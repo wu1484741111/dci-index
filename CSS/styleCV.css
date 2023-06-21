@@ -1,0 +1,187 @@
+/*selector  {declaration}
+{property: value}
+*/
+
+
+
+
+<style>
+            @import url("https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap");
+        </style>
+
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap"
+            rel="stylesheet"
+        />
+
+
+/*Header Styles*/
+h1 {
+    font-size: xx-large;
+    font-style: italic;
+    color: rgb(121, 0, 90);
+    font-weight: bolder;
+}
+h2 {
+    color: violet;
+    background: linear-gradient(
+        90deg,
+        rgba(137, 43, 226, 0.295) 0%,
+        white 40%,
+        rgba(64, 224, 208, 0.295) 100%
+    );
+}
+
+
+h3 {
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    background-image: url(https://scontent-ham3-1.xx.fbcdn.net/v/t1.18169-9/1916098_336109835625_1181494_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cdbe9c&_nc_ohc=n264hqUpAAIAX_55BZG&_nc_ht=scontent-ham3-1.xx&oh=00_AT9FKmPqI-pyP4Ohf8NQHR9bbmEs0XW33yR26FjJBE4OIg&oe=62BE6793);
+    background-size: 25px;
+}
+
+.h3_1 {
+    background-image: url(https://scontent-ham3-1.xx.fbcdn.net/v/t1.18169-9/10592710_10202156546989831_6609333235688602755_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=ba80b0&_nc_ohc=dUz4_AhWfqwAX9g9kCE&_nc_ht=scontent-ham3-1.xx&oh=00_AT8ajlxaybn1bghqyYP0dxa_WxFPtLFqDu1Qs9Eds8ZmnA&oe=62BDA41A);
+    background-size: cover 25px;
+}
+
+.h3_2{
+    background-image: url(../IMG/frame.png);
+    background-size: contain 25px;
+}
+
+.boxmodel1{
+    padding: 30px;
+    margin: 20px;
+    border: 10px solid rebeccapurple;
+}
+
+.boxmodel2{
+    padding: 30px;
+    margin: 40px;
+    border: 10px solid hotpink;
+}
+
+.boxmodel3{
+    padding: 60px;
+    margin: 20px;
+    border: 10px solid orangered;
+}
+
+.boxmodel4{
+    margin-top: 40px;
+    margin-right: 80px;
+    margin-bottom: 40px;
+    margin-left: 80px;
+
+    padding: 30 60 30 60px;
+
+    border-width: 10px;
+    border-style: dashed;
+    border-color: rosybrown;
+}
+
+.boxmodel5{
+    padding-top: 30px;
+    padding-right: 60px;
+    padding-bottom: 30px;
+    padding-left: 60px;
+
+    margin: 40px 80px 40px 80px;
+
+    border-width: 10px;
+    border-style: groove dotted;
+    border-color: pink red blue yellowgreen;
+}
+
+.boxmodel6 {
+    box-sizing: border-box;
+    box-shadow: rgba(137, 43, 226, 0.295);
+}
+
+
+.boxmodel7 {
+    box-sizing: content-box;
+}
+
+
+        <br />
+        <img
+            src="https://scontent-ham3-1.xx.fbcdn.net/v/t1.18169-9/11665420_10153047694535983_3913731521140203864_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=e3f864&_nc_ohc=Upg0ZK_tVbkAX_5iOMX&_nc_ht=scontent-ham3-1.xx&oh=00_AT9G5sCjXmCze6wOh1_d0LC8MzLG35qzG04jT9ZiK6pR2g&oe=62BB3DFB"
+            alt=""
+
+
+
+
+
+
+
+
+
+
+
+/*Header Styles*/
+p {
+    font-weight: bolder;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    background-color: lightgreen;
+}
+
+/*Table Styles*/
+table {
+    background-color: rgba(255, 228, 196, 0.541);
+    font-weight: 900;
+    font-style: initial;
+}
+
+ol {
+    background-color: azure;
+}
+
+ul {
+    background-color: rgba(100, 148, 237, 0.466);
+}
+
+/*Paragraph Styles*/
+.tifanyparagraph {
+    color: rgb(4, 74, 92);
+    font-weight: lighter;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.overwriting {
+    background-color: turquoise;
+}
+
+section {
+    background-color: ghostwhite;
+    font-style: unset;
+    font-family: cursive;
+}
+section p {
+    background-color: rgba(255, 255, 0, 0.418);
+    font-weight: lighter;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+section ul li span {
+    background-color: rgb(255, 2, 2);
+}
+#reallypink {
+    color: pink;
+}
+
+/*Foto Styles*/
+
+/*Footer Styles*/
+footer {
+    background-color: grey;
+    color: rgb(68, 72, 75);
+    border: 5px dotted yellow;
+}
+nav {
+    background-color: whitesmoke;
+}

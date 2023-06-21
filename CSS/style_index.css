@@ -1,0 +1,511 @@
+/*
+1. Explain your idea and what your website is about.
+2. How did you proceed?
+3. How did you implement your idea with code?
+4. Explain what was easy to do and which part were complicated and how did you overcome it.
+5. Make a conclusion, what did you like and what not.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Mansalva&family=Shadows+Into+Light&display=swap');
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+@keyframes swing {
+    15% {
+        transform: translate(10px);
+    }
+    40% {
+        transform: translate(-10px);
+    }
+    65% {
+        transform: translate(4px);
+    }
+    85% {
+        transform: translate(-4px);
+    }
+    100% {
+        transform: translate(0px);
+    }
+}
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+body {
+    background: linear-gradient(
+        45deg,
+        rgba(139, 0, 39, 0.4),
+        rgba(202, 29, 78, 0.5),
+        orange
+    );
+    background-color: rgba(139, 0, 139, 0.404);
+}
+
+body aside {
+    height: 100%;
+    display: flex;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 10px;
+}
+
+header img {
+    width: 70px;
+    margin: 10px;
+}
+
+header img:hover {
+    transform: scale(1.6);
+}
+
+header nav {
+    display: flex;
+    padding: 0%;
+    margin: 0%;
+}
+header nav ul {
+    list-style: none;
+    padding: 0%;
+    display: flex;
+}
+
+header nav li {
+    text-align: center;
+    font-weight: bold;
+}
+
+header nav a {
+    display: flex;
+    background-color: rgba(10, 10, 1, 0.445);
+    border: goldenrod double 2px;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    font-family: "Kdam Thmor Pro", sans-serif;
+}
+
+header nav a:hover {
+    background-color: rgb(10, 10, 1);
+    transform: scale(1.05);
+    color: rgb(252, 252, 64);
+}
+
+
+main {
+    margin: 0px;
+}
+
+#km {
+    font-family: "Shadows Into Light", cursive;
+    font-size: 40px;
+    opacity: 0.3;
+    text-decoration: none;
+}
+
+#km:hover {
+    background-color: rgba(255, 68, 0, 0.13);
+    opacity: 1.2;
+    font-weight: bolder;
+    text-decoration-line: underline;
+    border-radius: 80px;
+}
+
+#sec1 {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px 0px 80px 0px;
+    width: 100%;
+    font-weight: bolder;
+    font-family: "Mansalva", cursive;
+    font-size: 120px;
+}
+
+#at1 {
+    margin: 0px 0px 0px 40px;
+    padding: 0%;
+    display: flex;
+    justify-content: flex-end;
+    flex-flow: wrap column;
+    position: relative;
+}
+
+#img1 {
+    margin: 50px 80px 0px 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    align-content: center;
+    justify-items: baseline;
+    opacity: 1;
+}
+
+#img1:hover {
+    animation: swing 1s 3;
+    opacity: 0.7;
+}
+
+section article {
+    display: flex;
+    padding: 0%;
+    margin: 0px;
+}
+section p {
+    margin: 0;
+    text-align: center;
+}
+
+h1 {
+    font-family: "Shadows Into Light", cursive;
+    font-size: 35px;
+    margin: 0px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    font-weight: lighter;
+    font-style: italic;
+}
+
+h2 {
+    display: flex;
+    justify-content: space-around;
+    font-size: small;
+    font-style: italic;
+    font-weight: bolder;
+    text-decoration: underline;
+    margin: 0px 0px 0px 500px;
+}
+
+.h3_1 {
+    display: flex;
+    justify-content: center;
+    color: aquamarine;
+    font-family: "Mansalva", cursive;
+    margin: 30px 0px 0px 400px;
+    font-size: x-large;
+    font-style: oblique;
+    font-weight: unset;
+}
+
+
+
+
+
+.sideMenu {
+    float: left;
+    z-index: 30;
+    width: 300px;
+    height: 500%;
+    margin: -550px 0px -4000px 0px;
+    background: linear-gradient( 0deg, tomato, rgba(125, 125, 125, 1));
+    border-right: 3px solid #d1d1d1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0px 500px 10px;
+    box-sizing: border-box; /*not scroll*/
+    box-shadow: 5px 0 10px rgba(23, 23, 54, 0.6);
+    position: relative;
+    transform: translateX(-102%);
+    transition: 0.3s;
+}
+
+.sideMenu form {
+    display: flex;
+    margin: 0 10px 50px;
+    border-radius: 100px solid rgb(255, 255, 255, 0.4);
+}
+
+.sideMenu form input,
+.sideMenu form button {
+    border: none;
+    padding: 5px 10px;
+    background-color: transparent;
+    color: #fff;
+}
+
+.sideMenu form input {
+    width: 230px;
+}
+
+.sideMenu form input::placeholder {
+    color: #fff;
+}
+
+.sideMenu form button {
+    width: 50px;
+    border-left: 2px #fff;
+}
+
+.sideMenu form input: focus,
+.sideMenu form button: focus {
+    outline: none;
+}
+
+.sideMenu label {
+    width: 40px;
+    height: 80px;
+    background-color: #d1d1d1;
+    color: #686666;
+    font-size: 3rem;
+    position: absolute;
+    right: -40px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    line-height: 80px;
+    text-align: center;
+    border-radius: 0 5px 5px 0;
+    box-shadow: 0 5px 5px 0 rgba(23, 23, 54, 0.6);
+}
+
+.sideMenu ul li {
+    align-content: space-between;
+}
+
+#sideMenu-active {
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+}
+
+#sideMenu-active:checked + .sideMenu {
+    transform: translateX(0);
+}
+
+#sideMenu-active:checked + .sideMenu label .fas-fa-angle-right{
+    transform: scaleX(-1):
+}
+
+
+/**/
+
+
+
+div nav {
+    display: block;
+
+}
+
+div nav a {
+    display: block;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    position: relative;
+}
+
+div nav a + a::before {
+    content: "";
+    position: absolute;
+    border-top: 1px solid rgb(255, 255, 255, 0.4);
+    left: 10px;
+    right: 10px;
+    top: 0;
+}
+
+
+
+div nav a:hover .fa {
+    margin-right: 0em;
+    transform: scale(01);
+}
+
+/*Test*/
+.nav li:hover .fa {
+    margin-right: 0;
+    opacity: 1;
+    transform: rotateY(360deg);
+}
+
+.nav li:hover>a {
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .6));
+    color: rgb(252, 190, 110);
+}
+
+.nav ul {
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    text-align: left;
+    left: 60%;
+    width: 350px;
+    top: 20%;
+    background-color: rgba(255, 255, 255, .2);
+    box-shadow: 5px 0 10px hsla(240, 40%, 15%, .6);
+    transition: .3s;
+}
+
+.nav ul:hover {
+    background-color: rgba(255, 255, 255, .5);
+}
+
+.nav li:hover>ul {
+    pointer-events: auto;
+    opacity: 1;
+    left: 80%;
+}
+
+.nav ul li:hover>ul {
+    left: 95%;
+}
+
+.nav ul ul li:hover>ul {
+    left: 35%;
+}
+/*Test*/
+
+.sec3 {
+    display: flex;
+    flex-wrap: wrap column;
+}
+
+.sec4 {
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+}
+
+/*Box models start*/
+.boxmodel1 {
+    padding: 10px;
+    margin: 20px 20px 80px 20px;
+    border: 5px solid rebeccapurple;
+    border-radius: 0px 50px 30px;
+    border-style: ridge;
+    background-color: rgba(102, 51, 153, 0.151);
+    color: rgb(214, 214, 104);
+    font-weight: bolder;
+}
+
+.boxmodel2 {
+    padding: 10px 15px 10px 15px;
+    margin: 80px 20px 0px 20px;
+    border: 10px solid hotpink;
+    border-style: ridge;
+    border-radius: 50px 0px 50px 30px;
+    background-color: rgba(255, 105, 180, 0.404);
+    color: darkslateblue;
+    font-weight: bolder;
+}
+
+.boxmodel3 {
+    margin: 15px 60px 20px 100px;
+    padding: 0px;
+    border-style: inset;
+    border-radius: 0px 80px 50px;
+    width: 55%;
+    border-color: rosybrown;
+    background-color: rgba(188, 143, 143, 0.603);
+    color: rgba(238, 237, 237, 0.801);
+    font-weight: bolder;
+    border-width: 20px;
+}
+
+.boxmodel4 {
+    margin-top: 5px;
+    margin-right: 0px;
+    margin-bottom: 20px;
+    margin-left: 400px;
+    padding: 0px;
+    border-width: 20px;
+    border-style: inset;
+    border: 20px solid rgb(153, 192, 95);
+    background-color: rgba(147, 180, 98, 0.61);
+    color: rgba(212, 59, 3, 0.829);
+    border-radius: 80px 0px 80px 50px;
+    width: 60%;
+    font-weight: bolder;
+}
+.boxmodel5 {
+    margin: 0 0 -75px 15px;
+    padding: 60px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0.432);
+    color: rgba(238, 220, 213, 0.829);
+    border-radius: 100px;
+    font-weight: bolder;
+    display: flex;
+    width: 75%;
+    justify-content: center;
+}
+.boxmodel6 {
+    margin: -75px 0 0 150px;
+    padding: 60px;
+    border-width: 0;
+    background-color: rgba(255, 255, 255, 0.616);
+    color: rgb(0, 0, 0);
+    border-radius: 100px;
+    font-weight: bolder;
+    display: flex;
+    width: 75%;
+    justify-content: center;
+}
+/*Box Models end*/
+
+footer {
+    padding-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+footer img {
+    margin: 0%;
+    padding: 0%;
+    display: flex;
+    justify-content: center;
+}
+
+footer a {
+    width: 12%;
+    margin-bottom: 30px;
+    font-family: "Shadows Into Light", cursive;
+    font-weight: bolder;
+    font-size: larger;
+    display: flex;
+    flex-flow: wrap column;
+    align-content: center;
+    align-items: center
+    ;
+    text-decoration: none;
+    text-align: center;
+}
+
+footer a:hover {
+    transform: scale(1.2);
+}
+
+.btn {
+    background-color: #f4511e;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    opacity: 1;
+}
+
+.btn {
+    background-color: #ddd;
+    border: none;
+    color: black;
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background-color: #3e8e41;
+    color: white;
+}

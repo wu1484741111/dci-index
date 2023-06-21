@@ -1,0 +1,52 @@
+/*selector  {declaration}
+{property: value}
+*/
+* {
+    background: -webkit-repeating-linear-gradient(
+        45deg,
+        #ffe5e5 1%,
+        #dbd7f9 10%
+    );
+    background: -o-repeating-linear-gradient(45deg, #ffe5e5 1%, #dbd7f9 10%);
+    background: -moz-repeating-linear-gradient(45deg, #ffe5e5 1%, #dbd7f9 10%);
+    background: repeating-linear-gradient(45deg, #ffe5e5 1%, #dbd7f9 10%);
+}
+
+/*Header Styles*/
+h1 {
+    color: red;
+}
+h2 {
+    color: violet;
+}
+
+/*Header Styles*/
+p {
+    background-color: lightgreen;
+}
+
+/*Paragraph Styles*/
+.blueparagraph {
+    color: blue;
+    background-color: brown;
+    font-weight: bold;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+section p {
+    background-color: yellow;
+}
+section p span {
+    background-color: lightblue;
+}
+#reallypink {
+    color: pink;
+}
+/*Footer Styles*/
+footer {
+    background-color: grey;
+    color: aliceblue;
+    border: 5px dotted yellow;
+}
+nav {
+    background-color: whitesmoke;
+}
