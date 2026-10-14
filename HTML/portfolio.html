@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio – Roger Wu</title>
+<style>
+  :root{--bg:#f6f4ef;--ink:#1d2433;--muted:#5b6475;--line:#d9d5ca;--accent:#1f5f8b}
+  @media (prefers-color-scheme:dark){:root{--bg:#161a22;--ink:#e8e9ee;--muted:#9aa2b3;--line:#2c3240;--accent:#7cb7e0}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Noto Serif TC",serif;line-height:1.6}
+  main{max-width:760px;margin:0 auto;padding:48px 20px 64px}
+  a.back{color:var(--muted);text-decoration:none;font-size:.95rem}
+  h1{font-size:2.1rem;margin:16px 0 24px;font-weight:600}
+  .list{border-top:1px solid var(--line)}
+  .item{display:block;padding:18px 4px;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+  .item:hover h2,.item:focus-visible h2{color:var(--accent);text-decoration:underline}
+  .item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .item h2{margin:0;font-size:1.15rem;font-weight:600}
+  .soon{padding:18px 4px;border-bottom:1px solid var(--line);color:var(--muted)}
+  .soon h2{margin:0;font-size:1.15rem;font-weight:600}
+  .soon p{margin:0;font-size:.9rem}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">Back to profile</a>
+<h1>Portfolio</h1>
+<div class="list">
+<a class="item" href="sky-dome-v2.html" target="_blank" rel="noopener"><h2>Sky Dome (v2)</h2></a>
+<a class="item" href="sky-dome-v1.html" target="_blank" rel="noopener"><h2>Sky Dome (v1)</h2></a>
+<a class="item" href="posture-monitor-ascii.html" target="_blank" rel="noopener"><h2>Posture Monitor (ASCII)</h2></a>
+<div class="soon"><h2>Household Budget</h2><p>Coming later</p></div>
+</div>
+</main>
+</body>
+</html>

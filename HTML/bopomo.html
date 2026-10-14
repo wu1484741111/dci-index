@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>華語學習 · Chinesisch Lernen</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+<style>
+:root {
+  --bg: #f7f3ee;
+  --panel: #ffffff;
+  --ink: #1c2033;
+  --ink2: rgba(28,32,51,0.55);
+  --ink3: rgba(28,32,51,0.28);
+  --red: #d9432a;
+  --gold: #e8a020;
+  --blue: #3a6fd8;
+  --green: #2e8b57;
+  --border: #e2ddd8;
+  --shadow: 0 2px 16px rgba(28,32,51,0.09);
+  --r: 14px;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+html,body { height:100%; }
+body {
+  font-family:'Nunito','Noto Sans TC',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+}
+ 
+/* ── HEADER ── */
+.app-header {
+  background:var(--ink);
+  padding:14px 20px;
+  display:flex; align-items:center; gap:12px;
+  position:sticky; top:0; z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,0.25);
+}
+.app-header .logo { font-size:24px; }
+.app-header h1 { color:#fff; font-size:17px; font-weight:800; line-height:1.2; }
+.app-header h1 small { display:block; font-size:11px; font-weight:400; color:rgba(255,255,255,0.5); letter-spacing:.5px; }
+ 
+/* ── 3-LEVEL NAV ── */
+.nav-wrapper { max-width:860px; margin:0 auto; padding:16px 16px 0; }
+ 
+/* Level 1: Series pills */
+.series-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+.series-pill {
+  padding:8px 18px; border-radius:50px;
+  border:2px solid var(--border); background:var(--panel);
+  font-size:13px; font-weight:700; cursor:pointer;
+  transition:all .2s; color:var(--ink2);
+}
+.series-pill:hover { border-color:var(--blue); color:var(--blue); }
+.series-pill.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+ 
+/* Level 2: Book tabs */
+.book-tabs {
+  display:flex; gap:0; background:var(--panel);
+  border-radius:var(--r) var(--r) 0 0;
+  border:2px solid var(--border); border-bottom:none;
+  overflow:hidden;
+}
+.book-tab {
+  flex:1; padding:12px 8px; text-align:center; cursor:pointer;
+  font-size:13px; font-weight:700; color:var(--ink2);
+  border-right:1px solid var(--border);
+  transition:all .2s; background:transparent;
+}
+.book-tab:last-child { border-right:none; }
+.book-tab:hover { color:var(--ink); background:rgba(28,32,51,0.04); }
+.book-tab.active { background:var(--bg); color:var(--ink); position:relative; }
+.book-tab.active::after {
+  content:''; position:absolute; bottom:-2px; left:0; right:0; height:2px;
+  background:var(--bg);
+}
+.book-tab .t-emoji { font-size:18px; display:block; margin-bottom:2px; }
+.book-tab .t-sub { font-size:10px; font-weight:400; color:var(--ink3); }
+ 
+/* ── MAIN PANEL ── */
+.main-panel {
+  max-width:860px; margin:0 auto;
+  background:var(--bg);
+  border:2px solid var(--border); border-top:none;
+  border-radius:0 0 var(--r) var(--r);
+  overflow:hidden;
+}
+ 
+/* Level 3: Lesson buttons */
+.lesson-strip {
+  background:var(--panel);
+  padding:14px 16px 12px;
+  border-bottom:2px solid var(--border);
+  display:flex; flex-wrap:wrap; gap:7px; align-items:center;
+}
+.lesson-strip-label {
+  font-size:10px; font-weight:800; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--ink3);
+  width:100%; margin-bottom:2px;
+}
+.lesson-btn {
+  padding:7px 13px; border-radius:50px;
+  border:1.5px solid var(--border); background:var(--panel);
+  font-size:12px; font-weight:700; color:var(--ink2);
+  cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; gap:5px;
+}
+.lesson-btn:hover { border-color:var(--blue); color:var(--blue); transform:translateY(-1px); }
+.lesson-btn.active { background:var(--red); color:#fff; border-color:var(--red); box-shadow:0 3px 10px rgba(217,67,42,0.3); }
+.lesson-btn .l-num { font-family:'Noto Sans TC',sans-serif; font-size:13px; }
+ 
+/* ── CONTENT AREA ── */
+.content-area { padding:24px 20px 40px; }
+ 
+/* Welcome screen */
+.welcome {
+  text-align:center; padding:60px 20px;
+  color:var(--ink2);
+}
+.welcome .w-emoji { font-size:56px; margin-bottom:16px; }
+.welcome h2 { font-size:20px; font-weight:800; color:var(--ink); margin-bottom:8px; }
+.welcome p { font-size:14px; line-height:1.7; }
+ 
+/* Lesson header */
+.lesson-hd {
+  display:flex; align-items:flex-start; gap:16px; margin-bottom:20px;
+}
+.lesson-badge {
+  width:56px; height:56px; border-radius:14px;
+  background:var(--ink); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; font-weight:900; flex-shrink:0;
+  font-family:'Noto Sans TC',sans-serif;
+}
+.lesson-hd-text h2 {
+  font-size:26px; font-weight:900;
+  font-family:'Noto Sans TC',sans-serif; line-height:1.2;
+}
+.lesson-hd-text .py { color:var(--red); font-size:13px; font-weight:700; margin-top:3px; }
+.lesson-hd-text .de { color:var(--ink2); font-size:12px; font-style:italic; margin-top:2px; }
+ 
+/* Illustration */
+.lesson-illo {
+  background:linear-gradient(135deg,#fff7f0,#f0f4ff);
+  border:1.5px dashed var(--border); border-radius:16px;
+  padding:28px; text-align:center;
+  font-size:72px; line-height:1;
+  margin-bottom:22px;
+}
+.lesson-illo p { font-size:11px; color:var(--ink3); margin-top:8px; }
+ 
+/* Section label */
+.sec-label {
+  font-size:10px; font-weight:800; letter-spacing:1.8px;
+  text-transform:uppercase; color:var(--ink3);
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:12px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+ 
+/* Text block */
+.lesson-text-box {
+  background:var(--panel); border-radius:12px;
+  border:1.5px solid var(--border);
+  padding:18px 22px; margin-bottom:24px;
+}
+.text-line { margin-bottom:14px; }
+.text-line:last-child { margin-bottom:0; }
+.text-zh {
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:19px; line-height:1.7; color:var(--ink);
+}
+.text-py { font-size:12px; color:var(--red); margin-top:2px; font-family:'Noto Sans TC',sans-serif; }
+ 
+/* Vocab grid */
+.vocab-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:10px; margin-bottom:6px;
+}
+.vocab-card {
+  background:var(--panel); border-radius:12px;
+  border:1.5px solid var(--border);
+  padding:14px 12px; cursor:pointer;
+  transition:all .22s; position:relative; overflow:hidden;
+  text-align:left;
+}
+.vocab-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  border-radius:12px 12px 0 0;
+}
+.vc-c1::before{background:#d9432a;}
+.vc-c2::before{background:#3a6fd8;}
+.vc-c3::before{background:#2e8b57;}
+.vc-c4::before{background:#e8a020;}
+.vc-c5::before{background:#7c5ccc;}
+.vc-c6::before{background:#d64d8a;}
+.vc-c7::before{background:#0099aa;}
+.vc-c8::before{background:#e07030;}
+ 
+.vocab-card:hover { border-color:var(--blue); transform:translateY(-2px); box-shadow:0 6px 20px rgba(58,111,216,0.15); }
+.vc-char {
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:32px; font-weight:700; line-height:1.1;
+  margin-bottom:4px; color:var(--ink);
+}
+.vc-py { font-size:12px; color:var(--red); font-weight:600; font-family:'Noto Sans TC',sans-serif; }
+.vc-de { font-size:11px; color:var(--ink2); font-style:italic; margin-top:2px; }
+.vc-hint { font-size:9px; color:var(--ink3); margin-top:8px; }
+ 
+/* ── EXPANDED VOCAB ── */
+.vocab-expanded {
+  background:var(--panel); border-radius:16px;
+  border:2px solid var(--ink); padding:20px;
+  margin-bottom:10px;
+  grid-column:1/-1;
+  box-shadow:0 8px 30px rgba(28,32,51,0.12);
+  animation:popIn .25s ease;
+}
+@keyframes popIn {
+  from { opacity:0; transform:scale(.97); }
+  to   { opacity:1; transform:scale(1); }
+}
+.ve-top { display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start; margin-bottom:18px; }
+.ve-char-big {
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:72px; font-weight:700; line-height:1; color:var(--ink);
+  min-width:80px;
+}
+.ve-meta { flex:1; min-width:140px; }
+.ve-py { font-size:18px; color:var(--red); font-weight:700; font-family:'Noto Sans TC',sans-serif; margin-bottom:4px; }
+.ve-de { font-size:14px; color:var(--ink2); font-style:italic; margin-bottom:8px; }
+.ve-strokes-label {
+  font-size:10px; font-weight:800; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--ink3);
+}
+ 
+/* Stroke order grid */
+.stroke-steps-row {
+  display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end;
+  margin-bottom:16px;
+}
+.stroke-step {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.stroke-step-svg {
+  border:1.5px solid var(--border); border-radius:8px;
+  background:#fafafa; display:block;
+}
+.stroke-step-num {
+  font-size:10px; font-weight:800; color:var(--ink3);
+  font-family:'Nunito',sans-serif;
+}
+ 
+/* HanziWriter target area */
+.hw-target { position:relative; display:inline-block; }
+ 
+/* Controls */
+.ve-controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+.btn-sm {
+  padding:8px 16px; border-radius:50px;
+  border:none; font-family:'Nunito',sans-serif;
+  font-size:12px; font-weight:800; cursor:pointer; transition:all .2s;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.btn-play { background:var(--ink); color:#fff; }
+.btn-play:hover { background:var(--blue); box-shadow:0 4px 12px rgba(58,111,216,0.35); }
+.btn-quiz { background:var(--green); color:#fff; }
+.btn-quiz:hover { filter:brightness(1.1); box-shadow:0 4px 12px rgba(46,139,87,0.35); }
+.btn-close { background:none; border:1.5px solid var(--border) !important; color:var(--ink2); }
+.btn-close:hover { border-color:var(--red) !important; color:var(--red); }
+ 
+/* Practice grid */
+.practice-section { margin-top:2px; }
+.practice-label {
+  font-size:10px; font-weight:800; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--ink3); margin-bottom:8px;
+}
+.practice-row {
+  display:flex; flex-wrap:wrap; gap:6px;
+  background:#f9f7f4; border-radius:10px;
+  padding:12px; border:1px dashed var(--border);
+}
+.practice-cell {
+  width:58px; height:58px; border:1.5px solid var(--border);
+  border-radius:8px; background:#fff; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.practice-cell::before,
+.practice-cell::after {
+  content:''; position:absolute; background:rgba(58,111,216,0.1);
+  pointer-events:none;
+}
+.practice-cell::before { width:100%; height:1px; top:50%; }
+.practice-cell::after  { height:100%; width:1px; left:50%; }
+.practice-guide-char {
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:40px; line-height:1; color:rgba(28,32,51,0.15);
+  pointer-events:none; user-select:none;
+}
+.practice-note {
+  font-size:11px; color:var(--ink3); font-style:italic;
+  margin-top:8px;
+}
+ 
+/* Stroke order animation target */
+#hw-anim-container { position:relative; }
+ 
+/* Responsive */
+@media(max-width:560px){
+  .vocab-grid { grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); }
+  .ve-char-big { font-size:56px; }
+  .lesson-hd-text h2 { font-size:20px; }
+}
+ 
+/* Fade-in */
+.content-area { animation:fadeUp .3s ease; }
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+ 
+.hidden { display:none !important; }
+</style>
+</head>
+<body>
+ 
+<header class="app-header">
+  <span class="logo">📖</span>
+  <h1>華語學習
+    <small>Chinesisch lernen · Schreiben üben</small>
+  </h1>
+</header>
+ 
+<div class="nav-wrapper">
+ 
+  <!-- Level 1: Series -->
+  <div class="series-row" id="series-row"></div>
+ 
+  <!-- Level 2: Book tabs -->
+  <div class="book-tabs" id="book-tabs"></div>
+ 
+</div>
+ 
+<!-- Level 3 + Content -->
+<div class="main-panel" id="main-panel">
+  <div class="lesson-strip" id="lesson-strip">
+    <div class="lesson-strip-label">請先選擇系列和冊數 · Bitte wähle eine Serie und ein Buch</div>
+  </div>
+  <div class="content-area" id="content-area">
+    <div class="welcome">
+      <div class="w-emoji">✏️</div>
+      <h2>歡迎！Willkommen!</h2>
+      <p>請選擇上方的系列、冊數和課程開始練習。<br>
+      Wähle oben eine Serie, ein Buch und eine Lektion.</p>
+    </div>
+  </div>
+</div>
+ 
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════
+ 
+const SERIES = [
+  {
+    id: 'xhyqcz',
+    name: '學華語向前走',
+    nameDE: 'Lass uns Chinesisch lernen',
+    emoji: '🏫',
+    books: [
+      {
+        id: 'b1', name: '第一冊', nameDE: 'Band 1', emoji: '🌱',
+        lessons: [
+          {
+            id:1, title:'你好', py:'Nǐ hǎo', de:'Hallo', emoji:'👋',
+            text:[
+              {zh:'你好！', py:'Nǐ hǎo！'},
+              {zh:'你好！我叫小明。', py:'Nǐ hǎo！Wǒ jiào Xiǎomíng。'},
+              {zh:'你叫什麼名字？', py:'Nǐ jiào shénme míngzì？'},
+              {zh:'我叫小花。很高興認識你。', py:'Wǒ jiào Xiǎohuā。Hěn gāoxìng rènshi nǐ。'},
+            ],
+            vocab:[
+              {char:'你',py:'nǐ',de:'du',strokes:7},
+              {char:'好',py:'hǎo',de:'gut / hallo',strokes:6},
+              {char:'我',py:'wǒ',de:'ich',strokes:7},
+              {char:'叫',py:'jiào',de:'heißen / rufen',strokes:5},
+              {char:'名',py:'míng',de:'Name',strokes:6},
+            ]
+          },
+          {
+            id:2, title:'你家有幾個人？', py:'Nǐ jiā yǒu jǐ gè rén？', de:'Wie viele Personen hat deine Familie?', emoji:'👨‍👩‍👧',
+            text:[
+              {zh:'你家有幾個人？', py:'Nǐ jiā yǒu jǐ gè rén？'},
+              {zh:'我家有四個人。', py:'Wǒ jiā yǒu sì gè rén。'},
+              {zh:'爸爸、媽媽、哥哥和我。', py:'Bàba、māma、gēge hé wǒ。'},
+              {zh:'你有沒有弟弟妹妹？', py:'Nǐ yǒu méiyǒu dìdi mèimei？'},
+            ],
+            vocab:[
+              {char:'家',py:'jiā',de:'Zuhause / Familie',strokes:10},
+              {char:'有',py:'yǒu',de:'haben',strokes:6},
+              {char:'人',py:'rén',de:'Mensch / Person',strokes:2},
+              {char:'爸',py:'bà',de:'Papa / Vater',strokes:8},
+              {char:'媽',py:'mā',de:'Mama / Mutter',strokes:13},
+            ]
+          },
+          {
+            id:3, title:'你們班有幾個同學？', py:'Nǐmen bān yǒu jǐ gè tóngxué？', de:'Wie viele Mitschüler hat deine Klasse?', emoji:'🏫',
+            text:[
+              {zh:'你們班有幾個同學？', py:'Nǐmen bān yǒu jǐ gè tóngxué？'},
+              {zh:'我們班有二十個同學。', py:'Wǒmen bān yǒu èrshí gè tóngxué。'},
+              {zh:'男生和女生各有幾個？', py:'Nánshēng hé nǚshēng gè yǒu jǐ gè？'},
+              {zh:'男生有十二個，女生有八個。', py:'Nánshēng yǒu shí'èr gè，nǚshēng yǒu bā gè。'},
+            ],
+            vocab:[
+              {char:'班',py:'bān',de:'Klasse',strokes:10},
+              {char:'同',py:'tóng',de:'gleich / gemeinsam',strokes:6},
+              {char:'學',py:'xué',de:'lernen / studieren',strokes:16},
+              {char:'男',py:'nán',de:'männlich / Mann',strokes:7},
+              {char:'女',py:'nǚ',de:'weiblich / Frau',strokes:3},
+            ]
+          },
+          {
+            id:4, title:'來吃早飯', py:'Lái chī zǎofàn', de:'Komm frühstücken', emoji:'🍳',
+            text:[
+              {zh:'早上好！來吃早飯！', py:'Zǎoshàng hǎo！Lái chī zǎofàn！'},
+              {zh:'早飯有什麼？', py:'Zǎofàn yǒu shénme？'},
+              {zh:'有牛奶、麵包和水果。', py:'Yǒu niúnǎi、miànbāo hé shuǐguǒ。'},
+              {zh:'我喜歡喝牛奶、吃麵包。', py:'Wǒ xǐhuān hē niúnǎi、chī miànbāo。'},
+            ],
+            vocab:[
+              {char:'早',py:'zǎo',de:'früh / Morgen',strokes:6},
+              {char:'飯',py:'fàn',de:'Reis / Mahlzeit',strokes:12},
+              {char:'吃',py:'chī',de:'essen',strokes:6},
+              {char:'喝',py:'hē',de:'trinken',strokes:12},
+              {char:'牛',py:'niú',de:'Kuh / Rind',strokes:4},
+            ]
+          },
+          {
+            id:5, title:'我喜歡夏天', py:'Wǒ xǐhuān xiàtiān', de:'Ich mag den Sommer', emoji:'☀️',
+            text:[
+              {zh:'你喜歡哪個季節？', py:'Nǐ xǐhuān nǎge jìjié？'},
+              {zh:'我喜歡夏天。', py:'Wǒ xǐhuān xiàtiān。'},
+              {zh:'夏天可以游泳、吃冰淇淋。', py:'Xiàtiān kěyǐ yóuyǒng、chī bīngqílín。'},
+              {zh:'你不喜歡冬天嗎？', py:'Nǐ bù xǐhuān dōngtiān ma？'},
+            ],
+            vocab:[
+              {char:'喜',py:'xǐ',de:'mögen / Freude',strokes:12},
+              {char:'夏',py:'xià',de:'Sommer',strokes:10},
+              {char:'天',py:'tiān',de:'Himmel / Tag',strokes:4},
+              {char:'冬',py:'dōng',de:'Winter',strokes:5},
+              {char:'春',py:'chūn',de:'Frühling',strokes:9},
+            ]
+          },
+          {
+            id:6, title:'我的生日', py:'Wǒ de shēngrì', de:'Mein Geburtstag', emoji:'🎂',
+            text:[
+              {zh:'你的生日是幾月幾號？', py:'Nǐ de shēngrì shì jǐ yuè jǐ hào？'},
+              {zh:'我的生日是三月十五號。', py:'Wǒ de shēngrì shì sānyuè shíwǔ hào。'},
+              {zh:'生日快樂！這是你的禮物。', py:'Shēngrì kuàilè！Zhè shì nǐ de lǐwù。'},
+              {zh:'謝謝你！我很高興。', py:'Xièxiè nǐ！Wǒ hěn gāoxìng。'},
+            ],
+            vocab:[
+              {char:'生',py:'shēng',de:'geboren / Leben',strokes:5},
+              {char:'日',py:'rì',de:'Sonne / Tag',strokes:4},
+              {char:'月',py:'yuè',de:'Mond / Monat',strokes:4},
+              {char:'快',py:'kuài',de:'schnell / fröhlich',strokes:7},
+              {char:'樂',py:'lè',de:'Freude / fröhlich',strokes:15},
+            ]
+          },
+          {
+            id:7, title:'一起畫圖吧！', py:'Yīqǐ huà tú ba！', de:'Lasst uns zusammen zeichnen!', emoji:'🎨',
+            text:[
+              {zh:'你喜歡畫圖嗎？', py:'Nǐ xǐhuān huà tú ma？'},
+              {zh:'喜歡！我們一起畫圖吧！', py:'Xǐhuān！Wǒmen yīqǐ huà tú ba！'},
+              {zh:'你要畫什麼？', py:'Nǐ yào huà shénme？'},
+              {zh:'我要畫一隻小狗。', py:'Wǒ yào huà yī zhī xiǎo gǒu。'},
+            ],
+            vocab:[
+              {char:'畫',py:'huà',de:'zeichnen / malen',strokes:12},
+              {char:'圖',py:'tú',de:'Bild / Zeichnung',strokes:14},
+              {char:'起',py:'qǐ',de:'aufstehen / zusammen',strokes:10},
+              {char:'要',py:'yào',de:'wollen / brauchen',strokes:9},
+              {char:'狗',py:'gǒu',de:'Hund',strokes:8},
+            ]
+          },
+          {
+            id:8, title:'下課以後做什麼？', py:'Xià kè yǐhòu zuò shénme？', de:'Was machst du nach dem Unterricht?', emoji:'⚽',
+            text:[
+              {zh:'下課以後你做什麼？', py:'Xià kè yǐhòu nǐ zuò shénme？'},
+              {zh:'我去踢足球。', py:'Wǒ qù tī zúqiú。'},
+              {zh:'你不做功課嗎？', py:'Nǐ bù zuò gōngkè ma？'},
+              {zh:'我回家以後先做功課，再去踢球。', py:'Wǒ huíjiā yǐhòu xiān zuò gōngkè，zài qù tī qiú。'},
+            ],
+            vocab:[
+              {char:'課',py:'kè',de:'Unterricht / Lektion',strokes:15},
+              {char:'後',py:'hòu',de:'danach / hinten',strokes:9},
+              {char:'做',py:'zuò',de:'machen / tun',strokes:11},
+              {char:'去',py:'qù',de:'gehen',strokes:5},
+              {char:'回',py:'huí',de:'zurückkehren',strokes:6},
+            ]
+          },
+          {
+            id:9, title:'玩具在哪裡？', py:'Wánjù zài nǎlǐ？', de:'Wo ist das Spielzeug?', emoji:'🧸',
+            text:[
+              {zh:'我的玩具在哪裡？', py:'Wǒ de wánjù zài nǎlǐ？'},
+              {zh:'你的玩具在桌子上。', py:'Nǐ de wánjù zài zhuōzi shàng。'},
+              {zh:'書包在哪裡？', py:'Shūbāo zài nǎlǐ？'},
+              {zh:'書包在椅子旁邊。', py:'Shūbāo zài yǐzi pángbiān。'},
+            ],
+            vocab:[
+              {char:'玩',py:'wán',de:'spielen',strokes:8},
+              {char:'具',py:'jù',de:'Werkzeug / Gerät',strokes:8},
+              {char:'在',py:'zài',de:'sein / sich befinden',strokes:6},
+              {char:'哪',py:'nǎ',de:'welche / wo',strokes:9},
+              {char:'桌',py:'zhuō',de:'Tisch',strokes:10},
+            ]
+          },
+          {
+            id:10, title:'我生病了', py:'Wǒ shēngbìng le', de:'Ich bin krank', emoji:'🤒',
+            text:[
+              {zh:'你怎麼了？臉色不好看。', py:'Nǐ zěnme le？Liǎnsè bù hǎokàn。'},
+              {zh:'我頭痛、發燒。', py:'Wǒ tóutòng、fāshāo。'},
+              {zh:'你要去看醫生。', py:'Nǐ yào qù kàn yīshēng。'},
+              {zh:'媽媽，我生病了，我們去看醫生。', py:'Māma，wǒ shēngbìng le，wǒmen qù kàn yīshēng。'},
+            ],
+            vocab:[
+              {char:'病',py:'bìng',de:'krank / Krankheit',strokes:10},
+              {char:'頭',py:'tóu',de:'Kopf',strokes:16},
+              {char:'痛',py:'tòng',de:'schmerzen / Schmerz',strokes:12},
+              {char:'醫',py:'yī',de:'Arzt / Medizin',strokes:18},
+              {char:'看',py:'kàn',de:'ansehen / besuchen',strokes:9},
+            ]
+          },
+          {
+            id:11, title:'我要買什麼？', py:'Wǒ yào mǎi shénme？', de:'Was möchte ich kaufen?', emoji:'🛍️',
+            text:[
+              {zh:'你要買什麼？', py:'Nǐ yào mǎi shénme？'},
+              {zh:'我要買一個書包和兩支鉛筆。', py:'Wǒ yào mǎi yí gè shūbāo hé liǎng zhī qiānbǐ。'},
+              {zh:'這個書包多少錢？', py:'Zhège shūbāo duōshǎo qián？'},
+              {zh:'三百五十元。', py:'Sānbǎi wǔshí yuán。'},
+            ],
+            vocab:[
+              {char:'買',py:'mǎi',de:'kaufen',strokes:12},
+              {char:'書',py:'shū',de:'Buch',strokes:10},
+              {char:'錢',py:'qián',de:'Geld',strokes:16},
+              {char:'多',py:'duō',de:'viel',strokes:6},
+              {char:'少',py:'shǎo',de:'wenig',strokes:4},
+            ]
+          },
+          {
+            id:12, title:'我的學校', py:'Wǒ de xuéxiào', de:'Meine Schule', emoji:'🏫',
+            text:[
+              {zh:'這是我的學校。', py:'Zhè shì wǒ de xuéxiào。'},
+              {zh:'我的學校很大，有很多教室。', py:'Wǒ de xuéxiào hěn dà，yǒu hěn duō jiàoshì。'},
+              {zh:'學校裡有圖書館和體育館。', py:'Xuéxiào lǐ yǒu túshūguǎn hé tǐyùguǎn。'},
+              {zh:'我喜歡我的學校。', py:'Wǒ xǐhuān wǒ de xuéxiào。'},
+            ],
+            vocab:[
+              {char:'學',py:'xué',de:'lernen',strokes:16},
+              {char:'校',py:'xiào',de:'Schule',strokes:10},
+              {char:'大',py:'dà',de:'groß',strokes:3},
+              {char:'教',py:'jiào',de:'unterrichten / lehren',strokes:11},
+              {char:'室',py:'shì',de:'Zimmer / Raum',strokes:9},
+            ]
+          },
+        ]
+      },
+      {
+        id: 'b2', name: '第二冊', nameDE: 'Band 2', emoji: '🌸',
+        lessons: [
+          {
+            id:1, title:'我爸爸做生意', py:'Wǒ bàba zuò shēngyì', de:'Mein Vater macht Geschäfte', emoji:'💼',
+            text:[
+              {zh:'你爸爸做什麼工作？', py:'Nǐ bàba zuò shénme gōngzuò？'},
+              {zh:'我爸爸做生意。他是老闆。', py:'Wǒ bàba zuò shēngyì。Tā shì lǎobǎn。'},
+              {zh:'你媽媽呢？', py:'Nǐ māma ne？'},
+              {zh:'我媽媽是老師。她在學校教書。', py:'Wǒ māma shì lǎoshī。Tā zài xuéxiào jiāo shū。'},
+            ],
+            vocab:[
+              {char:'爸',py:'bà',de:'Papa / Vater',strokes:8},
+              {char:'做',py:'zuò',de:'machen / tun',strokes:11},
+              {char:'工',py:'gōng',de:'Arbeit',strokes:3},
+              {char:'作',py:'zuò',de:'tun / machen',strokes:7},
+              {char:'老',py:'lǎo',de:'alt / erfahren',strokes:6},
+            ]
+          },
+          {
+            id:2, title:'今天幾月幾號？', py:'Jīntiān jǐ yuè jǐ hào？', de:'Was für ein Datum ist heute?', emoji:'📅',
+            text:[
+              {zh:'今天幾月幾號？', py:'Jīntiān jǐ yuè jǐ hào？'},
+              {zh:'今天是十月二十一號，星期三。', py:'Jīntiān shì shíyuè èrshíyī hào，xīngqīsān。'},
+              {zh:'明天是什麼日子？', py:'Míngtiān shì shénme rìzi？'},
+              {zh:'明天是媽媽的生日！', py:'Míngtiān shì māma de shēngrì！'},
+            ],
+            vocab:[
+              {char:'今',py:'jīn',de:'heute / jetzt',strokes:4},
+              {char:'明',py:'míng',de:'morgen / hell',strokes:8},
+              {char:'星',py:'xīng',de:'Stern',strokes:9},
+              {char:'期',py:'qī',de:'Periode / Woche',strokes:12},
+              {char:'號',py:'hào',de:'Nummer / Datum',strokes:13},
+            ]
+          },
+          {
+            id:3, title:'你住在哪裡？', py:'Nǐ zhù zài nǎlǐ？', de:'Wo wohnst du?', emoji:'🏠',
+            text:[
+              {zh:'你住在哪裡？', py:'Nǐ zhù zài nǎlǐ？'},
+              {zh:'我住在臺北市，離這裡不遠。', py:'Wǒ zhù zài Táiběi shì，lí zhèlǐ bù yuǎn。'},
+              {zh:'你家附近有什麼？', py:'Nǐ jiā fùjìn yǒu shénme？'},
+              {zh:'有公園、超市和圖書館。', py:'Yǒu gōngyuán、chāoshì hé túshūguǎn。'},
+            ],
+            vocab:[
+              {char:'住',py:'zhù',de:'wohnen / leben',strokes:7},
+              {char:'近',py:'jìn',de:'nah / in der Nähe',strokes:7},
+              {char:'遠',py:'yuǎn',de:'weit / fern',strokes:13},
+              {char:'公',py:'gōng',de:'öffentlich',strokes:4},
+              {char:'園',py:'yuán',de:'Garten / Park',strokes:13},
+            ]
+          },
+          {
+            id:4, title:'你會說幾種語言？', py:'Nǐ huì shuō jǐ zhǒng yǔyán？', de:'Wie viele Sprachen sprichst du?', emoji:'🗣️',
+            text:[
+              {zh:'你會說幾種語言？', py:'Nǐ huì shuō jǐ zhǒng yǔyán？'},
+              {zh:'我會說中文、英文和德文。', py:'Wǒ huì shuō zhōngwén、yīngwén hé déwén。'},
+              {zh:'你的中文說得很好！', py:'Nǐ de zhōngwén shuō de hěn hǎo！'},
+              {zh:'謝謝！我還在學習。', py:'Xièxiè！Wǒ hái zài xuéxí。'},
+            ],
+            vocab:[
+              {char:'說',py:'shuō',de:'sprechen / sagen',strokes:14},
+              {char:'語',py:'yǔ',de:'Sprache',strokes:14},
+              {char:'言',py:'yán',de:'Sprache / Wort',strokes:7},
+              {char:'文',py:'wén',de:'Schrift / Literatur',strokes:4},
+              {char:'會',py:'huì',de:'können / verstehen',strokes:13},
+            ]
+          },
+          {
+            id:5, title:'你喜歡什麼運動？', py:'Nǐ xǐhuān shénme yùndòng？', de:'Welchen Sport magst du?', emoji:'🏊',
+            text:[
+              {zh:'你喜歡什麼運動？', py:'Nǐ xǐhuān shénme yùndòng？'},
+              {zh:'我喜歡游泳和打籃球。', py:'Wǒ xǐhuān yóuyǒng hé dǎ lánqiú。'},
+              {zh:'游泳對身體很好。', py:'Yóuyǒng duì shēntǐ hěn hǎo。'},
+              {zh:'你多久游一次泳？', py:'Nǐ duō jiǔ yóu yīcì yǒng？'},
+            ],
+            vocab:[
+              {char:'運',py:'yùn',de:'bewegen / Transport',strokes:12},
+              {char:'動',py:'dòng',de:'bewegen / Sport',strokes:11},
+              {char:'游',py:'yóu',de:'schwimmen',strokes:12},
+              {char:'打',py:'dǎ',de:'schlagen / spielen',strokes:5},
+              {char:'球',py:'qiú',de:'Ball',strokes:11},
+            ]
+          },
+          {
+            id:6, title:'我最喜歡吃的食物', py:'Wǒ zuì xǐhuān chī de shíwù', de:'Mein Lieblingsessen', emoji:'🍜',
+            text:[
+              {zh:'你最喜歡吃什麼？', py:'Nǐ zuì xǐhuān chī shénme？'},
+              {zh:'我最喜歡吃麵條和餃子。', py:'Wǒ zuì xǐhuān chī miàntiáo hé jiǎozi。'},
+              {zh:'你會做餃子嗎？', py:'Nǐ huì zuò jiǎozi ma？'},
+              {zh:'我媽媽每年過節的時候都做餃子。', py:'Wǒ māma měinián guòjié de shíhòu dōu zuò jiǎozi。'},
+            ],
+            vocab:[
+              {char:'食',py:'shí',de:'essen / Nahrung',strokes:9},
+              {char:'物',py:'wù',de:'Sache / Ding',strokes:8},
+              {char:'麵',py:'miàn',de:'Nudeln / Mehl',strokes:20},
+              {char:'最',py:'zuì',de:'am meisten / -ste',strokes:12},
+              {char:'每',py:'měi',de:'jeder / jedes',strokes:7},
+            ]
+          },
+          {
+            id:7, title:'你怎麼去學校？', py:'Nǐ zěnme qù xuéxiào？', de:'Wie gehst du zur Schule?', emoji:'🚌',
+            text:[
+              {zh:'你怎麼去學校？', py:'Nǐ zěnme qù xuéxiào？'},
+              {zh:'我每天坐公車去學校。', py:'Wǒ měitiān zuò gōngchē qù xuéxiào。'},
+              {zh:'坐公車要多久？', py:'Zuò gōngchē yào duō jiǔ？'},
+              {zh:'大概二十分鐘。', py:'Dàgài èrshí fēnzhōng。'},
+            ],
+            vocab:[
+              {char:'坐',py:'zuò',de:'sitzen / mit (Verkehrsmittel)',strokes:7},
+              {char:'車',py:'chē',de:'Fahrzeug / Auto',strokes:7},
+              {char:'路',py:'lù',de:'Straße / Weg',strokes:13},
+              {char:'分',py:'fēn',de:'Minute / teilen',strokes:4},
+              {char:'鐘',py:'zhōng',de:'Uhr / Glocke',strokes:20},
+            ]
+          },
+          {
+            id:8, title:'天氣怎麼樣？', py:'Tiānqì zěnmeyàng？', de:'Wie ist das Wetter?', emoji:'⛅',
+            text:[
+              {zh:'今天天氣怎麼樣？', py:'Jīntiān tiānqì zěnmeyàng？'},
+              {zh:'今天晴天，很暖和。', py:'Jīntiān qíngtiān，hěn nuǎnhuó。'},
+              {zh:'明天會下雨嗎？', py:'Míngtiān huì xià yǔ ma？'},
+              {zh:'天氣預報說明天多雲，有時候有雨。', py:'Tiānqì yùbào shuō míngtiān duōyún，yǒu shíhòu yǒu yǔ。'},
+            ],
+            vocab:[
+              {char:'天',py:'tiān',de:'Himmel / Tag',strokes:4},
+              {char:'氣',py:'qì',de:'Luft / Wetter',strokes:10},
+              {char:'雨',py:'yǔ',de:'Regen',strokes:8},
+              {char:'雪',py:'xuě',de:'Schnee',strokes:11},
+              {char:'風',py:'fēng',de:'Wind',strokes:9},
+            ]
+          },
+          {
+            id:9, title:'你的興趣是什麼？', py:'Nǐ de xìngqù shì shénme？', de:'Was sind deine Hobbys?', emoji:'🎵',
+            text:[
+              {zh:'你的興趣是什麼？', py:'Nǐ de xìngqù shì shénme？'},
+              {zh:'我喜歡畫畫和聽音樂。', py:'Wǒ xǐhuān huàhuà hé tīng yīnyuè。'},
+              {zh:'你學過樂器嗎？', py:'Nǐ xuéguò yuèqì ma？'},
+              {zh:'我學了兩年鋼琴。', py:'Wǒ xué le liǎng nián gāngqín。'},
+            ],
+            vocab:[
+              {char:'興',py:'xìng',de:'Interesse / Freude',strokes:16},
+              {char:'趣',py:'qù',de:'Interesse / amüsant',strokes:15},
+              {char:'音',py:'yīn',de:'Klang / Ton',strokes:9},
+              {char:'樂',py:'yuè',de:'Musik / Freude',strokes:15},
+              {char:'年',py:'nián',de:'Jahr',strokes:6},
+            ]
+          },
+          {
+            id:10, title:'過年真熱鬧', py:'Guònián zhēn rènào', de:'Das Neujahrsfest ist sehr lebendig', emoji:'🧧',
+            text:[
+              {zh:'快過年了，你們家怎麼慶祝？', py:'Kuài guònián le，nǐmen jiā zěnme qìngzhù？'},
+              {zh:'我們家會大掃除、貼春聯。', py:'Wǒmen jiā huì dà sǎochú、tiē chūnlián。'},
+              {zh:'過年的時候吃什麼？', py:'Guònián de shíhòu chī shénme？'},
+              {zh:'我們吃年糕和湯圓，象徵團圓和好運。', py:'Wǒmen chī niángāo hé tāngyuán，xiàngzhēng tuányuán hé hǎoyùn。'},
+            ],
+            vocab:[
+              {char:'年',py:'nián',de:'Jahr',strokes:6},
+              {char:'過',py:'guò',de:'verbringen / vorbeigehen',strokes:12},
+              {char:'熱',py:'rè',de:'heiß / lebhaft',strokes:15},
+              {char:'鬧',py:'nào',de:'laut / Trubel',strokes:15},
+              {char:'吃',py:'chī',de:'essen',strokes:6},
+            ]
+          },
+          {
+            id:11, title:'我想要一隻小狗', py:'Wǒ xiǎngyào yī zhī xiǎo gǒu', de:'Ich möchte einen kleinen Hund', emoji:'🐶',
+            text:[
+              {zh:'我想要一隻小狗。', py:'Wǒ xiǎngyào yī zhī xiǎo gǒu。'},
+              {zh:'養狗需要花很多時間和心思。', py:'Yǎng gǒu xūyào huā hěn duō shíjiān hé xīnsī。'},
+              {zh:'我每天都會照顧牠。', py:'Wǒ měitiān dōu huì zhàogù tā。'},
+              {zh:'好吧，我們去寵物店看看。', py:'Hǎo ba，wǒmen qù chǒngwù diàn kàn kàn。'},
+            ],
+            vocab:[
+              {char:'想',py:'xiǎng',de:'wollen / denken',strokes:13},
+              {char:'隻',py:'zhī',de:'Zählwort für Tiere',strokes:10},
+              {char:'小',py:'xiǎo',de:'klein',strokes:3},
+              {char:'時',py:'shí',de:'Zeit / Stunde',strokes:10},
+              {char:'間',py:'jiān',de:'Raum / Zeitraum',strokes:12},
+            ]
+          },
+          {
+            id:12, title:'我的夢想', py:'Wǒ de mèngxiǎng', de:'Mein Traum', emoji:'🌟',
+            text:[
+              {zh:'你長大以後想做什麼？', py:'Nǐ zhǎngdà yǐhòu xiǎng zuò shénme？'},
+              {zh:'我想當醫生，幫助生病的人。', py:'Wǒ xiǎng dāng yīshēng，bāngzhù shēngbìng de rén。'},
+              {zh:'那你要好好讀書。', py:'Nà nǐ yào hǎohǎo dúshū。'},
+              {zh:'我知道，我每天都認真學習。', py:'Wǒ zhīdào，wǒ měitiān dōu rènzhēn xuéxí。'},
+            ],
+            vocab:[
+              {char:'夢',py:'mèng',de:'Traum',strokes:13},
+              {char:'想',py:'xiǎng',de:'wollen / denken',strokes:13},
+              {char:'當',py:'dāng',de:'sein / werden',strokes:13},
+              {char:'幫',py:'bāng',de:'helfen',strokes:17},
+              {char:'知',py:'zhī',de:'wissen',strokes:8},
+            ]
+          },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'shhy',
+    name: '生活華語',
+    nameDE: 'Alltags-Chinesisch',
+    emoji: '🌏',
+    books: [
+      {
+        id: 'b1', name: '第一冊', nameDE: 'Band 1', emoji: '🌱',
+        lessons: [
+          {
+            id:1, title:'你好', py:'Nǐ hǎo', de:'Hallo', emoji:'👋',
+            text:[
+              {zh:'你好！', py:'Nǐ hǎo！'},
+              {zh:'您好！請問您貴姓？', py:'Nín hǎo！Qǐngwèn nín guìxìng？'},
+              {zh:'我姓王，叫大文。', py:'Wǒ xìng Wáng，jiào Dàwén。'},
+              {zh:'王大文，認識你很高興！', py:'Wáng Dàwén，rènshi nǐ hěn gāoxìng！'},
+            ],
+            vocab:[
+              {char:'你',py:'nǐ',de:'du',strokes:7},
+              {char:'好',py:'hǎo',de:'gut / hallo',strokes:6},
+              {char:'姓',py:'xìng',de:'Familienname',strokes:8},
+              {char:'叫',py:'jiào',de:'heißen / rufen',strokes:5},
+              {char:'認',py:'rèn',de:'kennen / erkennen',strokes:14},
+            ]
+          },
+          {
+            id:2, title:'你家有幾個人？', py:'Nǐ jiā yǒu jǐ gè rén？', de:'Wie viele Personen sind in deiner Familie?', emoji:'👨‍👩‍👧‍👦',
+            text:[
+              {zh:'你家有幾個人？', py:'Nǐ jiā yǒu jǐ gè rén？'},
+              {zh:'我家有五個人。', py:'Wǒ jiā yǒu wǔ gè rén。'},
+              {zh:'爺爺、奶奶、爸爸、媽媽和我。', py:'Yéye、nǎinai、bàba、māma hé wǒ。'},
+              {zh:'你有沒有兄弟姐妹？', py:'Nǐ yǒu méiyǒu xiōngdì jiěmèi？'},
+            ],
+            vocab:[
+              {char:'家',py:'jiā',de:'Familie / Zuhause',strokes:10},
+              {char:'幾',py:'jǐ',de:'wie viele',strokes:12},
+              {char:'個',py:'gè',de:'Zählwort (allgemein)',strokes:10},
+              {char:'人',py:'rén',de:'Mensch / Person',strokes:2},
+              {char:'有',py:'yǒu',de:'haben',strokes:6},
+            ]
+          },
+          {
+            id:3, title:'打電話', py:'Dǎ diànhuà', de:'Telefonieren', emoji:'📞',
+            text:[
+              {zh:'喂，請問大文在嗎？', py:'Wèi，qǐngwèn Dàwén zài ma？'},
+              {zh:'他不在，你是誰？', py:'Tā bú zài，nǐ shì shuí？'},
+              {zh:'我是他的同學小明。請問他幾點回來？', py:'Wǒ shì tā de tóngxué Xiǎomíng。Qǐngwèn tā jǐ diǎn huílái？'},
+              {zh:'大概五點左右。我讓他給你回電話。', py:'Dàgài wǔ diǎn zuǒyòu。Wǒ ràng tā gěi nǐ huí diànhuà。'},
+            ],
+            vocab:[
+              {char:'電',py:'diàn',de:'Elektrizität / Strom',strokes:13},
+              {char:'話',py:'huà',de:'Sprache / sprechen',strokes:13},
+              {char:'請',py:'qǐng',de:'bitte / einladen',strokes:15},
+              {char:'問',py:'wèn',de:'fragen',strokes:11},
+              {char:'回',py:'huí',de:'zurückkehren',strokes:6},
+            ]
+          },
+          {
+            id:4, title:'吃東西', py:'Chī dōngxi', de:'Essen', emoji:'🍱',
+            text:[
+              {zh:'你喜歡吃什麼？', py:'Nǐ xǐhuān chī shénme？'},
+              {zh:'我喜歡吃米飯和炒菜。', py:'Wǒ xǐhuān chī mǐfàn hé chǎocài。'},
+              {zh:'你吃不吃牛肉？', py:'Nǐ chī bù chī niúròu？'},
+              {zh:'我不吃牛肉，但是我喜歡吃魚。', py:'Wǒ bù chī niúròu，dànshì wǒ xǐhuān chī yú。'},
+            ],
+            vocab:[
+              {char:'吃',py:'chī',de:'essen',strokes:6},
+              {char:'東',py:'dōng',de:'Osten / Ding',strokes:8},
+              {char:'西',py:'xī',de:'Westen / Sache',strokes:6},
+              {char:'米',py:'mǐ',de:'Reis (roh)',strokes:6},
+              {char:'魚',py:'yú',de:'Fisch',strokes:11},
+            ]
+          },
+          {
+            id:5, title:'數字', py:'Shùzì', de:'Zahlen', emoji:'🔢',
+            text:[
+              {zh:'一二三四五，上山打老虎。', py:'Yī èr sān sì wǔ，shàng shān dǎ lǎohǔ。'},
+              {zh:'你有幾個蘋果？', py:'Nǐ yǒu jǐ gè píngguǒ？'},
+              {zh:'我有六個。你要幾個？', py:'Wǒ yǒu liù gè。Nǐ yào jǐ gè？'},
+              {zh:'我要兩個，謝謝。', py:'Wǒ yào liǎng gè，xièxie。'},
+            ],
+            vocab:[
+              {char:'一',py:'yī',de:'eins (1)',strokes:1},
+              {char:'二',py:'èr',de:'zwei (2)',strokes:2},
+              {char:'三',py:'sān',de:'drei (3)',strokes:3},
+              {char:'十',py:'shí',de:'zehn (10)',strokes:2},
+              {char:'百',py:'bǎi',de:'hundert (100)',strokes:6},
+            ]
+          },
+          {
+            id:6, title:'動物', py:'Dòngwù', de:'Tiere', emoji:'🐾',
+            text:[
+              {zh:'你喜歡哪種動物？', py:'Nǐ xǐhuān nǎzhǒng dòngwù？'},
+              {zh:'我最喜歡小貓。牠很可愛。', py:'Wǒ zuì xǐhuān xiǎo māo。Tā hěn kě'ài。'},
+              {zh:'你家有養動物嗎？', py:'Nǐ jiā yǒu yǎng dòngwù ma？'},
+              {zh:'有，我家有一隻狗和兩隻貓。', py:'Yǒu，wǒ jiā yǒu yī zhī gǒu hé liǎng zhī māo。'},
+            ],
+            vocab:[
+              {char:'動',py:'dòng',de:'bewegen',strokes:11},
+              {char:'物',py:'wù',de:'Ding / Wesen',strokes:8},
+              {char:'貓',py:'māo',de:'Katze',strokes:11},
+              {char:'狗',py:'gǒu',de:'Hund',strokes:8},
+              {char:'愛',py:'ài',de:'lieben / Liebe',strokes:13},
+            ]
+          },
+          {
+            id:7, title:'我的一天', py:'Wǒ de yī tiān', de:'Mein Tag', emoji:'🌅',
+            text:[
+              {zh:'你每天幾點起床？', py:'Nǐ měitiān jǐ diǎn qǐchuáng？'},
+              {zh:'我七點起床，七點半吃早飯。', py:'Wǒ qī diǎn qǐchuáng，qī diǎn bàn chī zǎofàn。'},
+              {zh:'幾點去學校？', py:'Jǐ diǎn qù xuéxiào？'},
+              {zh:'八點去學校，下午四點放學。', py:'Bā diǎn qù xuéxiào，xiàwǔ sì diǎn fàngxué。'},
+            ],
+            vocab:[
+              {char:'每',py:'měi',de:'jeder / jedes',strokes:7},
+              {char:'點',py:'diǎn',de:'Punkt / Uhr',strokes:17},
+              {char:'起',py:'qǐ',de:'aufstehen',strokes:10},
+              {char:'床',py:'chuáng',de:'Bett',strokes:7},
+              {char:'半',py:'bàn',de:'halb',strokes:5},
+            ]
+          },
+          {
+            id:8, title:'顏色', py:'Yánsè', de:'Farben', emoji:'🌈',
+            text:[
+              {zh:'你喜歡什麼顏色？', py:'Nǐ xǐhuān shénme yánsè？'},
+              {zh:'我喜歡藍色和綠色。', py:'Wǒ xǐhuān lán sè hé lǜ sè。'},
+              {zh:'天空是什麼顏色？', py:'Tiānkōng shì shénme yánsè？'},
+              {zh:'晴天的天空是藍色的，白雲飄在天上。', py:'Qíngtiān de tiānkōng shì lán sè de，bái yún piāo zài tiān shàng。'},
+            ],
+            vocab:[
+              {char:'顏',py:'yán',de:'Farbe / Gesicht',strokes:18},
+              {char:'色',py:'sè',de:'Farbe',strokes:6},
+              {char:'紅',py:'hóng',de:'rot',strokes:9},
+              {char:'藍',py:'lán',de:'blau',strokes:20},
+              {char:'白',py:'bái',de:'weiß',strokes:5},
+            ]
+          },
+          {
+            id:9, title:'身體部位', py:'Shēntǐ bùwèi', de:'Körperteile', emoji:'🧍',
+            text:[
+              {zh:'你的頭痛嗎？', py:'Nǐ de tóu tòng ma？'},
+              {zh:'不痛，但是我的眼睛很累。', py:'Bù tòng，dànshì wǒ de yǎnjīng hěn lèi。'},
+              {zh:'你看電視看太久了！', py:'Nǐ kàn diànshì kàn tài jiǔ le！'},
+              {zh:'好，我去用手和腳做運動。', py:'Hǎo，wǒ qù yòng shǒu hé jiǎo zuò yùndòng。'},
+            ],
+            vocab:[
+              {char:'頭',py:'tóu',de:'Kopf',strokes:16},
+              {char:'眼',py:'yǎn',de:'Auge',strokes:11},
+              {char:'手',py:'shǒu',de:'Hand',strokes:4},
+              {char:'口',py:'kǒu',de:'Mund',strokes:3},
+              {char:'耳',py:'ěr',de:'Ohr',strokes:6},
+            ]
+          },
+          {
+            id:10, title:'器具和工具', py:'Qìjù hé gōngjù', de:'Geräte und Werkzeuge', emoji:'✏️',
+            text:[
+              {zh:'桌子上有什麼？', py:'Zhuōzi shàng yǒu shénme？'},
+              {zh:'有書、筆、紙和尺。', py:'Yǒu shū、bǐ、zhǐ hé chǐ。'},
+              {zh:'你用什麼寫字？', py:'Nǐ yòng shénme xiě zì？'},
+              {zh:'我用鉛筆寫字，用橡皮擦擦掉。', py:'Wǒ yòng qiānbǐ xiě zì，yòng xiàngpí cā cādiào。'},
+            ],
+            vocab:[
+              {char:'書',py:'shū',de:'Buch',strokes:10},
+              {char:'筆',py:'bǐ',de:'Stift / schreiben',strokes:12},
+              {char:'紙',py:'zhǐ',de:'Papier',strokes:10},
+              {char:'寫',py:'xiě',de:'schreiben',strokes:15},
+              {char:'字',py:'zì',de:'Schriftzeichen',strokes:6},
+            ]
+          },
+          {
+            id:11, title:'我喜歡的課', py:'Wǒ xǐhuān de kè', de:'Mein Lieblingsfach', emoji:'📚',
+            text:[
+              {zh:'你最喜歡上什麼課？', py:'Nǐ zuì xǐhuān shàng shénme kè？'},
+              {zh:'我最喜歡上美術課和體育課。', py:'Wǒ zuì xǐhuān shàng měishù kè hé tǐyù kè。'},
+              {zh:'你不喜歡數學課嗎？', py:'Nǐ bù xǐhuān shùxué kè ma？'},
+              {zh:'數學課有點難，但是我也喜歡。', py:'Shùxué kè yǒudiǎn nán，dànshì wǒ yě xǐhuān。'},
+            ],
+            vocab:[
+              {char:'課',py:'kè',de:'Unterricht / Lektion',strokes:15},
+              {char:'美',py:'měi',de:'schön',strokes:9},
+              {char:'術',py:'shù',de:'Kunst / Technik',strokes:11},
+              {char:'體',py:'tǐ',de:'Körper / Sport',strokes:23},
+              {char:'難',py:'nán',de:'schwierig',strokes:19},
+            ]
+          },
+          {
+            id:12, title:'節日', py:'Jiérì', de:'Feiertage', emoji:'🎉',
+            text:[
+              {zh:'你最喜歡哪個節日？', py:'Nǐ zuì xǐhuān nǎge jiérì？'},
+              {zh:'我最喜歡中秋節，因為可以吃月餅、賞月。', py:'Wǒ zuì xǐhuān Zhōngqiū Jié，yīnwèi kěyǐ chī yuèbǐng、shǎng yuè。'},
+              {zh:'在德國有什麼節日？', py:'Zài Déguó yǒu shénme jiérì？'},
+              {zh:'德國有聖誕節、復活節，還有很多地方節慶。', py:'Déguó yǒu Shèngdànjié、Fùhuójié，hái yǒu hěn duō dìfāng jiéqìng。'},
+            ],
+            vocab:[
+              {char:'節',py:'jié',de:'Festival / Knoten',strokes:15},
+              {char:'日',py:'rì',de:'Sonne / Tag',strokes:4},
+              {char:'月',py:'yuè',de:'Mond / Monat',strokes:4},
+              {char:'因',py:'yīn',de:'weil / Ursache',strokes:6},
+              {char:'為',py:'wèi',de:'für / wegen',strokes:9},
+            ]
+          },
+        ]
+      },
+      {
+        id: 'b2', name: '第二冊', nameDE: 'Band 2', emoji: '🌸',
+        lessons: [
+          {
+            id:1, title:'學校的一天', py:'Xuéxiào de yī tiān', de:'Ein Tag in der Schule', emoji:'🏫',
+            text:[
+              {zh:'你今天上了哪些課？', py:'Nǐ jīntiān shàng le nǎxiē kè？'},
+              {zh:'上午上了國語、數學和自然。', py:'Shàngwǔ shàng le guóyǔ、shùxué hé zìrán。'},
+              {zh:'下午呢？', py:'Xiàwǔ ne？'},
+              {zh:'下午上了音樂和體育，很開心！', py:'Xiàwǔ shàng le yīnyuè hé tǐyù，hěn kāixīn！'},
+            ],
+            vocab:[
+              {char:'上',py:'shàng',de:'oben / gehen',strokes:3},
+              {char:'午',py:'wǔ',de:'Mittag',strokes:4},
+              {char:'下',py:'xià',de:'unten / beenden',strokes:3},
+              {char:'音',py:'yīn',de:'Klang / Ton',strokes:9},
+              {char:'開',py:'kāi',de:'öffnen / beginnen',strokes:12},
+            ]
+          },
+          {
+            id:2, title:'我學過書法', py:'Wǒ xuéguò shūfǎ', de:'Ich habe Kalligraphie gelernt', emoji:'🖌️',
+            text:[
+              {zh:'你會寫毛筆字嗎？', py:'Nǐ huì xiě máobǐ zì ma？'},
+              {zh:'會，我學過兩年書法。', py:'Huì，wǒ xuéguò liǎng nián shūfǎ。'},
+              {zh:'書法真是中國的藝術！', py:'Shūfǎ zhēn shì Zhōngguó de yìshù！'},
+              {zh:'對，練習書法讓我的字寫得更好看。', py:'Duì，liànxí shūfǎ ràng wǒ de zì xiě de gèng hǎokàn。'},
+            ],
+            vocab:[
+              {char:'書',py:'shū',de:'Buch / schreiben',strokes:10},
+              {char:'法',py:'fǎ',de:'Methode / Gesetz',strokes:8},
+              {char:'寫',py:'xiě',de:'schreiben',strokes:15},
+              {char:'練',py:'liàn',de:'üben',strokes:15},
+              {char:'習',py:'xí',de:'üben / lernen',strokes:11},
+            ]
+          },
+          {
+            id:3, title:'我的志願', py:'Wǒ de zhìyuàn', de:'Mein Berufswunsch', emoji:'🌟',
+            text:[
+              {zh:'你長大以後想做什麼？', py:'Nǐ zhǎngdà yǐhòu xiǎng zuò shénme？'},
+              {zh:'我想當老師，因為我喜歡和小朋友在一起。', py:'Wǒ xiǎng dāng lǎoshī，yīnwèi wǒ xǐhuān hé xiǎopéngyǒu zài yīqǐ。'},
+              {zh:'老師是很有意義的工作。', py:'Lǎoshī shì hěn yǒu yìyì de gōngzuò。'},
+              {zh:'我也想當科學家，研究新的東西。', py:'Wǒ yě xiǎng dāng kēxuéjiā，yánjiū xīn de dōngxi。'},
+            ],
+            vocab:[
+              {char:'志',py:'zhì',de:'Wille / Ziel',strokes:7},
+              {char:'願',py:'yuàn',de:'wünschen / Wunsch',strokes:19},
+              {char:'當',py:'dāng',de:'sein / werden',strokes:13},
+              {char:'因',py:'yīn',de:'weil / Ursache',strokes:6},
+              {char:'為',py:'wèi',de:'für / wegen',strokes:9},
+            ]
+          },
+          {
+            id:4, title:'旅遊', py:'Lǚyóu', de:'Reisen', emoji:'✈️',
+            text:[
+              {zh:'你去過哪些地方旅遊？', py:'Nǐ qùguò nǎxiē dìfāng lǚyóu？'},
+              {zh:'我去過日本、韓國和泰國。', py:'Wǒ qùguò Rìběn、Hánguó hé Tàiguó。'},
+              {zh:'你最喜歡哪個地方？', py:'Nǐ zuì xǐhuān nǎge dìfāng？'},
+              {zh:'我最喜歡日本，那裡的食物很好吃，風景也很美。', py:'Wǒ zuì xǐhuān Rìběn，nàlǐ de shíwù hěn hǎochī，fēngjǐng yě hěn měi。'},
+            ],
+            vocab:[
+              {char:'旅',py:'lǚ',de:'reisen',strokes:10},
+              {char:'遊',py:'yóu',de:'reisen / spielen',strokes:12},
+              {char:'地',py:'dì',de:'Erde / Ort',strokes:6},
+              {char:'方',py:'fāng',de:'Richtung / Ort',strokes:4},
+              {char:'美',py:'měi',de:'schön',strokes:9},
+            ]
+          },
+          {
+            id:5, title:'四季', py:'Sìjì', de:'Die vier Jahreszeiten', emoji:'🌸❄️',
+            text:[
+              {zh:'你最喜歡哪個季節？為什麼？', py:'Nǐ zuì xǐhuān nǎge jìjié？Wèishénme？'},
+              {zh:'我最喜歡秋天，因為天氣涼快，可以看紅葉。', py:'Wǒ zuì xǐhuān qiūtiān，yīnwèi tiānqì liángkuài，kěyǐ kàn hóngyè。'},
+              {zh:'德國的冬天很冷，會下雪。', py:'Déguó de dōngtiān hěn lěng，huì xià xuě。'},
+              {zh:'我喜歡下雪！可以堆雪人、打雪仗。', py:'Wǒ xǐhuān xià xuě！Kěyǐ duī xuěrén、dǎ xuězhàng。'},
+            ],
+            vocab:[
+              {char:'春',py:'chūn',de:'Frühling',strokes:9},
+              {char:'夏',py:'xià',de:'Sommer',strokes:10},
+              {char:'秋',py:'qiū',de:'Herbst',strokes:9},
+              {char:'冬',py:'dōng',de:'Winter',strokes:5},
+              {char:'雪',py:'xuě',de:'Schnee',strokes:11},
+            ]
+          },
+          {
+            id:6, title:'中華文化', py:'Zhōnghuá wénhuà', de:'Chinesische Kultur', emoji:'🏮',
+            text:[
+              {zh:'你了解中華文化嗎？', py:'Nǐ liǎojiě zhōnghuá wénhuà ma？'},
+              {zh:'我知道春節、中秋節和端午節。', py:'Wǒ zhīdào Chūnjié、Zhōngqiūjié hé Duānwǔjié。'},
+              {zh:'端午節為什麼吃粽子？', py:'Duānwǔjié wèishénme chī zòngzi？'},
+              {zh:'是為了紀念愛國詩人屈原。', py:'Shì wèile jìniàn àiguó shīrén Qū Yuán。'},
+            ],
+            vocab:[
+              {char:'文',py:'wén',de:'Schrift / Kultur',strokes:4},
+              {char:'化',py:'huà',de:'verwandeln / Kultur',strokes:4},
+              {char:'中',py:'zhōng',de:'Mitte / China',strokes:4},
+              {char:'國',py:'guó',de:'Land / Staat',strokes:11},
+              {char:'知',py:'zhī',de:'wissen',strokes:8},
+            ]
+          },
+        ]
+      }
+    ]
+  }
+];
+ 
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let state = {
+  seriesId: null,
+  bookId: null,
+  lessonId: null,
+  expandedVocabIdx: null,
+  hwWriter: null,
+};
+ 
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  renderSeriesPills();
+}
+ 
+// ═══════════════════════════════════════════════════════
+//  LEVEL 1: Series
+// ═══════════════════════════════════════════════════════
+function renderSeriesPills() {
+  const row = document.getElementById('series-row');
+  row.innerHTML = SERIES.map(s => `
+    <button class="series-pill ${state.seriesId===s.id?'active':''}"
+      onclick="selectSeries('${s.id}')">
+      ${s.emoji} ${s.name}
+    </button>
+  `).join('');
+}
+ 
+function selectSeries(id) {
+  state.seriesId = id;
+  state.bookId = null;
+  state.lessonId = null;
+  state.expandedVocabIdx = null;
+  renderSeriesPills();
+  renderBookTabs();
+  renderLessonStrip();
+  showWelcome();
+}
+ 
+// ═══════════════════════════════════════════════════════
+//  LEVEL 2: Books
+// ═══════════════════════════════════════════════════════
+function renderBookTabs() {
+  const tabs = document.getElementById('book-tabs');
+  if (!state.seriesId) { tabs.innerHTML=''; return; }
+  const series = SERIES.find(s=>s.id===state.seriesId);
+  tabs.innerHTML = series.books.map(b => `
+    <button class="book-tab ${state.bookId===b.id?'active':''}"
+      onclick="selectBook('${b.id}')">
+      <span class="t-emoji">${b.emoji}</span>
+      ${b.name}
+      <span class="t-sub">${b.nameDE}</span>
+    </button>
+  `).join('');
+}
+ 
+function selectBook(id) {
+  state.bookId = id;
+  state.lessonId = null;
+  state.expandedVocabIdx = null;
+  renderBookTabs();
+  renderLessonStrip();
+  showWelcome();
+}
+ 
+// ═══════════════════════════════════════════════════════
+//  LEVEL 3: Lessons
+// ═══════════════════════════════════════════════════════
+const LESSON_NUMS = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+ 
+function renderLessonStrip() {
+  const strip = document.getElementById('lesson-strip');
+  if (!state.seriesId || !state.bookId) {
+    strip.innerHTML = '<div class="lesson-strip-label">請先選擇系列和冊數 · Bitte wähle eine Serie und ein Buch</div>';
+    return;
+  }
+  const series = SERIES.find(s=>s.id===state.seriesId);
+  const book = series.books.find(b=>b.id===state.bookId);
+  strip.innerHTML = `
+    <div class="lesson-strip-label">課程 · Lektionen</div>
+    ${book.lessons.map(l=>`
+      <button class="lesson-btn ${state.lessonId===l.id?'active':''}"
+        onclick="selectLesson(${l.id})">
+        <span class="l-num">第${LESSON_NUMS[l.id-1]}課</span>
+        <span style="color:inherit;opacity:.7;font-size:11px;">${l.de.length>12?l.de.substring(0,12)+'…':l.de}</span>
+      </button>
+    `).join('')}
+  `;
+}
+ 
+function selectLesson(id) {
+  state.lessonId = id;
+  state.expandedVocabIdx = null;
+  destroyHanziWriter();
+  renderLessonStrip();
+  renderLesson();
+}
+ 
+// ═══════════════════════════════════════════════════════
+//  LESSON RENDER
+// ═══════════════════════════════════════════════════════
+function showWelcome() {
+  document.getElementById('content-area').innerHTML = `
+    <div class="welcome">
+      <div class="w-emoji">✏️</div>
+      <h2>${state.bookId ? 'Wähle eine Lektion!' : 'Wähle ein Buch!'}</h2>
+      <p>${state.bookId ? '選一課開始學習 😊<br>Klicke oben auf eine Lektion.' : '請選擇冊數 · Bitte wähle ein Buch aus.'}</p>
+    </div>
+  `;
+}
+ 
+function renderLesson() {
+  const series = SERIES.find(s=>s.id===state.seriesId);
+  const book = series.books.find(b=>b.id===state.bookId);
+  const lesson = book.lessons.find(l=>l.id===state.lessonId);
+  const ca = document.getElementById('content-area');
+ 
+  const colors = ['vc-c1','vc-c2','vc-c3','vc-c4','vc-c5','vc-c6','vc-c7','vc-c8'];
+ 
+  ca.innerHTML = `
+    <div class="lesson-hd">
+      <div class="lesson-badge">${lesson.id}</div>
+      <div class="lesson-hd-text">
+        <h2>${lesson.title}</h2>
+        <div class="py">${lesson.py}</div>
+        <div class="de">${lesson.de}</div>
+      </div>
+    </div>
+ 
+    <div class="lesson-illo">
+      ${lesson.emoji}
+      <p>課文插圖 · Illustration zur Lektion</p>
+    </div>
+ 
+    <div class="sec-label">📖 課文 · Lektionstext</div>
+    <div class="lesson-text-box">
+      ${lesson.text.map(t=>`
+        <div class="text-line">
+          <div class="text-zh">${t.zh}</div>
+          <div class="text-py">${t.py}</div>
+        </div>
+      `).join('')}
+    </div>
+ 
+    <div class="sec-label">✏️ 生字 · Neue Zeichen &amp; Strichreihenfolge</div>
+    <div class="vocab-grid" id="vocab-grid">
+      ${lesson.vocab.map((v,i)=>`
+        <div class="vocab-card ${colors[i%colors.length]}"
+          id="vc-${i}" onclick="toggleVocab(${i})"
+          style="animation-delay:${i*.06}s">
+          <div class="vc-char">${v.char}</div>
+          <div class="vc-py">${v.py}</div>
+          <div class="vc-de">${v.de}</div>
+          <div class="vc-hint">👆 Tippen für Strichreihenfolge</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+ 
+// ═══════════════════════════════════════════════════════
+//  VOCAB EXPAND + HANZI WRITER
+// ═══════════════════════════════════════════════════════
+function destroyHanziWriter() {
+  if (state.hwWriter) {
+    try { state.hwWriter = null; } catch(e){}
+  }
+  const old = document.getElementById('hw-container');
+  if (old) old.innerHTML = '';
+}
+ 
+function toggleVocab(idx) {
+  destroyHanziWriter();
+ 
+  if (state.expandedVocabIdx === idx) {
+    state.expandedVocabIdx = null;
+    renderLesson();
+    return;
+  }
+ 
+  state.expandedVocabIdx = idx;
+ 
+  const series = SERIES.find(s=>s.id===state.seriesId);
+  const book = series.books.find(b=>b.id===state.bookId);
+  const lesson = book.lessons.find(l=>l.id===state.lessonId);
+  const vocab = lesson.vocab[idx];
+  const colors = ['vc-c1','vc-c2','vc-c3','vc-c4','vc-c5','vc-c6','vc-c7','vc-c8'];
+ 
+  // Rebuild grid with expanded card
+  const grid = document.getElementById('vocab-grid');
+ 
+  // Build cards HTML, replacing the target card
+  let cardsHTML = lesson.vocab.map((v,i) => {
+    if (i === idx) return buildExpandedCard(vocab, idx, colors[i%colors.length]);
+    return `
+      <div class="vocab-card ${colors[i%colors.length]}"
+        id="vc-${i}" onclick="toggleVocab(${i})"
+        style="animation-delay:${i*.06}s">
+        <div class="vc-char">${v.char}</div>
+        <div class="vc-py">${v.py}</div>
+        <div class="vc-de">${v.de}</div>
+        <div class="vc-hint">👆 Tippen für Strichreihenfolge</div>
+      </div>
+    `;
+  }).join('');
+ 
+  grid.innerHTML = cardsHTML;
+ 
+  // Initialize HanziWriter after DOM update
+  setTimeout(() => initHanziWriter(vocab.char, idx), 50);
+}
+ 
+function buildExpandedCard(vocab, idx, colorClass) {
+  // Build practice cells: 1 ghost + 7 blank
+  let practiceCells = `
+    <div class="practice-cell">
+      <span class="practice-guide-char">${vocab.char}</span>
+    </div>
+  `;
+  for(let i=0;i<7;i++) practiceCells += `<div class="practice-cell"></div>`;
+ 
+  return `
+    <div class="vocab-expanded ${colorClass}" id="vc-${idx}">
+      <div class="ve-top">
+        <div class="ve-char-big">${vocab.char}</div>
+        <div class="ve-meta">
+          <div class="ve-py">${vocab.py}</div>
+          <div class="ve-de">${vocab.de}</div>
+          <div class="ve-strokes-label">約 ${vocab.strokes} 筆 · ca. ${vocab.strokes} Striche</div>
+        </div>
+      </div>
+ 
+      <div class="sec-label" style="margin-bottom:10px;">🖊️ 筆順動畫 · Strichreihenfolge-Animation</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px;">
+        <div id="hw-container" style="position:relative;">
+          <!-- HanziWriter renders here -->
+          <div style="width:160px;height:160px;background:#f5f3f0;border-radius:12px;
+            border:1.5px solid #e2ddd8;display:flex;align-items:center;justify-content:center;">
+            <span style="color:#bbb;font-size:12px;">載入中…</span>
+          </div>
+        </div>
+        <div>
+          <div class="ve-controls">
+            <button class="btn-sm btn-play" onclick="playAnimation()">▶ Strichreihenfolge abspielen</button>
+            <button class="btn-sm btn-quiz" onclick="startQuiz()">✍️ Schreiben üben</button>
+          </div>
+          <div style="font-size:11px;color:#888;line-height:1.6;max-width:220px;">
+            🔴 Klicke <strong>Abspielen</strong> um die Strichreihenfolge zu sehen.<br>
+            ✍️ Klicke <strong>Üben</strong> um selbst zu schreiben.<br>
+            <span style="color:#3a6fd8;">Jeder Strich wird separat in der richtigen Reihenfolge animiert.</span>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="practice-section">
+        <div class="practice-label">✏️ Schreiben üben · 寫字練習格</div>
+        <div class="practice-row">${practiceCells}</div>
+        <div class="practice-note">💡 Das erste Feld zeigt das Zeichen als Vorlage (beschreibe die anderen Felder auf Papier)</div>
+      </div>
+ 
+      <div style="margin-top:16px;">
+        <button class="btn-sm btn-close" style="border:1.5px solid #e2ddd8;"
+          onclick="toggleVocab(${idx})">✕ Schließen</button>
+      </div>
+    </div>
+  `;
+}
+ 
+function initHanziWriter(char, idx) {
+  const container = document.getElementById('hw-container');
+  if (!container) return;
+ 
+  container.innerHTML = '';
+ 
+  try {
+    const writer = HanziWriter.create(container, char, {
+      width: 160,
+      height: 160,
+      padding: 12,
+      strokeColor: '#1c2033',
+      radicalColor: '#d9432a',
+      highlightColor: '#3a6fd8',
+      outlineColor: '#e2ddd8',
+      drawingColor: '#1c2033',
+      drawingWidth: 4,
+      strokeAnimationSpeed: 1,
+      delayBetweenStrokes: 300,
+      showCharacter: true,
+      showOutline: true,
+      // Grid lines (田字格)
+      showHintAfterMisses: 3,
+      rendererType: 'svg',
+      onLoadCharDataSuccess: function() {
+        // character loaded
+      },
+      onLoadCharDataError: function(reason) {
+        container.innerHTML = `
+          <div style="width:160px;height:160px;background:#fff5f5;border-radius:12px;
+            border:1.5px solid #f5c0b8;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;gap:8px;padding:12px;text-align:center;">
+            <span style="font-size:56px;font-family:'Noto Sans TC',sans-serif;">${char}</span>
+            <span style="font-size:10px;color:#d9432a;">筆順資料暫無 · Strichdaten nicht verfügbar</span>
+          </div>
+        `;
+      }
+    });
+ 
+    // Add grid lines via SVG overlay
+    addGridLines(container, 160);
+    state.hwWriter = writer;
+ 
+  } catch(e) {
+    container.innerHTML = `
+      <div style="width:160px;height:160px;background:#f5f3f0;border-radius:12px;
+        display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:64px;font-family:'Noto Sans TC',sans-serif;">${char}</span>
+      </div>
+    `;
+  }
+}
+ 
+function addGridLines(container, size) {
+  // Find the SVG inside HanziWriter container and add grid lines
+  setTimeout(() => {
+    const svg = container.querySelector('svg');
+    if (!svg) return;
+    const ns = 'http://www.w3.org/2000/svg';
+ 
+    // Horizontal center
+    const h = document.createElementNS(ns, 'line');
+    h.setAttribute('x1','0'); h.setAttribute('y1', size/2);
+    h.setAttribute('x2', size); h.setAttribute('y2', size/2);
+    h.setAttribute('stroke','rgba(58,111,216,0.2)');
+    h.setAttribute('stroke-width','1');
+    h.setAttribute('stroke-dasharray','4,4');
+    svg.insertBefore(h, svg.firstChild);
+ 
+    // Vertical center
+    const v = document.createElementNS(ns, 'line');
+    v.setAttribute('x1', size/2); v.setAttribute('y1','0');
+    v.setAttribute('x2', size/2); v.setAttribute('y2', size);
+    v.setAttribute('stroke','rgba(58,111,216,0.2)');
+    v.setAttribute('stroke-width','1');
+    v.setAttribute('stroke-dasharray','4,4');
+    svg.insertBefore(v, svg.firstChild);
+ 
+    // Border
+    const rect = document.createElementNS(ns, 'rect');
+    rect.setAttribute('x','0'); rect.setAttribute('y','0');
+    rect.setAttribute('width', size); rect.setAttribute('height', size);
+    rect.setAttribute('fill','none');
+    rect.setAttribute('stroke','#e2ddd8');
+    rect.setAttribute('stroke-width','1.5');
+    rect.setAttribute('rx','12');
+    svg.insertBefore(rect, svg.firstChild);
+  }, 100);
+}
+ 
+function playAnimation() {
+  if (!state.hwWriter) return;
+  state.hwWriter.animateCharacter({
+    onComplete: function() { /* done */ }
+  });
+}
+ 
+function startQuiz() {
+  if (!state.hwWriter) return;
+  state.hwWriter.quiz({
+    onMistake: function(strokeData) {
+      // Flash red on mistake
+    },
+    onCorrectStroke: function(strokeData) {
+      // Progress feedback
+    },
+    onComplete: function(summaryData) {
+      alert(`🎉 Prima! Du hast alle ${summaryData.totalMistakes===0?'Striche ohne Fehler':'Striche'} geschrieben!\n✨ Fehler: ${summaryData.totalMistakes}`);
+    }
+  });
+}
+ 
+// ═══════════════════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>

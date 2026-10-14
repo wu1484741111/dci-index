@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suomi · Finnish Learning · 芬蘭語</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+TC:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ee;--surf:#fff;--surf2:#f0ece3;--bdr:#d8d0c0;
+  --tx:#2a2318;--tx2:#6b5e4a;--tx3:#9e8e78;
+  --acc:#8b3a2a;--fi:#1a3d5c;--en:#6b2d0e;--de:#2d5a1e;--zh:#5a1e4a;
+  --pon:#2a2318;--ptx:#f7f4ee;--pbg:#e8e0d0;--poff:#6b5e4a;
+  --sd:0 2px 12px rgba(42,35,24,.08);--r:11px;--t:.18s ease;
+}
+[data-theme=dark]{
+  --bg:#141210;--surf:#1e1b17;--surf2:#252118;--bdr:#3a3328;
+  --tx:#e8e0d0;--tx2:#b0a090;--tx3:#6e6050;--acc:#d4705a;
+  --fi:#7ab8e0;--en:#e0946a;--de:#8ecf72;--zh:#d68ecf;
+  --pon:#e8e0d0;--ptx:#1e1b17;--pbg:#2e2a22;--poff:#9e8e78;
+  --sd:0 2px 16px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--bg);color:var(--tx);min-height:100vh;transition:background var(--t),color var(--t)}
+
+/* ── TOP BAR ── */
+#topbar{display:flex;align-items:center;gap:7px;padding:8px 14px;border-bottom:1px solid var(--bdr);background:var(--surf);position:sticky;top:0;z-index:300;flex-wrap:wrap}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;white-space:nowrap}.logo b{color:var(--acc)}
+.sp{flex:1;min-width:4px}
+.pill{display:flex;background:var(--pbg);border-radius:999px;padding:2px}
+.pill button{border:none;background:none;color:var(--poff);border-radius:999px;padding:3px 10px;font-size:.71rem;font-family:inherit;cursor:pointer;transition:all var(--t);white-space:nowrap}
+.pill button.on{background:var(--pon);color:var(--ptx)}
+.lb{border:1.5px solid var(--bdr);background:var(--surf2);border-radius:5px;padding:3px 8px;font-size:.7rem;cursor:pointer;color:var(--tx2);transition:all var(--t)}
+.lb.on{background:var(--pon);color:var(--ptx);border-color:var(--pon)}
+.lb.de.on{background:var(--de);border-color:var(--de);color:#fff}
+.lb.zh.on{background:var(--zh);border-color:var(--zh);color:#fff}
+.iconbtn{width:28px;height:28px;border:1.5px solid var(--bdr);background:var(--surf2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+#ttsbadge{font-size:.63rem;padding:2px 7px;border:1px solid var(--bdr);border-radius:999px;color:var(--tx3);background:var(--surf2);white-space:nowrap;transition:all .3s;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+#ttsbadge.ok{color:var(--de);border-color:var(--de)}
+#ttsbadge.busy{color:var(--fi);border-color:var(--fi);animation:blink 1s infinite}
+#ttsbadge.err{color:#c44;border-color:#c44}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* ── SETTINGS MODAL ── */
+#sOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center}
+#sOverlay.open{display:flex}
+#sBox{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:22px;width:min(420px,92vw);box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.stit{font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:16px}
+.srow{margin-bottom:13px}
+.slbl{font-size:.73rem;color:var(--tx2);letter-spacing:.04em;margin-bottom:4px;display:block}
+.sinput{width:100%;padding:7px 10px;border:1.5px solid var(--bdr);border-radius:7px;background:var(--surf2);color:var(--tx);font-family:inherit;font-size:.82rem;outline:none;transition:border-color var(--t)}
+.sinput:focus{border-color:var(--fi)}
+.shint{font-size:.67rem;color:var(--tx3);margin-top:3px;line-height:1.4}
+.shint a{color:var(--fi)}
+.sbtns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.bcnl{border:1.5px solid var(--bdr);background:none;color:var(--tx2);border-radius:7px;padding:6px 16px;font-family:inherit;font-size:.78rem;cursor:pointer}
+.bsav{border:none;background:var(--fi);color:#fff;border-radius:7px;padding:6px 16px;font-family:inherit;font-size:.78rem;cursor:pointer}
+.epill{display:flex;background:var(--pbg);border-radius:999px;padding:2px;display:inline-flex}
+.epill button{border:none;background:none;color:var(--poff);border-radius:999px;padding:3px 10px;font-size:.67rem;font-family:inherit;cursor:pointer;transition:all var(--t)}
+.epill button.on{background:var(--pon);color:var(--ptx)}
+
+/* ── NAV BAR: dropdowns ── */
+#navbar{display:flex;align-items:stretch;background:var(--surf);border-bottom:1px solid var(--bdr);padding:0 10px;position:relative;z-index:250;overflow:visible}
+#navbar::-webkit-scrollbar{display:none}
+.ddwrap{position:relative;overflow:visible}
+.ddtrig{border:none;background:none;color:var(--tx3);font-family:'Cormorant Garamond',serif;font-size:.95rem;padding:8px 13px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all var(--t);display:flex;align-items:center;gap:4px}
+.ddtrig:hover,.ddtrig.open,.ddtrig.active{color:var(--tx)}
+.ddtrig.active{border-bottom-color:var(--acc);font-weight:600}
+.ddtrig .arr{font-size:.6rem;opacity:.5;transition:transform var(--t)}
+.ddtrig.open .arr{transform:rotate(180deg)}
+.ddmenu{display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:200px;background:var(--surf);border:1px solid var(--bdr);border-radius:8px;box-shadow:0 6px 24px rgba(42,35,24,.18);z-index:9999;padding:4px 0}
+.ddmenu.open{display:block}
+.dditem{display:block;width:100%;border:none;background:none;text-align:left;padding:8px 14px;font-family:inherit;font-size:.82rem;color:var(--tx2);cursor:pointer;transition:background var(--t);white-space:nowrap}
+.dditem:hover{background:var(--surf2);color:var(--tx)}
+.dditem.on{color:var(--fi);font-weight:500}
+.dditem.on::before{content:'✓ ';font-size:.75rem}
+.ddiv{height:1px;background:var(--bdr);margin:3px 0}
+
+/* ── PAGER ── */
+#pager{display:flex;align-items:center;gap:8px;padding:8px 14px 0;overflow-x:auto;scrollbar-width:none}
+#pager::-webkit-scrollbar{display:none}
+.ptab{border:1px solid var(--bdr);background:var(--surf);border-radius:999px;color:var(--tx3);font-size:.7rem;font-family:inherit;padding:3px 12px;cursor:pointer;transition:all var(--t);white-space:nowrap}
+.ptab.on{background:var(--pon);color:var(--ptx);border-color:var(--pon)}
+.padd{border:1px dashed var(--bdr);background:none;border-radius:999px;color:var(--tx3);font-size:.7rem;font-family:inherit;padding:3px 10px;cursor:pointer;transition:all var(--t);opacity:.6}
+.padd:hover{opacity:1;border-color:var(--fi);color:var(--fi)}
+
+/* ── MAIN ── */
+main{max-width:860px;margin:0 auto;padding:12px 14px 60px}
+.shdr{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;font-style:italic}
+.ssub{font-size:.72rem;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.seclbl{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin:11px 0 4px 2px}
+
+.sv{display:flex;flex-direction:column;gap:7px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);padding:11px 13px;box-shadow:var(--sd)}
+.rfi{font-size:1.04rem;color:var(--fi);line-height:1.5;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ren{font-size:.83rem;color:var(--en);margin-top:3px;font-style:italic;line-height:1.5;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rde{font-size:.82rem;color:var(--de);margin-top:3px;line-height:1.5;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rzh{font-family:'Noto Sans TC',serif;font-size:.82rem;color:var(--zh);margin-top:3px;line-height:1.6;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.llbl{font-size:.59rem;text-transform:uppercase;letter-spacing:.08em;opacity:.5;white-space:nowrap;font-style:normal;flex-shrink:0}
+.refline{font-size:.64rem;color:var(--tx3);margin-top:3px}
+
+.wv{display:flex;flex-direction:column;gap:12px}
+.wblk{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:var(--sd)}
+.wbhdr{padding:8px 13px;border-bottom:1px solid var(--bdr);background:var(--surf2);display:flex;align-items:center;gap:8px}
+.wrow{display:grid;grid-template-columns:1.4fr 1.4fr 1.4fr 1.4fr 26px;align-items:start;gap:3px;padding:5px 13px;border-bottom:1px solid var(--bdr);transition:background var(--t)}
+.wrow:last-child{border-bottom:none}.wrow:hover{background:var(--surf2)}
+.whdr{font-size:.59rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);padding-bottom:3px}
+.wfi{font-size:.94rem;color:var(--fi);line-height:1.3}.wpos{font-size:.57rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em}
+.wen2{font-size:.8rem;color:var(--en);font-style:italic;line-height:1.3}
+.wde2{font-size:.8rem;color:var(--de);line-height:1.3}
+.wzh2{font-family:'Noto Sans TC',serif;font-size:.81rem;color:var(--zh);line-height:1.4}
+.nowords{padding:24px;text-align:center;color:var(--tx3);font-style:italic;font-size:.86rem}
+
+.tb{background:none;border:1px solid var(--bdr);border-radius:4px;color:var(--tx3);font-size:.67rem;padding:1px 5px;cursor:pointer;display:inline-flex;align-items:center;gap:2px;transition:all var(--t);white-space:nowrap;user-select:none;flex-shrink:0}
+.tb:hover{background:var(--surf2);color:var(--tx);border-color:var(--tx3)}
+.tb.fi{border-color:color-mix(in srgb,var(--fi) 45%,var(--bdr));color:var(--fi)}
+.tb.fi:hover{background:var(--fi);color:#fff;border-color:var(--fi)}
+.tb.speaking{animation:pulse .85s ease-in-out infinite;border-color:var(--acc);color:var(--acc)}
+.tb.spin{opacity:.5;pointer-events:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.credits{margin-top:24px;padding:10px 13px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--surf);font-size:.69rem;color:var(--tx3);line-height:1.7}
+.credits b{color:var(--tx2)}
+.hidden{display:none!important}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- CORS banner — shown only when opened as file:// with ElevenLabs selected -->
+<div id="cors-banner" style="display:none;background:#8b3a2a;color:#fff;font-size:.82rem;padding:10px 16px;line-height:1.6;position:relative">
+  <strong>⚠️ ElevenLabs needs a local server</strong> — browsers block API calls from <code>file://</code> for security.<br>
+  <strong>Fix in 10 seconds:</strong>
+  1. Open Terminal &nbsp;
+  2. <code>cd</code> to this file's folder &nbsp;
+  3. Run: <code style="background:rgba(255,255,255,.2);padding:1px 6px;border-radius:3px">node proxy.js</code> (in the same folder) &nbsp;
+  4. Open <code>http://localhost:3000</code> in Chrome<br>
+  <small style="opacity:.75">proxy.js is included alongside this HTML file. Or switch to V2 · Piper WASM (no server needed) via ⚙️.</small>
+  <button onclick="this.parentElement.style.display='none'" style="position:absolute;top:8px;right:10px;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer">✕</button>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="sOverlay" onclick="if(event.target===this)closeSett()">
+  <div id="sBox">
+    <div class="stit">⚙️ TTS Settings</div>
+    <div class="srow">
+      <span class="slbl">Finnish TTS Engine</span>
+      <div class="epill">
+        <button id="ev2" onclick="setEng('v2')" class="on">V2 · Piper (free · offline · no server needed)</button>
+        <button id="ev3" onclick="setEng('v3')">V3 · ElevenLabs (needs Node)</button>
+      </div>
+    </div>
+    <div id="elrow" class="srow">
+      <span class="slbl">ElevenLabs API Key</span>
+      <input class="sinput" id="elkey" type="password" placeholder="sk_…" autocomplete="off">
+      <div class="shint">Requires <code>node proxy.js</code> running in the same folder. Get key at <a href="https://elevenlabs.io/app/developers/api-keys" target="_blank">elevenlabs.io → API Keys</a>.</div>
+    </div>
+    <div id="elvoicerow" class="srow">
+      <span class="slbl">Voice ID <span style="opacity:.55">(optional — leave blank for default)</span></span>
+      <input class="sinput" id="elvoice" type="text" placeholder="JBFqnCBsd6RMkjVDRZzb">
+      <div class="shint">Find voices at <a href="https://elevenlabs.io/voice-library" target="_blank">elevenlabs.io/voice-library</a></div>
+    </div>
+    <div class="sbtns">
+      <button class="bcnl" onclick="closeSett()">Cancel</button>
+      <button class="bsav" onclick="saveSett()">Save & Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo">Suomi · <b>芬蘭語</b></div>
+  <div class="sp"></div>
+  <div class="pill">
+    <button id="bWord" onclick="setMode('word')">逐字 Word</button>
+    <button id="bSent" onclick="setMode('sentence')" class="on">整句 Sentence</button>
+  </div>
+  <button class="lb de on" id="tDE" onclick="toggleLang('de')">DE</button>
+  <button class="lb zh on" id="tZH" onclick="toggleLang('zh')">繁</button>
+  <span id="ttsbadge" class="ok">🔊 ElevenLabs</span>
+  <button class="iconbtn" onclick="openSett()" title="Settings">⚙️</button>
+  <button class="iconbtn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</div>
+
+<!-- DROPDOWN NAV -->
+<div id="navbar"></div>
+
+<!-- PAGE TABS -->
+<div id="pager"></div>
+
+<main id="mainc"></main>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SETTINGS & STORAGE
+══════════════════════════════════════════════════════════ */
+let EL_KEY   = localStorage.getItem('el_key')   || '';
+let EL_VOICE = localStorage.getItem('el_voice')  || 'JBFqnCBsd6RMkjVDRZzb';
+let TTS_ENG  = localStorage.getItem('tts_eng')   || 'v2';
+
+function openSett() {
+  document.getElementById('elkey').value   = EL_KEY;
+  document.getElementById('elvoice').value = EL_VOICE === 'JBFqnCBsd6RMkjVDRZzb' ? '' : EL_VOICE;
+  setEng(TTS_ENG, false);
+  document.getElementById('sOverlay').classList.add('open');
+}
+function closeSett() { document.getElementById('sOverlay').classList.remove('open'); }
+function saveSett() {
+  EL_KEY   = document.getElementById('elkey').value.trim();
+  const vid = document.getElementById('elvoice').value.trim();
+  EL_VOICE = vid || 'JBFqnCBsd6RMkjVDRZzb';
+  localStorage.setItem('el_key',   EL_KEY);
+  localStorage.setItem('el_voice', EL_VOICE);
+  localStorage.setItem('tts_eng',  TTS_ENG);
+  closeSett();
+  updateBadge();
+}
+function setEng(e, persist) {
+  TTS_ENG = e;
+  if (persist !== false) localStorage.setItem('tts_eng', e);
+  document.getElementById('ev2').classList.toggle('on', e === 'v2');
+  document.getElementById('ev3').classList.toggle('on', e === 'v3');
+  document.getElementById('elrow').classList.toggle('hidden', e !== 'v3');
+  document.getElementById('elvoicerow').classList.toggle('hidden', e !== 'v3');
+}
+
+function setBadge(t, c) { const b = document.getElementById('ttsbadge'); b.textContent = t; b.className = c || ''; }
+function updateBadge() {
+  if (TTS_ENG === 'v3') {
+    if (!EL_KEY)               setBadge('🔊 EL: need key ⚙️', 'err');
+    else if (IS_FILE)          setBadge('🔊 EL: run proxy.js first', 'err');
+    else                       setBadge('🔊 ElevenLabs ✓', 'ok');
+  } else {
+    setBadge(_piperReady ? '🔊 Piper ✓' : '🔊 Piper (tap ▶)', _piperReady ? 'ok' : '');
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ELEVENLABS TTS (V3)
+   ElevenLabs allows CORS from localhost & https origins,
+   but NOT from file:// (origin: null).
+   We detect this on load and show a one-time banner.
+══════════════════════════════════════════════════════════ */
+const EL_MODEL = 'eleven_v3';
+const elCache  = new Map();
+let activeBtn  = null, activeAudio = null;
+
+const IS_FILE  = location.protocol === 'file:';
+const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
+
+function stopAll() {
+  if (activeAudio) { activeAudio.pause(); activeAudio = null; }
+  if (activeBtn)   { activeBtn.classList.remove('speaking', 'spin'); activeBtn = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+}
+
+async function speakEL(text, btn) {
+  if (!EL_KEY) { openSett(); return; }
+
+  stopAll();
+  btn.classList.add('spin'); activeBtn = btn;
+  setBadge('🔊 generating…', 'busy');
+
+  const ckey = EL_VOICE + '|' + text;
+  if (elCache.has(ckey)) {
+    btn.classList.remove('spin'); btn.classList.add('speaking');
+    playURL(elCache.get(ckey), btn); return;
+  }
+
+  try {
+    // Route through local proxy (proxy.js) to avoid CORS.
+    // On localhost the proxy is always running; elsewhere fall back to direct.
+    const elPath = `/v1/text-to-speech/${EL_VOICE}?output_format=mp3_44100_128`;
+    const elURL  = IS_LOCAL
+      ? `http://localhost:3000/elevenlabs${elPath}`
+      : `https://api.elevenlabs.io${elPath}`;
+
+    const r = await fetch(elURL, {
+      method: 'POST',
+      headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text, model_id: EL_MODEL, language_code: 'fi',
+        voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.3, use_speaker_boost: true }
+      })
+    });
+    if (!r.ok) {
+      let msg = 'HTTP ' + r.status;
+      try { msg = (await r.json())?.detail?.message || msg; } catch(e) {}
+      throw new Error(msg);
+    }
+    const url = URL.createObjectURL(await r.blob());
+    elCache.set(ckey, url);
+    btn.classList.remove('spin'); btn.classList.add('speaking');
+    playURL(url, btn);
+    setBadge('🔊 ElevenLabs ✓', 'ok');
+  } catch(e) {
+    btn.classList.remove('spin', 'speaking'); activeBtn = null;
+    // TypeError with no HTTP status = network/CORS block (no response at all)
+    const isCORSBlock = (e instanceof TypeError) && IS_FILE;
+    if (isCORSBlock) {
+      showCORSBanner();
+      setBadge('🔊 EL: open via localhost', 'err');
+      _fallbackFI(text, btn);
+    } else {
+      // Real API error (wrong key, quota, etc.) — show the message
+      setBadge('🔊 EL: ' + String(e.message || e).slice(0, 28), 'err');
+    }
+    console.error('ElevenLabs:', e);
+  }
+}
+
+let _bannerShown = false;
+function showCORSBanner() {
+  if (_bannerShown) return; _bannerShown = true;
+  document.getElementById('cors-banner').style.display = 'block';
+}
+
+function playURL(url, btn) {
+  const a = new Audio(url); activeAudio = a;
+  a.onended = () => { btn.classList.remove('speaking'); activeBtn = null; activeAudio = null; setBadge('🔊 ElevenLabs ✓', 'ok'); };
+  a.onerror = () => { btn.classList.remove('speaking', 'spin'); activeBtn = null; activeAudio = null; };
+  a.play();
+}
+
+/* ══════════════════════════════════════════════════════════
+   PIPER WASM (V2 — fallback)
+══════════════════════════════════════════════════════════ */
+let _Piper = null, _piperReady = false, _piperLoading = false;
+const PIPER_VOICE = 'fi_FI-harri-medium';
+
+async function ensureCOI() {
+  if (window.crossOriginIsolated) return true;
+  if (!('serviceWorker' in navigator)) return false;
+  try {
+    const swBlob = new Blob([`
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).then(r=>{
+  const h=new Headers(r.headers);
+  h.set('Cross-Origin-Opener-Policy','same-origin');
+  h.set('Cross-Origin-Embedder-Policy','require-corp');
+  return new Response(r.body,{status:r.status,statusText:r.statusText,headers:h});
+}).catch(()=>fetch(e.request)));});`], { type: 'application/javascript' });
+    await navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope: '/' });
+    await navigator.serviceWorker.ready;
+    if (!window.crossOriginIsolated) window.location.reload();
+    return window.crossOriginIsolated;
+  } catch(e) { return false; }
+}
+
+async function initPiper() {
+  if (_Piper) return;
+  try {
+    _Piper = await import('https://cdn.jsdelivr.net/npm/@diffusionstudio/vits-web@1.0.3/+esm');
+    const stored = await _Piper.stored().catch(() => []);
+    if (Array.isArray(stored) && stored.includes(PIPER_VOICE)) { _piperReady = true; updateBadge(); }
+  } catch(e) { console.warn('Piper import:', e); }
+}
+
+async function speakPiper(text, btn) {
+  if (!_piperReady) {
+    if (!_piperLoading) {
+      _piperLoading = true;
+      setBadge('🔊 Piper: loading…', 'busy');
+      const iso = await ensureCOI();
+      if (iso) { await initPiper(); }
+      if (!_piperReady && _Piper) {
+        setBadge('🔊 downloading…', 'busy');
+        try {
+          await _Piper.download(PIPER_VOICE, (p) => {
+            if (p.total) setBadge('🔊 ' + Math.round(p.loaded * 100 / p.total) + '%', 'busy');
+          });
+          _piperReady = true;
+        } catch(e) { _piperLoading = false; setBadge('🔊 Piper: failed', 'err'); _fallbackFI(text, btn); return; }
+      }
+      _piperLoading = false;
+      if (!_piperReady) { _fallbackFI(text, btn); return; }
+      updateBadge();
+    } else { setTimeout(() => speakPiper(text, btn), 800); return; }
+  }
+  stopAll(); btn.classList.add('spin'); activeBtn = btn;
+  try {
+    const wav = await _Piper.predict({ text, voiceId: PIPER_VOICE });
+    btn.classList.remove('spin'); btn.classList.add('speaking');
+    const url = URL.createObjectURL(wav); const a = new Audio(url); activeAudio = a;
+    a.onended = () => { btn.classList.remove('speaking'); activeBtn = null; activeAudio = null; URL.revokeObjectURL(url); updateBadge(); };
+    a.play();
+  } catch(e) { btn.classList.remove('spin', 'speaking'); activeBtn = null; _fallbackFI(text, btn); }
+}
+
+function _fallbackFI(text, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'fi-FI'; u.rate = 0.82;
+  const fv = speechSynthesis.getVoices().filter(v => v.lang.startsWith('fi'));
+  if (fv.length) u.voice = fv.find(v => v.localService) || fv[0];
+  btn.classList.add('speaking');
+  u.onend = u.onerror = () => btn.classList.remove('speaking');
+  speechSynthesis.speak(u);
+}
+
+/* ══ MAIN DISPATCH ══ */
+function _speakFI(text, btn) {
+  if (TTS_ENG === 'v3') speakEL(text, btn);
+  else speakPiper(text, btn);
+}
+
+/* Other languages */
+let oBtnA = null;
+function _speakOther(text, lang, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel(); stopAll();
+  if (oBtnA) { oBtnA.classList.remove('speaking'); oBtnA = null; }
+  const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = lang === 'zh-TW' ? 0.85 : 0.9;
+  btn.classList.add('speaking'); oBtnA = btn;
+  u.onend = u.onerror = () => { btn.classList.remove('speaking'); oBtnA = null; };
+  speechSynthesis.speak(u);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════════════ */
+const D = {
+
+/* ═══════════════════════════════════════════════════════════════
+   詩歌 HYMNS
+═══════════════════════════════════════════════════════════════ */
+hymns: { label: '詩歌 Hymns', pages: [
+  { id:'h1', label:'No.1 · Hallelujah', title:'Hallelujah, Praise the Lord', sub:'Hymns No.1 · LSM Hymnal · LSM:n virsikirja', secs:[
+    { s:'Verse 1 · 第一節', items:[
+      { fi:'Hallelujah, ylistä Herraa,', en:'Hallelujah, praise the Lord,', de:'Halleluja, lobe den Herrn,', zh:'哈利路亞，讚美主，',
+        words:[{fi:'Hallelujah',en:'Hallelujah',de:'Halleluja',zh:'哈利路亞',pos:''},{fi:'ylistä',en:'praise',de:'lobe',zh:'讚美',pos:'v.'},{fi:'Herraa',en:'the Lord',de:'den Herrn',zh:'主',pos:'n.'}]},
+      { fi:'Hän on kalliomme ja linnamme.', en:'He is our Rock and our fortress.', de:'Er ist unser Fels und unsere Burg.', zh:'祂是我們的磐石和堡壘。',
+        words:[{fi:'Hän',en:'He',de:'Er',zh:'祂',pos:'pron.'},{fi:'on',en:'is',de:'ist',zh:'是',pos:'v.'},{fi:'kalliomme',en:'our Rock',de:'unser Fels',zh:'我們的磐石',pos:'n.'},{fi:'ja',en:'and',de:'und',zh:'和',pos:'conj.'},{fi:'linnamme',en:'our fortress',de:'unsere Burg',zh:'堡壘',pos:'n.'}]},
+      { fi:'Hän on pelastuksemme lähde.', en:'He is the source of our salvation.', de:'Er ist die Quelle unseres Heils.', zh:'祂是我們救恩的源頭。',
+        words:[{fi:'pelastuksemme',en:'our salvation',de:'unseres Heils',zh:'我們救恩的',pos:'n.'},{fi:'lähde',en:'source',de:'Quelle',zh:'源頭',pos:'n.'}]}
+    ]},
+    { s:'Chorus · 副歌', items:[
+      { fi:'Ylistämme Sinua, Herra Jeesus,', en:'We praise Thee, Lord Jesus,', de:'Wir loben Dich, Herr Jesus,', zh:'我們讚美祢，主耶穌，',
+        words:[{fi:'Ylistämme',en:'We praise',de:'Wir loben',zh:'我們讚美',pos:'v.'},{fi:'Sinua',en:'Thee',de:'Dich',zh:'祢',pos:'pron.'},{fi:'Herra Jeesus',en:'Lord Jesus',de:'Herr Jesus',zh:'主耶穌',pos:'n.'}]},
+      { fi:'sillä Sinä olet meidän kaikkemme.', en:'for Thou art our everything.', de:'denn Du bist unser Alles.', zh:'因祢是我們的一切。',
+        words:[{fi:'sillä',en:'for',de:'denn',zh:'因',pos:'conj.'},{fi:'Sinä olet',en:'Thou art',de:'Du bist',zh:'祢是',pos:'v.'},{fi:'kaikkemme',en:'everything',de:'Alles',zh:'一切',pos:'n.'}]},
+      { fi:'Sinä olet elämämme ja voitomme.', en:'Thou art our life and our victory.', de:'Du bist unser Leben und unser Sieg.', zh:'祢是我們的生命和得勝。',
+        words:[{fi:'elämämme',en:'our life',de:'unser Leben',zh:'我們的生命',pos:'n.'},{fi:'voitomme',en:'our victory',de:'unser Sieg',zh:'我們的得勝',pos:'n.'}]}
+    ]},
+    { s:'Verse 2 · 第二節', items:[
+      { fi:'Jeesus, Sinä olet Poika Jumalan,', en:'Jesus, Thou art the Son of God,', de:'Jesus, Du bist der Sohn Gottes,', zh:'耶穌，祢是神的兒子，',
+        words:[{fi:'Jeesus',en:'Jesus',de:'Jesus',zh:'耶穌',pos:'n.'},{fi:'Poika',en:'Son',de:'Sohn',zh:'兒子',pos:'n.'},{fi:'Jumalan',en:'of God',de:'Gottes',zh:'神的',pos:'n.'}]},
+      { fi:'ihmiseksi tullut meidän tähtemme.', en:'who became a man for our sake.', de:'der um unsretwillen Mensch wurde.', zh:'為我們的緣故成了人。',
+        words:[{fi:'ihmiseksi',en:'a man',de:'Mensch',zh:'人',pos:'n.'},{fi:'tullut',en:'became',de:'wurde',zh:'成了',pos:'v.'},{fi:'tähtemme',en:'for our sake',de:'um unsretwillen',zh:'為我們的緣故',pos:'prep.'}]},
+      { fi:'Sinä kuolit meidän syntimme tähden.', en:'Thou didst die for our sins.', de:'Du starbst für unsere Sünden.', zh:'祢為我們的罪而死。',
+        words:[{fi:'kuolit',en:'didst die',de:'starbst',zh:'死了',pos:'v.'},{fi:'syntimme',en:'our sins',de:'unsere Sünden',zh:'我們的罪',pos:'n.'},{fi:'tähden',en:'for',de:'für',zh:'為了',pos:'prep.'}]}
+    ]}
+  ]},
+
+  { id:'h2', label:'No.501 · Jeesus rakastaa', title:'Jeesus rakastaa minua', sub:'Jesus Loves Me · 耶穌愛我 · No.501', secs:[
+    { s:'Verse 1 · 第一節', items:[
+      { fi:'Jeesus rakastaa minua, sen tiedän varmasti.', en:'Jesus loves me, this I know,', de:'Jesus liebt mich ganz gewiss,', zh:'耶穌愛我，我知情，',
+        words:[{fi:'Jeesus',en:'Jesus',de:'Jesus',zh:'耶穌',pos:'n.'},{fi:'rakastaa',en:'loves',de:'liebt',zh:'愛',pos:'v.'},{fi:'minua',en:'me',de:'mich',zh:'我',pos:'pron.'},{fi:'tiedän',en:'I know',de:'ich weiß',zh:'我知道',pos:'v.'}]},
+      { fi:'Raamattu sen kertoo.', en:'for the Bible tells me so.', de:'denn die Bibel sagt mir so.', zh:'聖經如此說。',
+        words:[{fi:'Raamattu',en:'the Bible',de:'die Bibel',zh:'聖經',pos:'n.'},{fi:'kertoo',en:'tells',de:'sagt',zh:'說',pos:'v.'}]},
+      { fi:'Pienet lapset kuuluvat Hänelle.', en:'Little ones to Him belong;', de:'Alle Kleinen sind sein Eigen;', zh:'小孩子屬於祂；',
+        words:[{fi:'Pienet lapset',en:'little ones',de:'kleine Kinder',zh:'小孩子',pos:'n.'},{fi:'kuuluvat',en:'belong',de:'gehören',zh:'屬於',pos:'v.'},{fi:'Hänelle',en:'to Him',de:'ihm',zh:'祂',pos:'pron.'}]},
+      { fi:'He ovat heikkoja, mutta Hän on väkevä.', en:'they are weak, but He is strong.', de:'sie sind schwach, doch Er ist stark.', zh:'他們軟弱，祂卻剛強。',
+        words:[{fi:'heikkoja',en:'weak',de:'schwach',zh:'軟弱',pos:'adj.'},{fi:'väkevä',en:'strong',de:'stark',zh:'剛強',pos:'adj.'}]}
+    ]},
+    { s:'Chorus · 副歌', items:[
+      { fi:'Kyllä, Jeesus rakastaa minua.', en:'Yes, Jesus loves me!', de:'Ja, Jesus liebt mich!', zh:'是的，耶穌愛我！',
+        words:[{fi:'Kyllä',en:'Yes',de:'Ja',zh:'是的',pos:'adv.'},{fi:'rakastaa',en:'loves',de:'liebt',zh:'愛',pos:'v.'},{fi:'minua',en:'me',de:'mich',zh:'我',pos:'pron.'}]},
+      { fi:'Raamattu sen kertoo.', en:'The Bible tells me so.', de:'Die Bibel sagt mir so.', zh:'聖經如此說。',
+        words:[{fi:'Raamattu',en:'the Bible',de:'die Bibel',zh:'聖經',pos:'n.'},{fi:'kertoo',en:'tells',de:'sagt',zh:'說',pos:'v.'}]}
+    ]}
+  ]},
+
+  { id:'h6', label:'No.6 · Pyhä, pyhä, pyhä', title:'Pyhä, pyhä, pyhä! Suuri Jumalamme', sub:'Holy, Holy, Holy · 聖哉聖哉 · No.6 · KOLMIYHTEISEN JUMALAN PALVOMINEN', secs:[
+    { s:'Verse 1 · 第一節', items:[
+      { fi:'Pyhä, pyhä, pyhä! Suuri Jumalamme,', en:'Holy, holy, holy! Great our God,', de:'Heilig, heilig, heilig! Groß unser Gott,', zh:'聖哉！聖哉！聖哉！我們偉大的神，',
+        words:[{fi:'Pyhä',en:'Holy',de:'Heilig',zh:'聖哉',pos:'adj.'},{fi:'Suuri',en:'Great',de:'Groß',zh:'偉大的',pos:'adj.'},{fi:'Jumalamme',en:'our God',de:'unser Gott',zh:'我們的神',pos:'n.'}]},
+      { fi:'ikiaikoihin me Sulle tuomme kiitoksen.', en:'unto everlasting days we for You bring thanksgiving.', de:'in ewige Zeiten bringen wir Dir Dank.', zh:'直到永遠，我們向祢獻上感謝。',
+        words:[{fi:'ikiaikoihin',en:'unto everlasting days',de:'in ewige Zeiten',zh:'直到永遠',pos:'n.'},{fi:'tuomme',en:'we bring',de:'bringen wir',zh:'我們帶來',pos:'v.'},{fi:'kiitoksen',en:'thanksgiving',de:'Dank',zh:'感謝',pos:'n.'}]},
+      { fi:'Pyhä, pyhä, pyhä, armon antajamme,', en:'Holy, holy, holy, giver of grace,', de:'Heilig, heilig, heilig, Geber der Gnade,', zh:'聖哉！聖哉！聖哉！賜恩者，',
+        words:[{fi:'armon',en:'of grace',de:'der Gnade',zh:'恩典的',pos:'n.'},{fi:'antajamme',en:'our giver',de:'unser Geber',zh:'我們的賜予者',pos:'n.'}]},
+      { fi:'laupias Herra kolmiyhteinen.', en:'merciful Lord, triune.', de:'gnädiger Herr, dreieinig.', zh:'慈悲的主，三一神。',
+        words:[{fi:'laupias',en:'merciful',de:'gnädig',zh:'慈悲的',pos:'adj.'},{fi:'Herra',en:'Lord',de:'Herr',zh:'主',pos:'n.'},{fi:'kolmiyhteinen',en:'triune',de:'dreieinig',zh:'三一',pos:'adj.'}]}
+    ]},
+    { s:'Verse 2 · 第二節', items:[
+      { fi:'Enkelit ne kantaa kruununsa nyt eteen Herran valtaistuimen.', en:'Angels they bear their crowns of gold now unto the Lord\'s throne.', de:'Engel tragen ihre Kronen jetzt vor den Thron des Herrn.', zh:'天使們將金冠冕獻到主寶座前。',
+        words:[{fi:'Enkelit',en:'Angels',de:'Engel',zh:'天使',pos:'n.'},{fi:'kantaa',en:'bear',de:'tragen',zh:'帶來',pos:'v.'},{fi:'kruununsa',en:'their crowns',de:'ihre Kronen',zh:'他們的冠冕',pos:'n.'},{fi:'valtaistuimen',en:'throne',de:'Thron',zh:'寶座',pos:'n.'}]},
+      { fi:'Taivaallisten kuoro kiitoksensa antaa, herrojen Herra, iankaikkinen.', en:'The choir of heavenly beings gives its praise, Lord of lords, eternal.', de:'Der Chor der himmlischen Wesen gibt sein Lob, Herr der Herren, ewig.', zh:'天上眾生的詩班獻上讚美，萬主之主，永恆的神。',
+        words:[{fi:'Taivaallisten',en:'of heavenly beings',de:'der himmlischen Wesen',zh:'天上眾生的',pos:'n.'},{fi:'kuoro',en:'choir',de:'Chor',zh:'詩班',pos:'n.'},{fi:'iankaikkinen',en:'eternal',de:'ewig',zh:'永恆',pos:'adj.'}]}
+    ]},
+    { s:'Verse 3 · 第三節', items:[
+      { fi:'Pyhä, pyhä, pyhä! Kirkkautes loistaa,', en:'Holy, holy, holy! Your brightness is shining,', de:'Heilig, heilig, heilig! Dein Glanz leuchtet,', zh:'聖哉！聖哉！聖哉！祢的榮光照耀，',
+        words:[{fi:'Kirkkautes',en:'Your brightness',de:'Dein Glanz',zh:'祢的光輝',pos:'n.'},{fi:'loistaa',en:'is shining',de:'leuchtet',zh:'照耀',pos:'v.'}]},
+      { fi:'vaikka silmä syntisen ei näe kunniaas.', en:'although the eye of a sinner cannot see Your glory.', de:'obwohl das Auge eines Sünders Deine Herrlichkeit nicht sieht.', zh:'雖然罪人的眼睛看不見祢的榮耀。',
+        words:[{fi:'syntisen',en:'of a sinner',de:'eines Sünders',zh:'罪人的',pos:'n.'},{fi:'näe',en:'cannot see',de:'nicht sieht',zh:'看不見',pos:'v.'},{fi:'kunniaas',en:'Your glory',de:'Deine Herrlichkeit',zh:'祢的榮耀',pos:'n.'}]},
+      { fi:'Pyhä olet yksin, vertaistas ei toista, rakkaus, voima kaikkivaltias.', en:'Holy You are alone, none matches You, love, power almighty.', de:'Heilig bist Du allein, keiner kommt Dir gleich, Liebe, Macht, Allmächtiger.', zh:'唯獨祢是聖的，沒有可比祢的，愛、能力，全能者。',
+        words:[{fi:'Pyhä',en:'Holy',de:'Heilig',zh:'聖的',pos:'adj.'},{fi:'yksin',en:'alone',de:'allein',zh:'唯獨',pos:'adv.'},{fi:'vertaistas ei toista',en:'none matches You',de:'keiner kommt Dir gleich',zh:'沒有可比祢的',pos:'phrase'},{fi:'kaikkivaltias',en:'almighty',de:'Allmächtiger',zh:'全能者',pos:'adj.'}]}
+    ]},
+    { s:'Verse 4 · 第四節', items:[
+      { fi:'Pyhä, pyhä, pyhä! Kiitoslaulu suuri kaikuu halki taivaan, maan ja merten äärien.', en:'Holy, holy, holy! Great song of thanksgiving echoes through heaven, earth and seas\' far ends.', de:'Heilig, heilig, heilig! Großes Danklied hallt durch Himmel, Erde und die Enden der Meere.', zh:'聖哉！聖哉！聖哉！偉大的感謝之歌迴盪於天空、地上和海洋的盡頭。',
+        words:[{fi:'Kiitoslaulu suuri',en:'great song of thanksgiving',de:'großes Danklied',zh:'偉大的感謝之歌',pos:'n.'},{fi:'kaikuu',en:'echoes',de:'hallt',zh:'迴盪',pos:'v.'},{fi:'halki',en:'through',de:'durch',zh:'穿越',pos:'prep.'}]},
+      { fi:'Pyhä, pyhä, pyhä, armon vahva muuri, oi Jumalamme kolmiyhteinen.', en:'Holy, holy, holy, strong wall of grace, oh our God, triune.', de:'Heilig, heilig, heilig, starke Mauer der Gnade, o unser Gott, dreieinig.', zh:'聖哉！聖哉！聖哉！恩典的堅固城牆，哦，我們的神，三一神。',
+        words:[{fi:'armon vahva muuri',en:'strong wall of grace',de:'starke Mauer der Gnade',zh:'恩典的堅固城牆',pos:'n.'},{fi:'Jumalamme',en:'our God',de:'unser Gott',zh:'我們的神',pos:'n.'}]}
+    ]}
+  ]},
+
+  { id:'h124', label:'No.124 · Ylistäkää Kristustamme', title:'Ylistäkää Kristustamme', sub:'Praise Our Christ · 讚美我們的基督 · No.124', secs:[
+    { s:'Verse 1 · 第一節', items:[
+      { fi:'Ylistäkää Kristustamme, Hän on synnin voittaja!', en:'Praise our Christ, He is the overcomer of sin!', de:'Preist unseren Christus, Er ist der Überwinder der Sünde!', zh:'讚美我們的基督，祂是罪的得勝者！',
+        words:[{fi:'Ylistäkää',en:'Praise',de:'Preist',zh:'讚美',pos:'v.'},{fi:'Kristustamme',en:'our Christ',de:'unseren Christus',zh:'我們的基督',pos:'n.'},{fi:'synnin voittaja',en:'overcomer of sin',de:'Überwinder der Sünde',zh:'罪的得勝者',pos:'n.'}]},
+      { fi:'Lopun teki Aadamista, täysi pelastus Hän on.', en:'He made an end of Adam, He is full salvation.', de:'Er machte dem Adam ein Ende, Er ist volle Errettung.', zh:'祂終結了亞當，祂是完全的救恩。',
+        words:[{fi:'Lopun teki',en:'made an end',de:'machte ein Ende',zh:'終結了',pos:'v.'},{fi:'Aadamista',en:'of Adam',de:'dem Adam',zh:'亞當的',pos:'n.'},{fi:'pelastus',en:'salvation',de:'Errettung',zh:'救恩',pos:'n.'}]},
+      { fi:'Kaikki pahan voimat voitti ristin riemuvoitolla.', en:'He overcame all evil powers with the cross\'s triumphant victory.', de:'Er überwand alle bösen Mächte durch den Triumphsieg des Kreuzes.', zh:'祂藉著十字架的凱旋勝利，勝過了一切邪惡的權勢。',
+        words:[{fi:'pahan voimat',en:'evil powers',de:'böse Mächte',zh:'邪惡的權勢',pos:'n.'},{fi:'voitti',en:'overcame',de:'überwand',zh:'勝過了',pos:'v.'},{fi:'ristin',en:'of the cross',de:'des Kreuzes',zh:'十字架的',pos:'n.'},{fi:'riemuvoitolla',en:'with triumphant victory',de:'durch Triumphsieg',zh:'藉著凱旋勝利',pos:'n.'}]}
+    ]},
+    { s:'Verse 2 · 第二節', items:[
+      { fi:'Kristuksemme ylösnousi, Isä Hänet herätti.', en:'Our Christ rose, the Father woke Him up.', de:'Unser Christus erstand auf, der Vater erweckte Ihn.', zh:'我們的基督復活了，父叫祂從死復活。',
+        words:[{fi:'ylösnousi',en:'rose',de:'erstand auf',zh:'復活了',pos:'v.'},{fi:'Isä',en:'the Father',de:'der Vater',zh:'父',pos:'n.'},{fi:'herätti',en:'woke up',de:'erweckte',zh:'叫…復活',pos:'v.'}]},
+      { fi:'Nieli koko kuolon vallan, antoi meille elämän.', en:'He swallowed all the might of death, gave us life.', de:'Er verschlang all die Macht des Todes, gab uns das Leben.', zh:'祂吞滅了死的全部權勢，賜給我們生命。',
+        words:[{fi:'Nieli',en:'swallowed',de:'verschlang',zh:'吞滅',pos:'v.'},{fi:'kuolon vallan',en:'the might of death',de:'die Macht des Todes',zh:'死的權勢',pos:'n.'},{fi:'antoi',en:'gave',de:'gab',zh:'賜給',pos:'v.'},{fi:'meille elämän',en:'us life',de:'uns das Leben',zh:'我們生命',pos:'n.'}]}
+    ]},
+    { s:'Verse 3–4 · 第三至四節', items:[
+      { fi:'Taivaaseen Hän astunut on, korotettu iäksi.', en:'He has stepped into the heavens, exalted eternally.', de:'Er ist in den Himmel gestiegen, ewig erhöht.', zh:'祂已升入天上，永遠被升高。',
+        words:[{fi:'astunut on',en:'has stepped',de:'ist gestiegen',zh:'已升入',pos:'v.'},{fi:'korotettu',en:'exalted',de:'erhöht',zh:'被升高',pos:'adj.'},{fi:'iäksi',en:'eternally',de:'ewig',zh:'永遠',pos:'adv.'}]},
+      { fi:'Halleluja, voittanut on Golgatalla kuollessaan! Halleluja, ylösnoussut, voittonsa on kestävä!', en:'Hallelujah, He overcame on Calvary while dying! Hallelujah, resurrected, His victory is lasting!', de:'Halleluja, Er hat überwunden auf Golgatha beim Sterben! Halleluja, auferstanden, Sein Sieg ist bleibend!', zh:'哈利路亞，祂在各各他死時得勝！哈利路亞，祂復活了，祂的勝利是持久的！',
+        words:[{fi:'voittanut on',en:'has overcome',de:'hat überwunden',zh:'得勝了',pos:'v.'},{fi:'Golgatalla',en:'on Calvary',de:'auf Golgatha',zh:'在各各他',pos:'n.'},{fi:'ylösnoussut',en:'resurrected',de:'auferstanden',zh:'復活了',pos:'adj.'},{fi:'voittonsa on kestävä',en:'His victory is lasting',de:'Sein Sieg ist bleibend',zh:'祂的勝利是持久的',pos:'phrase'}]}
+    ]}
+  ]},
+
+  { id:'h501', label:'No.501 · Oi ihmeinen Kristus', title:'Oi ihmeinen Kristus oot mun', sub:'Oh Marvellous Christ · 奇妙的基督 · No.501', secs:[
+    { s:'Verse 1 · 第一節', items:[
+      { fi:'Oi ihmeinen Kristus oot mun, Sinä Jumalan valkeus ja loiste.', en:'Oh marvellous Christ You are mine, You are God\'s light and shining.', de:'Oh wunderbarer Christus, Du bist mein, Du bist Gottes Licht und Glanz.', zh:'哦，奇妙的基督，祢是我的，祢是神的光和榮耀。',
+        words:[{fi:'ihmeinen',en:'marvellous',de:'wunderbar',zh:'奇妙的',pos:'adj.'},{fi:'valkeus',en:'light',de:'Licht',zh:'光',pos:'n.'},{fi:'loiste',en:'shining/glory',de:'Glanz',zh:'榮耀',pos:'n.'}]},
+      { fi:'Rajaton ja ikuinen Jumala, myös rajallinen ihminen.', en:'Unlimited and eternal God, also limited man.', de:'Unbegrenzter und ewiger Gott, auch begrenzter Mensch.', zh:'無限而永恆的神，也是有限的人。',
+        words:[{fi:'Rajaton',en:'unlimited',de:'unbegrenzt',zh:'無限的',pos:'adj.'},{fi:'ikuinen',en:'eternal',de:'ewig',zh:'永恆的',pos:'adj.'},{fi:'rajallinen',en:'limited',de:'begrenzt',zh:'有限的',pos:'adj.'},{fi:'ihminen',en:'man',de:'Mensch',zh:'人',pos:'n.'}]}
+    ]},
+    { s:'Chorus · 副歌', items:[
+      { fi:'Kristus kuva on kaikkivaltiaan, rikkautensa tutkimaton.', en:'Christ is the image of the Almighty, His riches unsearchable.', de:'Christus ist das Bild des Allmächtigen, Seine Reichtümer unerforschlich.', zh:'基督是全能者的形象，祂的豐富是無法測度的。',
+        words:[{fi:'kuva',en:'image',de:'Bild',zh:'形象',pos:'n.'},{fi:'kaikkivaltiaan',en:'of the Almighty',de:'des Allmächtigen',zh:'全能者的',pos:'n.'},{fi:'rikkautensa',en:'His riches',de:'Seine Reichtümer',zh:'祂的豐富',pos:'n.'},{fi:'tutkimaton',en:'unsearchable',de:'unerforschlich',zh:'無法測度的',pos:'adj.'}]},
+      { fi:'ihmisyyteen tulleen Jumalan voimme tänään kokea.', en:'of God who came into humanity we can experience today.', de:'des Gottes, der in die Menschheit kam, können wir heute erfahren.', zh:'降入人性之神——我們今天可以經歷祂。',
+        words:[{fi:'ihmisyyteen',en:'into humanity',de:'in die Menschheit',zh:'進入人性',pos:'n.'},{fi:'tulleen',en:'who came',de:'der kam',zh:'降入的',pos:'v.'},{fi:'voimme kokea',en:'we can experience',de:'können wir erfahren',zh:'我們可以經歷',pos:'v.'}]}
+    ]},
+    { s:'Verses 2–3 · 第二至三節', items:[
+      { fi:'Jumaluuden täyteys Sä oot, ihanuutensa osoitat mulle.', en:'You are the fullness of divinity, You show me His loveliness.', de:'Du bist die Fülle der Gottheit, Du zeigst mir Seine Lieblichkeit.', zh:'祢是神性的豐滿，祢向我顯示祂的美好。',
+        words:[{fi:'Jumaluuden täyteys',en:'fullness of divinity',de:'Fülle der Gottheit',zh:'神性的豐滿',pos:'n.'},{fi:'ihanuutensa',en:'His loveliness',de:'Seine Lieblichkeit',zh:'祂的美好',pos:'n.'},{fi:'osoitat',en:'You show',de:'Du zeigst',zh:'祢顯示',pos:'v.'}]},
+      { fi:'Isän rikkaudet on Sinussa, ja ne omistaa voin hengessäni.', en:'The Father\'s riches are in You, and I can possess them in my spirit.', de:'Die Reichtümer des Vaters sind in Dir, und ich kann sie in meinem Geist besitzen.', zh:'父的豐富在祢裡面，我能在靈裡擁有它們。',
+        words:[{fi:'Isän rikkaudet',en:'the Father\'s riches',de:'die Reichtümer des Vaters',zh:'父的豐富',pos:'n.'},{fi:'omistaa voin',en:'I can possess',de:'ich kann besitzen',zh:'我能擁有',pos:'v.'},{fi:'hengessäni',en:'in my spirit',de:'in meinem Geist',zh:'在我靈裡',pos:'n.'}]}
+    ]}
+  ]},
+
+  { id:'h505', label:'No.505 · Ihminen kirkkaudessa', title:'Ihminen kirkkaudessa', sub:'Man in Glory · 在榮耀中的人 · No.505', secs:[
+    { s:'Verse 1 · 第一節', items:[
+      { fi:'Ihminen kirkkaudessa, Jeesus, elämänsä.', en:'Man in glory, Jesus, His life.', de:'Mensch in Herrlichkeit, Jesus, Sein Leben.', zh:'在榮耀中的人，耶穌，祂的生命。',
+        words:[{fi:'Ihminen',en:'Man',de:'Mensch',zh:'人',pos:'n.'},{fi:'kirkkaudessa',en:'in glory',de:'in Herrlichkeit',zh:'在榮耀中',pos:'n.'},{fi:'elämänsä',en:'His life',de:'Sein Leben',zh:'祂的生命',pos:'n.'}]},
+      { fi:'niin puhdas ja pyhä, vapaa, voitokas; niin hyvä ja rakas, on minulle annettu.', en:'so clean and holy, free, triumphant; so good and dear, is given to me.', de:'so rein und heilig, frei, siegreich; so gut und lieb, mir gegeben.', zh:'如此純潔聖潔，自由，得勝；如此良善親愛，賜給了我。',
+        words:[{fi:'puhdas',en:'clean',de:'rein',zh:'純潔',pos:'adj.'},{fi:'pyhä',en:'holy',de:'heilig',zh:'聖潔',pos:'adj.'},{fi:'voitokas',en:'triumphant',de:'siegreich',zh:'得勝的',pos:'adj.'},{fi:'annettu',en:'given',de:'gegeben',zh:'賜給',pos:'v.'}]}
+    ]},
+    { s:'Chorus · 副歌', items:[
+      { fi:'Tuon kalliin ja pyhän, voitokkaan elämän, tulee olla elämä, jota nyt elän.', en:'That precious and holy, triumphant life, must be the life that I live now.', de:'Jenes kostbare und heilige, siegreiche Leben muss das Leben sein, das ich jetzt lebe.', zh:'那寶貴而聖潔、得勝的生命，必須是我現在所活的生命。',
+        words:[{fi:'kalliin',en:'precious',de:'kostbar',zh:'寶貴的',pos:'adj.'},{fi:'voitokkaan',en:'triumphant',de:'siegreich',zh:'得勝的',pos:'adj.'},{fi:'tulee olla',en:'must be',de:'muss sein',zh:'必須是',pos:'v.'},{fi:'elän',en:'I live',de:'ich lebe',zh:'我活',pos:'v.'}]}
+    ]}
+  ]}
+] },
+
+/* ═══════════════════════════════════════════════════════════════
+   綱要 OUTLINE
+═══════════════════════════════════════════════════════════════ */
+outline: { label: '綱要 Outline', pages: [
+  { id:'o44', label:'Vol.8 Wk.44', title:'Experiencing, Enjoying and Expressing Christ', sub:'Vol.8 · Week 44 · 經歷、享受並表達基督', secs:[
+    { s:'I. Kristus — ihmisten elämä · Christ — Life of Man · 基督——人的生命', items:[
+      { fi:'Jumala loi ihmisen omaksi kuvakseen ja antoi hänelle elämän; Kristus on se elämä.', en:'God created man in His own image and gave him life; Christ is that life.', de:'Gott schuf den Menschen nach Seinem Bild und gab ihm Leben; Christus ist dieses Leben.', zh:'神按自己的形象造人，並將生命賜給他；基督就是那生命。', ref:'Gen. 1:26; Col. 3:4',
+        words:[{fi:'Jumala',en:'God',de:'Gott',zh:'神',pos:'n.'},{fi:'loi',en:'created',de:'schuf',zh:'創造了',pos:'v.'},{fi:'ihmisen',en:'man',de:'den Menschen',zh:'人',pos:'n.'},{fi:'kuvakseen',en:'in His image',de:'nach Seinem Bild',zh:'按祂的形象',pos:'n.'},{fi:'elämän',en:'life',de:'Leben',zh:'生命',pos:'n.'}]},
+      { fi:'Kristus tuli lihaksi, jotta me saisimme elämän ja sen yltäkylläisesti.', en:'Christ came in the flesh that we might have life and have it abundantly.', de:'Christus kam im Fleisch, damit wir Leben haben und es in Fülle haben.', zh:'基督成為肉身，使我們可以得生命，並且得得更豐盛。', ref:'John 10:10',
+        words:[{fi:'tuli lihaksi',en:'came in the flesh',de:'kam im Fleisch',zh:'成為肉身',pos:'v.'},{fi:'saisimme',en:'we might have',de:'wir haben könnten',zh:'我們能得',pos:'v.'},{fi:'yltäkylläisesti',en:'abundantly',de:'in Fülle',zh:'更豐盛',pos:'adv.'}]}
+    ]},
+    { s:'II. Sanalla ruokkiminen · Feeding on the Word · 以話語為食', items:[
+      { fi:'Herran sanat ovat henkeä ja elämää; ne ravitsevat meidän sisäistä ihmistämme.', en:'The Lord\'s words are spirit and life; they nourish our inner man.', de:'Die Worte des Herrn sind Geist und Leben; sie nähren unseren inneren Menschen.', zh:'主的話是靈也是生命；它們滋養我們裡面的人。', ref:'John 6:63',
+        words:[{fi:'sanat',en:'words',de:'Worte',zh:'話語',pos:'n.'},{fi:'henkeä',en:'spirit',de:'Geist',zh:'靈',pos:'n.'},{fi:'elämää',en:'life',de:'Leben',zh:'生命',pos:'n.'},{fi:'ravitsevat',en:'nourish',de:'nähren',zh:'滋養',pos:'v.'},{fi:'sisäistä ihmistämme',en:'our inner man',de:'unseren inneren Menschen',zh:'我們裡面的人',pos:'n.'}]},
+      { fi:'Sana asuu meissä rikkaasti, kun rukoilemme Sanaa ja sekoitamme sen uskoon.', en:'The word dwells in us richly when we pray over the word and mix it with faith.', de:'Das Wort wohnt reichlich in uns, wenn wir das Wort beten und es mit Glauben mischen.', zh:'當我們禱讀話語、以信心調和話語時，話語就豐豐富富住在我們裡面。', ref:'Col. 3:16',
+        words:[{fi:'asuu',en:'dwells',de:'wohnt',zh:'住',pos:'v.'},{fi:'rikkaasti',en:'richly',de:'reichlich',zh:'豐豐富富',pos:'adv.'},{fi:'rukoilemme',en:'we pray',de:'wir beten',zh:'我們禱告',pos:'v.'},{fi:'sekoitamme',en:'we mix',de:'wir mischen',zh:'我們調和',pos:'v.'},{fi:'uskoon',en:'with faith',de:'mit Glauben',zh:'以信心',pos:'n.'}]}
+    ]},
+    { s:'III. Henki — ehtymätön lähde · The Spirit — Inexhaustible Source · 靈——取之不盡的源頭', items:[
+      { fi:'Pyhä Henki on ehtymätön lähde; Hän virtaa uskovan syvimmästä olemuksesta.', en:'The Holy Spirit is the inexhaustible source; He flows out of the believer\'s innermost being.', de:'Der Heilige Geist ist die unerschöpfliche Quelle; Er strömt aus dem Innersten des Gläubigen.', zh:'聖靈是取之不盡的源頭；祂從信徒的最深處湧流出來。', ref:'John 7:38-39',
+        words:[{fi:'ehtymätön',en:'inexhaustible',de:'unerschöpflich',zh:'取之不盡的',pos:'adj.'},{fi:'lähde',en:'source',de:'Quelle',zh:'源頭',pos:'n.'},{fi:'virtaa',en:'flows',de:'strömt',zh:'湧流',pos:'v.'},{fi:'syvimmästä',en:'from the innermost',de:'aus dem Innersten',zh:'從最深處',pos:'adj.'}]},
+      { fi:'Meidän ei tulisi sammuttaa Henkeä, vaan antaa Hänen täyttää meidät.', en:'We should not quench the Spirit but let Him fill us.', de:'Wir sollen den Geist nicht auslöschen, sondern Ihn uns erfüllen lassen.', zh:'我們不應撲滅那靈，乃要讓祂充滿我們。', ref:'1 Thes. 5:19',
+        words:[{fi:'sammuttaa',en:'quench',de:'auslöschen',zh:'撲滅',pos:'v.'},{fi:'antaa',en:'let',de:'lassen',zh:'讓',pos:'v.'},{fi:'täyttää',en:'fill',de:'erfüllen',zh:'充滿',pos:'v.'}]}
+    ]},
+    { s:'IV. Rukoilu · Prayer · 禱告', items:[
+      { fi:'Rukoilu on hengitystä hengellisessä elämässä; ilman sitä sisäinen ihminen kuihtuu.', en:'Prayer is breathing in the spiritual life; without it the inner man withers.', de:'Gebet ist das Atmen im geistlichen Leben; ohne es verkümmert der innere Mensch.', zh:'禱告是屬靈生命的呼吸；沒有它，裡面的人就會枯萎。',
+        words:[{fi:'Rukoilu',en:'Prayer',de:'Gebet',zh:'禱告',pos:'n.'},{fi:'hengitystä',en:'breathing',de:'Atmen',zh:'呼吸',pos:'n.'},{fi:'ilman',en:'without',de:'ohne',zh:'沒有',pos:'prep.'},{fi:'kuihtuu',en:'withers',de:'verkümmert',zh:'枯萎',pos:'v.'}]},
+      { fi:'Meidän tulee rukoilla Hengessä, puhuen sydämestämme Herralle.', en:'We must pray in spirit, speaking from our heart to the Lord.', de:'Wir müssen im Geist beten und von unserem Herzen zum Herrn sprechen.', zh:'我們必須在靈裡禱告，從我們的心向主說話。', ref:'Eph. 6:18',
+        words:[{fi:'rukoilla',en:'pray',de:'beten',zh:'禱告',pos:'v.'},{fi:'Hengessä',en:'in spirit',de:'im Geist',zh:'在靈裡',pos:'n.'},{fi:'sydämestämme',en:'from our heart',de:'von unserem Herzen',zh:'從我們的心',pos:'n.'}]}
+    ]}
+  ]},
+
+  { id:'o45', label:'Vol.8 Wk.45', title:'Experiencing, Enjoying and Expressing Christ', sub:'Vol.8 · Week 45 · 經歷、享受並表達基督', secs:[
+    { s:'I. Pyhä Henki · The Holy Spirit · 聖靈', items:[
+      { fi:'Pyhä Henki on Jumalan Henki, Isän Henki ja Kristuksen Henki.', en:'The Holy Spirit is the Spirit of God, the Spirit of the Father, and the Spirit of Christ.', de:'Der Heilige Geist ist der Geist Gottes, der Geist des Vaters und der Geist Christi.', zh:'聖靈是神的靈、父的靈，也是基督的靈。', ref:'Rom. 8:9',
+        words:[{fi:'Pyhä Henki',en:'Holy Spirit',de:'Heiliger Geist',zh:'聖靈',pos:'n.'},{fi:'Jumalan Henki',en:'Spirit of God',de:'Geist Gottes',zh:'神的靈',pos:'n.'},{fi:'Isän Henki',en:'Spirit of Father',de:'Geist des Vaters',zh:'父的靈',pos:'n.'},{fi:'Kristuksen Henki',en:'Spirit of Christ',de:'Geist Christi',zh:'基督的靈',pos:'n.'}]},
+      { fi:'Henki asuu meissä ja antaa elämää kuolevaisille ruumiillemme.', en:'The Spirit dwells in us and gives life to our mortal bodies.', de:'Der Geist wohnt in uns und macht unsere sterblichen Leiber lebendig.', zh:'那靈住在我們裡面，也必叫我們必死的身體活過來。', ref:'Rom. 8:11',
+        words:[{fi:'asuu meissä',en:'dwells in us',de:'wohnt in uns',zh:'住在我們裡面',pos:'v.'},{fi:'antaa elämää',en:'gives life',de:'macht lebendig',zh:'賜生命',pos:'v.'},{fi:'kuolevaisille ruumiillemme',en:'to our mortal bodies',de:'unsere sterblichen Leiber',zh:'我們必死的身體',pos:'n.'}]}
+    ]},
+    { s:'II. Kristus elämänä · Christ as Life · 基督為生命', items:[
+      { fi:'Kristus on meidän elämämme.', en:'Christ is our life.', de:'Christus ist unser Leben.', zh:'基督是我們的生命。', ref:'Col. 3:4',
+        words:[{fi:'Kristus',en:'Christ',de:'Christus',zh:'基督',pos:'n.'},{fi:'on',en:'is',de:'ist',zh:'是',pos:'v.'},{fi:'meidän elämämme',en:'our life',de:'unser Leben',zh:'我們的生命',pos:'n.'}]},
+      { fi:'En minä enää elä, vaan Kristus elää minussa.', en:'It is no longer I who live, but Christ who lives in me.', de:'Nicht mehr ich lebe, sondern Christus lebt in mir.', zh:'現在活著的，不再是我，乃是基督在我裡面活著。', ref:'Gal. 2:20',
+        words:[{fi:'En enää elä',en:'no longer I live',de:'nicht mehr ich lebe',zh:'不再是我活著',pos:'v.'},{fi:'vaan',en:'but',de:'sondern',zh:'乃是',pos:'conj.'},{fi:'elää minussa',en:'lives in me',de:'lebt in mir',zh:'在我裡面活著',pos:'v.'}]}
+    ]},
+    { s:'III. Kirkko · The Church · 召會', items:[
+      { fi:'Kirkko on Kristuksen ruumis, Hänen täyteytensä.', en:'The church is the Body of Christ, His fullness.', de:'Die Gemeinde ist der Leib Christi, Seine Fülle.', zh:'召會是基督的身體，是祂的豐滿。', ref:'Eph. 1:22-23',
+        words:[{fi:'Kirkko',en:'church',de:'Gemeinde',zh:'召會',pos:'n.'},{fi:'ruumis',en:'body',de:'Leib',zh:'身體',pos:'n.'},{fi:'täyteytensä',en:'His fullness',de:'Seine Fülle',zh:'祂的豐滿',pos:'n.'}]},
+      { fi:'Kasvamme Häneen, joka on pää, Kristus.', en:'We grow up into Him who is the Head, Christ.', de:'Wir wachsen auf in Ihn hinein, der das Haupt ist, Christus.', zh:'我們在各事上長到祂，就是頭，基督。', ref:'Eph. 4:15',
+        words:[{fi:'Kasvamme',en:'We grow up',de:'Wir wachsen',zh:'我們長到',pos:'v.'},{fi:'pää',en:'Head',de:'Haupt',zh:'頭',pos:'n.'}]}
+    ]},
+    { s:'IV. Jumalan varustus · Armor of God · 神的軍裝', items:[
+      { fi:'Pukekaa päällenne koko Jumalan haarniska.', en:'Put on the whole armor of God.', de:'Zieht die ganze Waffenrüstung Gottes an.', zh:'要穿上神所賜的全副軍裝。', ref:'Eph. 6:11',
+        words:[{fi:'Pukekaa päällenne',en:'Put on',de:'Zieht an',zh:'穿上',pos:'v.'},{fi:'haarniska',en:'armor',de:'Waffenrüstung',zh:'軍裝',pos:'n.'}]},
+      { fi:'Totuuden vyö, vanhurskauden haarniskapaita, rauhan evankeliumin kengät.', en:'The belt of truth, the breastplate of righteousness, the sandals of the gospel of peace.', de:'Den Gürtel der Wahrheit, den Brustpanzer der Gerechtigkeit, die Schuhe des Evangeliums des Friedens.', zh:'用真理束腰，用公義護胸，腳穿傳和平之福音的鞋。', ref:'Eph. 6:14-15',
+        words:[{fi:'vyö',en:'belt',de:'Gürtel',zh:'腰帶',pos:'n.'},{fi:'haarniskapaita',en:'breastplate',de:'Brustpanzer',zh:'護胸甲',pos:'n.'},{fi:'kengät',en:'sandals',de:'Schuhe',zh:'鞋',pos:'n.'}]}
+    ]}
+  ]},
+
+  { id:'o46', label:'Vol.8 Wk.46', title:'Experiencing, Enjoying and Expressing Christ', sub:'Vol.8 · Week 46 · 經歷、享受並表達基督', secs:[
+    { s:'I. Kristuksen itselleen omistaminen · Christ\'s Possession of Us · 基督佔有我們', items:[
+      { fi:'Kristus tullakseen omistamaan ihmiset kuoli, nousi ylös ja tuli eläväksi Hengeksi.', en:'In order to come to possess men, Christ died, rose, and became the life-giving Spirit.', de:'Um die Menschen in Besitz zu nehmen, starb Christus, erstand auf und wurde der lebendigmachende Geist.', zh:'基督為了得著人，死了，復活，並成了賜生命的靈。', ref:'1 Cor. 15:45',
+        words:[{fi:'omistamaan',en:'to possess',de:'in Besitz zu nehmen',zh:'得著/佔有',pos:'v.'},{fi:'kuoli',en:'died',de:'starb',zh:'死了',pos:'v.'},{fi:'nousi ylös',en:'rose',de:'erstand auf',zh:'復活了',pos:'v.'},{fi:'eläväksi Hengeksi',en:'life-giving Spirit',de:'lebendigmachender Geist',zh:'賜生命的靈',pos:'n.'}]},
+      { fi:'Hän nyt omistaa ja täyttää uskovat sisimmissään Hengellä.', en:'He now possesses and fills believers in their innermost being with the Spirit.', de:'Er besitzt und füllt jetzt die Gläubigen in ihrem innersten Wesen mit dem Geist.', zh:'祂如今藉著那靈佔有並充滿信徒的最深處。',
+        words:[{fi:'omistaa',en:'possesses',de:'besitzt',zh:'佔有',pos:'v.'},{fi:'täyttää',en:'fills',de:'füllt',zh:'充滿',pos:'v.'},{fi:'uskovat',en:'believers',de:'Gläubigen',zh:'信徒',pos:'n.'},{fi:'sisimmissään',en:'in their innermost being',de:'in ihrem innersten Wesen',zh:'在他們的最深處',pos:'n.'}]}
+    ]},
+    { s:'II. Kristus — monimuotoinen ihme · Christ — All-Inclusive · 基督——包羅萬有', items:[
+      { fi:'Kristus on Jumalan voima ja Jumalan viisaus.', en:'Christ is the power of God and the wisdom of God.', de:'Christus ist die Kraft Gottes und die Weisheit Gottes.', zh:'基督是神的大能，也是神的智慧。', ref:'1 Cor. 1:24',
+        words:[{fi:'voima',en:'power',de:'Kraft',zh:'大能',pos:'n.'},{fi:'viisaus',en:'wisdom',de:'Weisheit',zh:'智慧',pos:'n.'}]},
+      { fi:'Hän on vanhurskautemme, pyhityksemme ja lunastuksemme.', en:'He is our righteousness, sanctification and redemption.', de:'Er ist unsere Gerechtigkeit, Heiligung und Erlösung.', zh:'祂是我們的公義、聖別和救贖。', ref:'1 Cor. 1:30',
+        words:[{fi:'vanhurskautemme',en:'our righteousness',de:'unsere Gerechtigkeit',zh:'我們的公義',pos:'n.'},{fi:'pyhityksemme',en:'our sanctification',de:'unsere Heiligung',zh:'我們的聖別',pos:'n.'},{fi:'lunastuksemme',en:'our redemption',de:'unsere Erlösung',zh:'我們的救贖',pos:'n.'}]},
+      { fi:'Kristus on kaikki ja kaikissa.', en:'Christ is all and in all.', de:'Christus ist alles und in allem.', zh:'基督是一切，又在一切之內。', ref:'Col. 3:11',
+        words:[{fi:'kaikki',en:'all',de:'alles',zh:'一切',pos:'pron.'},{fi:'kaikissa',en:'in all',de:'in allem',zh:'在一切之內',pos:'pron.'}]}
+    ]},
+    { s:'III. Kristuksen kokeminen — vaeltaminen · Experiencing Christ — Walk · 經歷基督——行事為人', items:[
+      { fi:'Meidän tulee vaeltaa Hengessä, ei tyydyttää lihan haluja.', en:'We must walk by the Spirit and not fulfill the lusts of the flesh.', de:'Wir müssen im Geist wandeln und nicht die Begierden des Fleisches erfüllen.', zh:'我們應當順著靈而行，就不會放縱肉體的私慾。', ref:'Gal. 5:16',
+        words:[{fi:'vaeltaa',en:'walk',de:'wandeln',zh:'行走/生活',pos:'v.'},{fi:'Hengessä',en:'by the Spirit',de:'im Geist',zh:'順著靈',pos:'n.'},{fi:'lihan haluja',en:'lusts of the flesh',de:'Begierden des Fleisches',zh:'肉體的私慾',pos:'n.'}]},
+      { fi:'Kristus asuu sydämissämme uskon kautta; olemme juurtuneita rakkauteen.', en:'Christ makes His home in our hearts through faith; we are rooted and grounded in love.', de:'Christus wohnt durch den Glauben in unseren Herzen; wir sind in der Liebe verwurzelt und gegründet.', zh:'基督藉著信住在我們心裡；我們在愛中生根立基。', ref:'Eph. 3:17',
+        words:[{fi:'asuu sydämissämme',en:'makes His home in our hearts',de:'wohnt in unseren Herzen',zh:'住在我們心裡',pos:'v.'},{fi:'uskon kautta',en:'through faith',de:'durch den Glauben',zh:'藉著信',pos:'n.'},{fi:'juurtuneita',en:'rooted',de:'verwurzelt',zh:'生根的',pos:'adj.'},{fi:'rakkauteen',en:'in love',de:'in der Liebe',zh:'在愛中',pos:'n.'}]}
+    ]},
+    { s:'IV. Kirkko — Kristuksen täyteys · The Church — Fullness of Christ · 召會——基督的豐滿', items:[
+      { fi:'Kirkko on Kristuksen ruumis, täyteys, joka täyttää kaikki kaikessa.', en:'The church is the Body of Christ, the fullness of the One who fills all in all.', de:'Die Gemeinde ist der Leib Christi, die Fülle dessen, der alles in allem erfüllt.', zh:'召會是基督的身體，是那充滿萬有者的豐滿。', ref:'Eph. 1:23',
+        words:[{fi:'Kirkko',en:'church',de:'Gemeinde',zh:'召會',pos:'n.'},{fi:'täyteys',en:'fullness',de:'Fülle',zh:'豐滿',pos:'n.'},{fi:'täyttää kaikki kaikessa',en:'fills all in all',de:'alles in allem erfüllt',zh:'充滿萬有',pos:'v.'}]},
+      { fi:'Jumalan täyteys täyttää meidät, kun olemme vahvistettuja sisimmässämme Hengellä.', en:'The fullness of God fills us when we are strengthened with power in our inner man through His Spirit.', de:'Die Fülle Gottes erfüllt uns, wenn wir durch Seinen Geist mit Kraft im inneren Menschen gestärkt werden.', zh:'當我們藉著祂的靈，在內裡的人得以加強時，神的豐滿就充滿我們。', ref:'Eph. 3:16,19',
+        words:[{fi:'Jumalan täyteys',en:'the fullness of God',de:'die Fülle Gottes',zh:'神的豐滿',pos:'n.'},{fi:'vahvistettuja',en:'strengthened',de:'gestärkt',zh:'加強',pos:'adj.'},{fi:'sisimmässämme',en:'in our inner man',de:'im inneren Menschen',zh:'在內裡的人',pos:'n.'}]}
+    ]}
+  ]}
+] },
+
+/* ═══════════════════════════════════════════════════════════════
+   福音 GOSPEL
+═══════════════════════════════════════════════════════════════ */
+gospel: { label: '福音 Gospel', pages: [
+  { id:'g1', label:'Basic Truths · 基本真理', title:'Gospel Phrases', sub:'福音基本用語 · Living Stream Ministry', secs:[
+    { s:'Sin & Need · 罪與需要', items:[
+      { fi:'Kaikki ovat syntiä tehneet.', en:'All have sinned.', de:'Alle haben gesündigt.', zh:'眾人都犯了罪。', ref:'Rom. 3:23',
+        words:[{fi:'Kaikki',en:'All',de:'Alle',zh:'眾人',pos:'pron.'},{fi:'syntiä',en:'sin',de:'Sünde',zh:'罪',pos:'n.'},{fi:'tehneet',en:'have committed',de:'gesündigt',zh:'犯了',pos:'v.'}]},
+      { fi:'Synnin palkka on kuolema.', en:'The wages of sin is death.', de:'Der Lohn der Sünde ist der Tod.', zh:'罪的工價乃是死。', ref:'Rom. 6:23',
+        words:[{fi:'palkka',en:'wages',de:'Lohn',zh:'工價',pos:'n.'},{fi:'kuolema',en:'death',de:'Tod',zh:'死',pos:'n.'}]},
+      { fi:'Jumala rakastaa sinua.', en:'God loves you.', de:'Gott liebt dich.', zh:'神愛你。',
+        words:[{fi:'Jumala',en:'God',de:'Gott',zh:'神',pos:'n.'},{fi:'rakastaa',en:'loves',de:'liebt',zh:'愛',pos:'v.'},{fi:'sinua',en:'you',de:'dich',zh:'你',pos:'pron.'}]}
+    ]},
+    { s:'Salvation · 救恩', items:[
+      { fi:'Jumala niin rakasti maailmaa, että antoi ainokaisen Poikansa.', en:'God so loved the world that He gave His only begotten Son.', de:'Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab.', zh:'神愛世人，甚至將祂的獨生子賜給他們。', ref:'John 3:16',
+        words:[{fi:'rakasti',en:'loved',de:'geliebt',zh:'愛了',pos:'v.'},{fi:'maailmaa',en:'the world',de:'die Welt',zh:'世人',pos:'n.'},{fi:'antoi',en:'gave',de:'gab',zh:'賜給',pos:'v.'},{fi:'Poikansa',en:'His Son',de:'seinen Sohn',zh:'祂的兒子',pos:'n.'}]},
+      { fi:'Jeesus Kristus kuoli meidän puolestamme.', en:'Jesus Christ died for us.', de:'Jesus Christus ist für uns gestorben.', zh:'耶穌基督為我們死了。', ref:'Rom. 5:8',
+        words:[{fi:'kuoli',en:'died',de:'gestorben',zh:'死了',pos:'v.'},{fi:'puolestamme',en:'for us',de:'für uns',zh:'為我們',pos:'prep.'}]},
+      { fi:'Hän nousi kuolleista kolmantena päivänä.', en:'He rose from the dead on the third day.', de:'Er erstand am dritten Tage von den Toten.', zh:'祂在第三天從死人中復活了。', ref:'1 Cor. 15:4',
+        words:[{fi:'nousi',en:'rose',de:'erstand',zh:'復活了',pos:'v.'},{fi:'kuolleista',en:'from the dead',de:'von den Toten',zh:'從死人中',pos:'n.'},{fi:'kolmantena päivänä',en:'on the third day',de:'am dritten Tage',zh:'在第三天',pos:'n.'}]}
+    ]},
+    { s:'Response · 回應', items:[
+      { fi:'Tunnusta, että Jeesus on Herra.', en:'Confess that Jesus is Lord.', de:'Bekenne, daß Jesus Herr ist.', zh:'口裡承認耶穌為主。', ref:'Rom. 10:9',
+        words:[{fi:'Tunnusta',en:'Confess',de:'Bekenne',zh:'承認',pos:'v.'},{fi:'Herra',en:'Lord',de:'Herr',zh:'主',pos:'n.'}]},
+      { fi:'Usko sydämessäsi, että Jumala herätti Hänet kuolleista.', en:'Believe in your heart that God raised Him from the dead.', de:'Glaube in deinem Herzen, daß Gott ihn von den Toten auferweckt hat.', zh:'心裡信神叫祂從死人中復活。', ref:'Rom. 10:9',
+        words:[{fi:'Usko',en:'Believe',de:'Glaube',zh:'信',pos:'v.'},{fi:'sydämessäsi',en:'in your heart',de:'in deinem Herzen',zh:'在你心裡',pos:'n.'},{fi:'herätti',en:'raised',de:'auferweckte',zh:'叫…復活',pos:'v.'}]},
+      { fi:'Jokainen, joka huutaa avukseen Herran nimeä, pelastetaan.', en:'Whoever calls upon the name of the Lord shall be saved.', de:'Jeder, der den Namen des Herrn anrufen wird, soll gerettet werden.', zh:'凡求告主名的，就必得救。', ref:'Rom. 10:13',
+        words:[{fi:'huutaa avukseen',en:'calls upon',de:'anrufen',zh:'求告',pos:'v.'},{fi:'nimeä',en:'the name',de:'den Namen',zh:'名',pos:'n.'},{fi:'pelastetaan',en:'shall be saved',de:'gerettet werden',zh:'必得救',pos:'v.'}]}
+    ]}
+  ]}
+] },
+
+/* ═══════════════════════════════════════════════════════════════
+   禱告 PRAYER
+═══════════════════════════════════════════════════════════════ */
+prayer: { label: '禱告 Prayer', pages: [
+  { id:'pm', label:'Morning · 早禱', title:'Morning Prayer', sub:'晨禱用語 · Aamuhartaus', secs:[
+    { s:'Praise · 讚美', items:[
+      { fi:'Herra, kiitän Sinua tästä uudesta päivästä.', en:'Lord, I thank You for this new day.', de:'Herr, ich danke Dir für diesen neuen Tag.', zh:'主，我感謝祢賜給我這新的一天。',
+        words:[{fi:'kiitän',en:'I thank',de:'ich danke',zh:'我感謝',pos:'v.'},{fi:'Sinua',en:'You',de:'Dir',zh:'祢',pos:'pron.'},{fi:'uudesta päivästä',en:'for this new day',de:'für diesen neuen Tag',zh:'這新的一天',pos:'n.'}]},
+      { fi:'Armahtosi uusiutuu joka aamu.', en:'Your mercies are new every morning.', de:'Deine Barmherzigkeit erneuert sich jeden Morgen.', zh:'你的慈愛每早晨都是新的。', ref:'Lam. 3:23',
+        words:[{fi:'Armahtosi',en:'Your mercies',de:'Deine Barmherzigkeit',zh:'你的慈愛',pos:'n.'},{fi:'uusiutuu',en:'are renewed',de:'erneuert sich',zh:'更新',pos:'v.'},{fi:'joka aamu',en:'every morning',de:'jeden Morgen',zh:'每早晨',pos:'n.'}]},
+      { fi:'Ylistän Sinua, sillä Sinä olet hyvä.', en:'I praise You, for You are good.', de:'Ich lobe Dich, denn Du bist gut.', zh:'我讚美祢，因祢是美善的。',
+        words:[{fi:'Ylistän',en:'I praise',de:'Ich lobe',zh:'我讚美',pos:'v.'},{fi:'hyvä',en:'good',de:'gut',zh:'美善的',pos:'adj.'}]}
+    ]},
+    { s:'Commitment · 委身', items:[
+      { fi:'Täytä minut Pyhällä Hengellä.', en:'Fill me with the Holy Spirit.', de:'Fülle mich mit dem Heiligen Geist.', zh:'用聖靈充滿我。',
+        words:[{fi:'Täytä',en:'Fill',de:'Fülle',zh:'充滿',pos:'v.'},{fi:'Pyhällä Hengellä',en:'with the Holy Spirit',de:'mit dem Heiligen Geist',zh:'用聖靈',pos:'n.'}]},
+      { fi:'Kristus, asu sydämessäni uskon kautta tänään.', en:'Christ, make Your home in my heart through faith today.', de:'Christus, wohne durch den Glauben heute in meinem Herzen.', zh:'基督，今天藉著信住在我心裡。', ref:'Eph. 3:17',
+        words:[{fi:'asu',en:'make Your home',de:'wohne',zh:'住',pos:'v.'},{fi:'sydämessäni',en:'in my heart',de:'in meinem Herzen',zh:'在我心裡',pos:'n.'},{fi:'uskon kautta',en:'through faith',de:'durch den Glauben',zh:'藉著信',pos:'n.'}]},
+      { fi:'Käytä minua tänään kunniaksesi.', en:'Use me today for Your glory.', de:'Gebrauche mich heute für Deine Herrlichkeit.', zh:'今天使用我，為了祢的榮耀。',
+        words:[{fi:'Käytä',en:'Use',de:'Gebrauche',zh:'使用',pos:'v.'},{fi:'kunniaksesi',en:'for Your glory',de:'für Deine Herrlichkeit',zh:'為祢的榮耀',pos:'n.'}]}
+    ]}
+  ]},
+  { id:'pe', label:'Evening · 晚禱', title:'Evening Prayer', sub:'晚禱用語 · Iltahartaus', secs:[
+    { s:'Confession · 認罪', items:[
+      { fi:'Herra, tutki sydämeni.', en:'Lord, search my heart.', de:'Herr, erforsche mein Herz.', zh:'主，鑑察我的心。', ref:'Ps. 139:23',
+        words:[{fi:'tutki',en:'search',de:'erforsche',zh:'鑑察',pos:'v.'},{fi:'sydämeni',en:'my heart',de:'mein Herz',zh:'我的心',pos:'n.'}]},
+      { fi:'Anteeksi kaikki syntini.', en:'Forgive all my sins.', de:'Vergib mir all meine Sünden.', zh:'赦免我一切的罪。',
+        words:[{fi:'Anteeksi',en:'Forgive',de:'Vergib',zh:'赦免',pos:'v.'},{fi:'syntini',en:'my sins',de:'meine Sünden',zh:'我的罪',pos:'n.'}]},
+      { fi:'Puhdista minut kaikesta vääryydestä.', en:'Cleanse me from all unrighteousness.', de:'Reinige mich von aller Ungerechtigkeit.', zh:'洗淨我一切的不義。', ref:'1 John 1:9',
+        words:[{fi:'Puhdista',en:'Cleanse',de:'Reinige',zh:'洗淨',pos:'v.'},{fi:'vääryydestä',en:'from unrighteousness',de:'von Ungerechtigkeit',zh:'不義',pos:'n.'}]}
+    ]},
+    { s:'Rest · 安息', items:[
+      { fi:'Herra, lepään Sinussa tänä yönä.', en:'Lord, I rest in You this night.', de:'Herr, ich ruhe in Dir diese Nacht.', zh:'主，今夜我安息在祢裡面。',
+        words:[{fi:'lepään',en:'I rest',de:'ich ruhe',zh:'我安息',pos:'v.'},{fi:'Sinussa',en:'in You',de:'in Dir',zh:'在祢裡面',pos:'pron.'},{fi:'tänä yönä',en:'this night',de:'diese Nacht',zh:'今夜',pos:'n.'}]},
+      { fi:'Siunaa minua ja perheeni.', en:'Bless me and my family.', de:'Segne mich und meine Familie.', zh:'祝福我和我的家人。',
+        words:[{fi:'Siunaa',en:'Bless',de:'Segne',zh:'祝福',pos:'v.'},{fi:'perheeni',en:'my family',de:'meine Familie',zh:'我的家人',pos:'n.'}]}
+    ]}
+  ]},
+  { id:'p46', label:'Wk.46 Prayer · 第46週禱告', title:'Prayer from Week 46 Outline', sub:'週46禱告 · 基督的佔有與豐滿 — Viikko 46', secs:[
+    { s:'Opening · 開始', items:[
+      { fi:'Herra Jeesus, kiitän Sinua, että olet elävä Henki sisimmässäni.', en:'Lord Jesus, I thank You that You are the living Spirit in my innermost being.', de:'Herr Jesus, ich danke Dir, daß Du der lebendige Geist in meinem innersten Wesen bist.', zh:'主耶穌，我感謝祢，祢是活在我最深處的那靈。',
+        words:[{fi:'elävä Henki',en:'living Spirit',de:'lebendiger Geist',zh:'活的靈',pos:'n.'},{fi:'sisimmässäni',en:'in my innermost being',de:'in meinem innersten Wesen',zh:'在我的最深處',pos:'n.'}]},
+      { fi:'Kristus, omistu minut kokonaan — sisäinen ihmiseni, sieluni, ruumiini.', en:'Christ, possess me completely — my inner man, my soul, my body.', de:'Christus, nimm mich vollständig in Besitz — meinen inneren Menschen, meine Seele, meinen Leib.', zh:'基督，完全地佔有我——我裡面的人、我的魂、我的身體。',
+        words:[{fi:'Omistu',en:'Possess',de:'Nimm in Besitz',zh:'佔有',pos:'v.'},{fi:'kokonaan',en:'completely',de:'vollständig',zh:'完全地',pos:'adv.'},{fi:'sisäinen ihmiseni',en:'my inner man',de:'meinen inneren Menschen',zh:'我裡面的人',pos:'n.'}]}
+    ]},
+    { s:'Petition · 祈求', items:[
+      { fi:'Vaelta Hengessä tänään, täyttäen minut viisaudellasi ja voimallasi.', en:'Walk in the Spirit today, filling me with Your wisdom and power.', de:'Wandle im Geist heute und fülle mich mit Deiner Weisheit und Kraft.', zh:'今天在靈裡行走，用祢的智慧和能力充滿我。', ref:'Gal. 5:16; 1 Cor. 1:24',
+        words:[{fi:'Vaelta',en:'Walk',de:'Wandle',zh:'行走',pos:'v.'},{fi:'viisaudellasi',en:'with Your wisdom',de:'mit Deiner Weisheit',zh:'用祢的智慧',pos:'n.'},{fi:'voimallasi',en:'with Your power',de:'mit Deiner Kraft',zh:'用祢的能力',pos:'n.'}]},
+      { fi:'Täytä Jumalan täydellisyys koko kirkkoasi.', en:'Fill the whole church with the fullness of God.', de:'Fülle die ganze Gemeinde mit der Fülle Gottes.', zh:'用神的豐滿充滿全召會。', ref:'Eph. 3:19',
+        words:[{fi:'Täytä',en:'Fill',de:'Fülle',zh:'充滿',pos:'v.'},{fi:'Jumalan täydellisyys',en:'fullness of God',de:'Fülle Gottes',zh:'神的豐滿',pos:'n.'},{fi:'koko kirkkoasi',en:'the whole church',de:'die ganze Gemeinde',zh:'全召會',pos:'n.'}]},
+      { fi:'Rakenna kirkkoasi Kristuksen ruumiiksi, Hänen täyteydekseen.', en:'Build Your church as the Body of Christ, as His fullness.', de:'Baue Deine Gemeinde als den Leib Christi, als Seine Fülle auf.', zh:'建造祢的召會作為基督的身體，作為祂的豐滿。', ref:'Eph. 1:22-23',
+        words:[{fi:'Rakenna',en:'Build',de:'Baue',zh:'建造',pos:'v.'},{fi:'ruumiiksi',en:'as the Body',de:'als den Leib',zh:'作為身體',pos:'n.'},{fi:'täyteydekseen',en:'as His fullness',de:'als Seine Fülle',zh:'作為祂的豐滿',pos:'n.'}]}
+    ]},
+    { s:'Closing · 結束', items:[
+      { fi:'Herra, elä minussa tänään — olet vanhurskauteni, pyhitykseni ja lunastukseni.', en:'Lord, live in me today — You are my righteousness, my sanctification and my redemption.', de:'Herr, lebe heute in mir — Du bist meine Gerechtigkeit, meine Heiligung und meine Erlösung.', zh:'主，今天住在我裡面——祢是我的公義、我的聖別和我的救贖。', ref:'1 Cor. 1:30',
+        words:[{fi:'elä minussa',en:'live in me',de:'lebe in mir',zh:'住在我裡面',pos:'v.'},{fi:'vanhurskauteni',en:'my righteousness',de:'meine Gerechtigkeit',zh:'我的公義',pos:'n.'},{fi:'pyhitykseni',en:'my sanctification',de:'meine Heiligung',zh:'我的聖別',pos:'n.'}]}
+    ]}
+  ]}
+] },
+
+/* ═══════════════════════════════════════════════════════════════
+   日常 DAILY
+═══════════════════════════════════════════════════════════════ */
+daily: { label: '日常 Daily', pages: [
+  { id:'d1', label:'Greetings · 問候', title:'Daily Greetings', sub:'日常問候語 · Päivittäiset tervehdykset', secs:[
+    { s:'Basic Greetings · 基本問候', items:[
+      { fi:'Hyvää huomenta!', en:'Good morning!', de:'Guten Morgen!', zh:'早安！',
+        words:[{fi:'Hyvää',en:'Good',de:'Guten',zh:'美好的',pos:'adj.'},{fi:'huomenta',en:'morning',de:'Morgen',zh:'早晨',pos:'n.'}]},
+      { fi:'Hyvää iltaa!', en:'Good evening!', de:'Guten Abend!', zh:'晚安！',
+        words:[{fi:'Hyvää',en:'Good',de:'Guten',zh:'美好的',pos:'adj.'},{fi:'iltaa',en:'evening',de:'Abend',zh:'晚上',pos:'n.'}]},
+      { fi:'Kuinka voit?', en:'How are you?', de:'Wie geht es dir?', zh:'你好嗎？',
+        words:[{fi:'Kuinka',en:'How',de:'Wie',zh:'如何',pos:'adv.'},{fi:'voit',en:'are you',de:'geht es dir',zh:'你好',pos:'v.'}]},
+      { fi:'Olen hyvin, kiitos.', en:'I am fine, thank you.', de:'Ich bin gut, danke.', zh:'我很好，謝謝。',
+        words:[{fi:'hyvin',en:'fine',de:'gut',zh:'好',pos:'adv.'},{fi:'kiitos',en:'thank you',de:'danke',zh:'謝謝',pos:'n.'}]}
+    ]},
+    { s:'At Church · 在教會', items:[
+      { fi:'Tervetuloa kokoukseen!', en:'Welcome to the meeting!', de:'Herzlich willkommen zur Zusammenkunft!', zh:'歡迎來聚會！',
+        words:[{fi:'Tervetuloa',en:'Welcome',de:'Herzlich willkommen',zh:'歡迎',pos:'n.'},{fi:'kokoukseen',en:'to the meeting',de:'zur Zusammenkunft',zh:'來聚會',pos:'n.'}]},
+      { fi:'Oletko kristitty?', en:'Are you a Christian?', de:'Bist du ein Christ?', zh:'你是基督徒嗎？',
+        words:[{fi:'Oletko',en:'Are you',de:'Bist du',zh:'你是',pos:'v.'},{fi:'kristitty',en:'a Christian',de:'ein Christ',zh:'基督徒',pos:'n.'}]},
+      { fi:'Olen uskovainen.', en:'I am a believer.', de:'Ich bin ein Gläubiger.', zh:'我是信徒。',
+        words:[{fi:'uskovainen',en:'a believer',de:'ein Gläubiger',zh:'信徒',pos:'n.'}]}
+    ]}
+  ]},
+  { id:'d2', label:'Family · 家庭', title:'Family & Home', sub:'家庭生活用語 · Perhe ja koti', secs:[
+    { s:'Family Members · 家庭成員', items:[
+      { fi:'äiti', en:'mother', de:'Mutter', zh:'媽媽', words:[{fi:'äiti',en:'mother',de:'Mutter',zh:'媽媽',pos:'n.'}]},
+      { fi:'isä', en:'father', de:'Vater', zh:'爸爸', words:[{fi:'isä',en:'father',de:'Vater',zh:'爸爸',pos:'n.'}]},
+      { fi:'tytär', en:'daughter', de:'Tochter', zh:'女兒', words:[{fi:'tytär',en:'daughter',de:'Tochter',zh:'女兒',pos:'n.'}]},
+      { fi:'poika', en:'son', de:'Sohn', zh:'兒子', words:[{fi:'poika',en:'son',de:'Sohn',zh:'兒子',pos:'n.'}]},
+      { fi:'perhe', en:'family', de:'Familie', zh:'家庭', words:[{fi:'perhe',en:'family',de:'Familie',zh:'家庭',pos:'n.'}]}
+    ]},
+    { s:'Home Life · 家庭生活', items:[
+      { fi:'Rukoillaanko yhdessä?', en:'Shall we pray together?', de:'Wollen wir zusammen beten?', zh:'我們一起禱告好嗎？',
+        words:[{fi:'Rukoillaanko',en:'Shall we pray',de:'Wollen wir beten',zh:'我們一起禱告好嗎',pos:'v.'},{fi:'yhdessä',en:'together',de:'zusammen',zh:'一起',pos:'adv.'}]},
+      { fi:'Luetaan Raamattua yhdessä.', en:"Let's read the Bible together.", de:'Laßt uns zusammen die Bibel lesen.', zh:'我們一起讀聖經。',
+        words:[{fi:'Luetaan',en:"Let's read",de:'Laßt uns lesen',zh:'我們讀',pos:'v.'},{fi:'Raamattua',en:'the Bible',de:'die Bibel',zh:'聖經',pos:'n.'},{fi:'yhdessä',en:'together',de:'zusammen',zh:'一起',pos:'adv.'}]},
+      { fi:'Syödään yhdessä.', en:"Let's eat together.", de:'Laßt uns zusammen essen.', zh:'我們一起吃飯。',
+        words:[{fi:'Syödään',en:"Let's eat",de:'Laßt uns essen',zh:'我們吃',pos:'v.'},{fi:'yhdessä',en:'together',de:'zusammen',zh:'一起',pos:'adv.'}]}
+    ]}
+  ]}
+] },
+
+/* ═══════════════════════════════════════════════════════════════
+   聖經 SCRIPTURE
+═══════════════════════════════════════════════════════════════ */
+scripture: { label: '聖經 Scripture', pages: [
+  { id:'s1', label:'John · 約翰', title:'Gospel of John — Key Verses', sub:'約翰福音鑰節 · Johanneksen evankeliumi', secs:[
+    { s:'John 1 · 約翰一章', items:[
+      { fi:'Alussa oli Sana, ja Sana oli Jumalan luona, ja Sana oli Jumala.', en:'In the beginning was the Word, and the Word was with God, and the Word was God.', de:'Im Anfang war das Wort, und das Wort war bei Gott, und das Wort war Gott.', zh:'太初有道，道與神同在，道就是神。', ref:'John 1:1',
+        words:[{fi:'Alussa',en:'In the beginning',de:'Im Anfang',zh:'太初',pos:'n.'},{fi:'Sana',en:'Word',de:'Wort',zh:'道',pos:'n.'},{fi:'Jumalan luona',en:'with God',de:'bei Gott',zh:'與神同在',pos:'prep.'},{fi:'oli',en:'was',de:'war',zh:'有/是',pos:'v.'}]},
+      { fi:'Sana tuli lihaksi ja asui meidän keskellämme.', en:'The Word became flesh and dwelt among us.', de:'Und das Wort wurde Fleisch und wohnte unter uns.', zh:'道成了肉身，住在我們中間。', ref:'John 1:14',
+        words:[{fi:'tuli lihaksi',en:'became flesh',de:'wurde Fleisch',zh:'成了肉身',pos:'v.'},{fi:'asui',en:'dwelt',de:'wohnte',zh:'住',pos:'v.'},{fi:'keskellämme',en:'among us',de:'unter uns',zh:'在我們中間',pos:'prep.'}]}
+    ]},
+    { s:'John 3 · 約翰三章', items:[
+      { fi:'Niin Jumala rakasti maailmaa, että antoi ainoan Poikansa.', en:'For God so loved the world that He gave His only begotten Son.', de:'Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab.', zh:'神愛世人，甚至將祂的獨生子賜給他們。', ref:'John 3:16',
+        words:[{fi:'rakasti',en:'loved',de:'geliebt',zh:'愛了',pos:'v.'},{fi:'antoi',en:'gave',de:'gab',zh:'賜給',pos:'v.'},{fi:'ainoan Poikansa',en:'His only begotten Son',de:'seinen eingeborenen Sohn',zh:'祂的獨生子',pos:'n.'}]},
+      { fi:'Jokaisella, joka uskoo Häneen, on ikuinen elämä.', en:'Everyone who believes into Him has eternal life.', de:'Jeder, der in ihn glaubt, hat das ewige Leben.', zh:'叫一切信祂的人不致滅亡，反得永生。', ref:'John 3:16',
+        words:[{fi:'uskoo',en:'believes',de:'glaubt',zh:'信',pos:'v.'},{fi:'Häneen',en:'into Him',de:'in ihn',zh:'祂',pos:'pron.'},{fi:'ikuinen elämä',en:'eternal life',de:'ewige Leben',zh:'永生',pos:'n.'}]}
+    ]},
+    { s:'John 14 · 約翰十四章', items:[
+      { fi:'Minä olen tie, totuus ja elämä.', en:'I am the way, the reality, and the life.', de:'Ich bin der Weg, die Wahrheit und das Leben.', zh:'我就是道路、實際、生命。', ref:'John 14:6',
+        words:[{fi:'tie',en:'way',de:'Weg',zh:'道路',pos:'n.'},{fi:'totuus',en:'reality',de:'Wahrheit',zh:'實際',pos:'n.'},{fi:'elämä',en:'life',de:'Leben',zh:'生命',pos:'n.'}]},
+      { fi:'Pyydän Isää antamaan teille toisen Lohduttajan.', en:'I will ask the Father and He will give you another Comforter.', de:'Ich werde den Vater bitten, und er wird euch einen anderen Beistand geben.', zh:'我要求父，父就另賜給你們一位保惠師。', ref:'John 14:16',
+        words:[{fi:'Pyydän',en:'I will ask',de:'Ich werde bitten',zh:'我要求',pos:'v.'},{fi:'Lohduttajan',en:'Comforter',de:'Beistand',zh:'保惠師',pos:'n.'}]}
+    ]}
+  ]},
+  { id:'s2', label:'Eph. · 以弗所', title:'Epistle to the Ephesians — Key Verses', sub:'以弗所書鑰節 · Kirje efesolaisille', secs:[
+    { s:'Eph. 1 · 以弗所一章', items:[
+      { fi:'Kirkko on Kristuksen ruumis, Hänen täyteytensä, joka täyttää kaikki kaikessa.', en:'The church is His Body, the fullness of the One who fills all in all.', de:'Die Gemeinde ist sein Leib, die Fülle dessen, der alles in allem erfüllt.', zh:'召會是祂的身體，是那充滿萬有者的豐滿。', ref:'Eph. 1:22-23',
+        words:[{fi:'Kirkko',en:'church',de:'Gemeinde',zh:'召會',pos:'n.'},{fi:'ruumis',en:'Body',de:'Leib',zh:'身體',pos:'n.'},{fi:'täyteytensä',en:'His fullness',de:'Seine Fülle',zh:'祂的豐滿',pos:'n.'},{fi:'täyttää kaikki kaikessa',en:'fills all in all',de:'alles in allem erfüllt',zh:'充滿萬有',pos:'v.'}]}
+    ]},
+    { s:'Eph. 3-4 · 以弗所三至四章', items:[
+      { fi:'Kristus asuu sydämissämme uskon kautta, ja olemme juurtuneita rakkauteen.', en:'Christ makes His home in our hearts through faith, and we are rooted in love.', de:'Christus wohnt durch den Glauben in unseren Herzen, und wir sind in der Liebe verwurzelt.', zh:'基督藉著信住在我們心裡，我們在愛中生根。', ref:'Eph. 3:17',
+        words:[{fi:'asuu sydämissämme',en:'makes His home in our hearts',de:'wohnt in unseren Herzen',zh:'住在我們心裡',pos:'v.'},{fi:'juurtuneita',en:'rooted',de:'verwurzelt',zh:'生根的',pos:'adj.'},{fi:'rakkauteen',en:'in love',de:'in der Liebe',zh:'在愛中',pos:'n.'}]},
+      { fi:'Kasvamme kaikin puolin Häneen, joka on pää, Kristus.', en:'We grow up in all things into Him who is the Head, Christ.', de:'Wir wachsen in allen Stücken auf in ihn hinein, der das Haupt ist, Christus.', zh:'我們在各事上長到祂，就是頭，基督。', ref:'Eph. 4:15',
+        words:[{fi:'Kasvamme',en:'We grow up',de:'Wir wachsen',zh:'我們長到',pos:'v.'},{fi:'kaikin puolin',en:'in all things',de:'in allen Stücken',zh:'在各事上',pos:'adv.'},{fi:'pää',en:'Head',de:'Haupt',zh:'頭',pos:'n.'}]}
+    ]},
+    { s:'Eph. 6 · 以弗所六章', items:[
+      { fi:'Pukekaa päällenne koko Jumalan haarniska, jotta voitte seistä pahan päivinä.', en:'Put on the whole armor of God, that you may be able to stand in the evil day.', de:'Zieht die ganze Waffenrüstung Gottes an, damit ihr standhalten könnt am bösen Tag.', zh:'要穿上神所賜的全副軍裝，叫你們能抵擋魔鬼的詭計。', ref:'Eph. 6:11,13',
+        words:[{fi:'Pukekaa päällenne',en:'Put on',de:'Zieht an',zh:'穿上',pos:'v.'},{fi:'haarniska',en:'armor',de:'Waffenrüstung',zh:'軍裝',pos:'n.'},{fi:'seistä',en:'to stand',de:'standhalten',zh:'抵擋',pos:'v.'}]},
+      { fi:'Rukoilkaa kaikella rukouksella joka hetki Hengessä.', en:'Pray at every time in spirit with all prayer and petition.', de:'Betet zu jeder Zeit im Geist mit allem Gebet und Bitten.', zh:'靠著聖靈，隨時多方禱告祈求。', ref:'Eph. 6:18',
+        words:[{fi:'Rukoilkaa',en:'Pray',de:'Betet',zh:'禱告',pos:'v.'},{fi:'joka hetki',en:'at every time',de:'zu jeder Zeit',zh:'隨時',pos:'adv.'},{fi:'Hengessä',en:'in spirit',de:'im Geist',zh:'靠著聖靈',pos:'n.'}]}
+    ]}
+  ]}
+] }
+
+};
+/* ══   APP STATE
+══════════════════════════════════════════════════════════ */
+let activeCat  = 'hymns';
+let activePage = {};   // cat → pageId
+let mode    = 'sentence';
+let showDE  = true;
+let showZH  = true;
+let openDD  = null;   // currently open dropdown key
+
+Object.keys(D).forEach(k => activePage[k] = D[k].pages[0].id);
+
+/* ══ BUTTON HTML ══ */
+function esc(t) { return t.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' '); }
+function fib(t) { return `<button class="tb fi" onclick="_speakFI('${esc(t)}',this)">▶ FI</button>`; }
+function ob(t, lang, lbl) { return `<button class="tb" onclick="_speakOther('${esc(t)}','${lang}',this)">${lbl}</button>`; }
+
+/* ══ DROPDOWN NAV ══ */
+function renderNav() {
+  const nb = document.getElementById('navbar');
+  nb.innerHTML = Object.entries(D).map(([k, v]) => {
+    const isActive = k === activeCat;
+    const isOpen   = openDD === k;
+    const pages    = v.pages;
+    const items    = pages.map(p => {
+      const isCur = activePage[k] === p.id;
+      return `<button class="dditem${isCur ? ' on' : ''}" onclick="event.stopPropagation();selectPage('${k}','${p.id}')">${p.label}</button>`;
+    }).join('');
+    return `
+      <div class="ddwrap" id="dd-${k}">
+        <button class="ddtrig${isActive ? ' active' : ''}${isOpen ? ' open' : ''}" onclick="event.stopPropagation();toggleDD('${k}')">
+          ${v.label} <span class="arr">▾</span>
+        </button>
+        <div class="ddmenu${isOpen ? ' open' : ''}">${items}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleDD(k) {
+  const isOpening = openDD !== k;
+  // Close all
+  document.querySelectorAll('.ddmenu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.ddtrig').forEach(t => t.classList.remove('open'));
+  openDD = null;
+  if (isOpening) {
+    const wrap = document.getElementById('dd-' + k);
+    if (wrap) {
+      wrap.querySelector('.ddmenu').classList.add('open');
+      wrap.querySelector('.ddtrig').classList.add('open');
+      openDD = k;
+    }
+  }
+}
+
+function selectPage(cat, pageId) {
+  activeCat      = cat;
+  activePage[cat] = pageId;
+  openDD         = null;
+  renderNav();
+  renderPager();
+  renderMain();
+}
+
+/* ══ PAGER ══ */
+function renderPager() {
+  const pages = D[activeCat].pages;
+  const cur   = activePage[activeCat];
+  document.getElementById('pager').innerHTML =
+    pages.map(p => `<button class="ptab${p.id === cur ? ' on' : ''}" onclick="selectPage('${activeCat}','${p.id}')">${p.label}</button>`).join('') +
+    `<button class="padd" onclick="alert('Upload a new PDF or paste content to add the next week — coming soon!')" title="Add next week">+ week</button>`;
+}
+
+/* ══ MAIN RENDER ══ */
+function renderMain() {
+  const page = D[activeCat].pages.find(p => p.id === activePage[activeCat]) || D[activeCat].pages[0];
+  let h = `<div class="shdr"><div class="stitle">${page.title}</div><div class="ssub">${page.sub}</div></div>`;
+
+  if (mode === 'sentence') {
+    h += `<div class="sv">`;
+    for (const sec of page.secs) {
+      h += `<div class="seclbl">${sec.s}</div>`;
+      sec.items.forEach(item => {
+        h += `<div class="card">
+          <div class="rfi"><span class="llbl">FI</span><span>${item.fi}</span>${fib(item.fi)}</div>
+          <div class="ren"><span class="llbl">EN</span><span>${item.en}</span>${ob(item.en,'en-US','EN')}</div>
+          <div class="rde${showDE ? '' : ' hidden'}"><span class="llbl">DE</span><span>${item.de}</span>${ob(item.de,'de-DE','DE')}</div>
+          <div class="rzh${showZH ? '' : ' hidden'}"><span class="llbl">繁</span><span>${item.zh}</span>${ob(item.zh,'zh-TW','繁')}</div>
+          ${item.ref ? `<div class="refline">${item.ref}</div>` : ''}
+        </div>`;
+      });
+    }
+    h += `</div>`;
+  } else {
+    const hasW = page.secs.some(s => s.items.some(it => it.words && it.words.length > 0));
+    if (!hasW) {
+      h += `<div class="nowords">Word-by-word for this sheet coming soon · 逐字模式即將推出</div>`;
+    } else {
+      h += `<div class="wv">`;
+      for (const sec of page.secs) {
+        h += `<div class="seclbl">${sec.s}</div>`;
+        sec.items.forEach(item => {
+          if (!item.words || !item.words.length) return;
+          h += `<div class="wblk">
+            <div class="wbhdr"><span style="color:var(--fi);font-family:'Source Serif 4',serif;font-size:.88rem">${item.fi}</span>${fib(item.fi)}</div>
+            <div class="wrow whdr"><div>Finnish</div><div>English</div><div class="${showDE ? '' : 'hidden'}">Deutsch</div><div class="${showZH ? '' : 'hidden'}">繁中</div><div></div></div>`;
+          item.words.forEach(w => {
+            h += `<div class="wrow">
+              <div><div class="wfi">${w.fi}</div><div class="wpos">${w.pos}</div></div>
+              <div class="wen2">${w.en}</div>
+              <div class="wde2${showDE ? '' : ' hidden'}">${w.de}</div>
+              <div class="wzh2${showZH ? '' : ' hidden'}">${w.zh}</div>
+              <div>${fib(w.fi)}</div>
+            </div>`;
+          });
+          h += `</div>`;
+        });
+      }
+      h += `</div>`;
+    }
+  }
+
+  h += `<div class="credits"><b>Sources · 來源 · Quellen:</b><br>
+    Finnish/English: <em>Living Stream Ministry</em> ·
+    Deutsch: <em>Lebensstrom e.V.</em> ·
+    繁中: <em>台灣福音書房 Taiwan Gospel Room</em></div>`;
+
+  document.getElementById('mainc').innerHTML = h;
+}
+
+/* ══ CONTROLS ══ */
+function setMode(m) {
+  mode = m;
+  document.getElementById('bSent').classList.toggle('on', m === 'sentence');
+  document.getElementById('bWord').classList.toggle('on', m === 'word');
+  renderMain();
+}
+function toggleLang(l) {
+  if (l === 'de') { showDE = !showDE; document.getElementById('tDE').classList.toggle('on', showDE); }
+  else            { showZH = !showZH; document.getElementById('tZH').classList.toggle('on', showZH); }
+  renderMain();
+}
+function toggleTheme() {
+  const d = document.body.dataset.theme === 'dark';
+  document.body.dataset.theme = d ? 'light' : 'dark';
+  document.getElementById('themeBtn').textContent = d ? '🌙' : '☀️';
+}
+
+/* ══ INIT ══ */
+setEng(TTS_ENG, false);
+updateBadge();
+// Show a gentle badge hint if on file:// — but don't auto-show full banner
+if (IS_FILE && TTS_ENG === 'v3') {
+  setBadge('🔊 EL: open via localhost', 'err');
+}
+renderNav();
+renderPager();
+renderMain();
+
+/* Close dropdowns on outside click */
+document.addEventListener('click', () => {
+  if (openDD !== null) {
+    document.querySelectorAll('.ddmenu').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.ddtrig').forEach(t => t.classList.remove('open'));
+    openDD = null;
+  }
+});
+
+/* Auto-init Piper cache check if V2 selected */
+if (TTS_ENG === 'v2') {
+  ensureCOI().then(iso => { if (iso) initPiper(); });
+}
+</script>
+</body>
+</html>

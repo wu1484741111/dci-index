@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>頭頂星空・衛星・航班 即時穹頂（純瀏覽器版）</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/5.0.0/satellite.min.js"></script>
+<style>
+  :root {
+    --bg-deep: #03050d;
+    --bg-mid: #0a1228;
+    --accent-star: #fdf6e3;
+    --accent-plane: #ffb454;
+    --accent-sat: #5ee6ff;
+    --accent-sun: #ffd56b;
+    --accent-moon: #cfd8e3;
+    --panel-bg: rgba(8, 14, 32, 0.72);
+    --panel-border: rgba(120, 160, 220, 0.25);
+    --text-main: #e8edf7;
+    --text-dim: #8fa0c0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at top, var(--bg-mid) 0%, var(--bg-deep) 70%);
+    color: var(--text-main);
+    font-family: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", -apple-system, sans-serif;
+    overflow: hidden;
+  }
+
+  #app {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #domeCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+    cursor: grab;
+  }
+  #domeCanvas:active { cursor: grabbing; }
+
+  /* ===== 頂部資訊列 ===== */
+  #topBar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 20;
+    pointer-events: none;
+  }
+  #topBar .panel { pointer-events: auto; }
+
+  .panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 10px 14px;
+    backdrop-filter: blur(8px);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  #locInfo { min-width: 160px; }
+  #locInfo .row { display: flex; justify-content: space-between; gap: 12px; color: var(--text-dim); }
+  #locInfo .row b { color: var(--text-main); font-weight: 600; }
+  #locInfo .title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+
+  #statusPanel { text-align: right; min-width: 150px; }
+  .statusLine { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin: 3px 0; color: var(--text-dim); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.ok { background: #5fd97a; box-shadow: 0 0 6px #5fd97a; }
+  .dot.warn { background: #f0b94d; box-shadow: 0 0 6px #f0b94d; }
+  .dot.err { background: #e6555c; box-shadow: 0 0 6px #e6555c; }
+  .dot.pending { background: #6b7a99; }
+
+  /* ===== 底部控制列 ===== */
+  #bottomBar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    z-index: 20;
+  }
+
+  #layerToggles {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .toggleBtn {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--text-main);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.15s, transform 0.1s;
+    user-select: none;
+  }
+  .toggleBtn:active { transform: scale(0.96); }
+  .toggleBtn.off { opacity: 0.4; }
+  .toggleBtn .swatch { width: 10px; height: 10px; border-radius: 50%; }
+
+  #settingsBtn {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--text-main);
+    border-radius: 999px;
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* ===== 設定面板（彈窗）===== */
+  #settingsModal {
+    position: absolute;
+    inset: 0;
+    background: rgba(2,4,10,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  #settingsModal.show { display: flex; }
+  #settingsCard {
+    background: #0c1530;
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 22px;
+    width: min(420px, 90vw);
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  #settingsCard h3 { margin: 0 0 14px; font-size: 16px; }
+  #settingsCard label { display: block; font-size: 12px; color: var(--text-dim); margin: 14px 0 4px; }
+  #settingsCard input {
+    width: 100%;
+    background: #0a1124;
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    color: var(--text-main);
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  #settingsCard .hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+  #settingsCard .btnRow { display: flex; gap: 8px; margin-top: 18px; }
+  #settingsCard button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  #saveSettingsBtn { background: var(--accent-sat); color: #042; }
+  #closeSettingsBtn { background: rgba(255,255,255,0.08); color: var(--text-main); }
+
+  /* ===== 物件標籤 ===== */
+  .objLabel {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow: 0 0 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.9);
+    z-index: 10;
+  }
+
+  #loadingMsg {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text-dim);
+    z-index: 20;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    #topBar { flex-direction: column; gap: 8px; }
+    #statusPanel { text-align: left; }
+    .panel { font-size: 12px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="domeCanvas"></canvas>
+
+  <div id="topBar">
+    <div class="panel" id="locInfo">
+      <div class="title">頭頂穹頂</div>
+      <div class="row"><span>座標</span><b id="locCoord">—</b></div>
+      <div class="row"><span>時間</span><b id="locTime">—</b></div>
+      <div class="row"><span>日出/日落</span><b id="locSunTimes">—</b></div>
+    </div>
+    <div class="panel" id="statusPanel">
+      <div class="statusLine"><span id="flightCount">航班 —</span><span class="dot pending" id="flightDot"></span></div>
+      <div class="statusLine"><span id="satCount">衛星 —</span><span class="dot pending" id="satDot"></span></div>
+      <div class="statusLine"><span id="starStatus">星空 就緒</span><span class="dot ok"></span></div>
+    </div>
+  </div>
+
+  <div id="loadingMsg"></div>
+
+  <div id="bottomBar">
+    <div id="layerToggles">
+      <div class="toggleBtn" data-layer="stars"><span class="swatch" style="background:var(--accent-star)"></span>星空</div>
+      <div class="toggleBtn" data-layer="planes"><span class="swatch" style="background:var(--accent-plane)"></span>航班</div>
+      <div class="toggleBtn" data-layer="sats"><span class="swatch" style="background:var(--accent-sat)"></span>衛星</div>
+    </div>
+    <div id="settingsBtn">⚙️</div>
+  </div>
+
+  <div id="settingsModal">
+    <div id="settingsCard">
+      <h3>設定</h3>
+
+      <label>觀測座標（緯度, 經度）</label>
+      <input type="text" id="inputCoord" placeholder="例如：53.5511, 9.9937">
+      <div class="hint">預設會嘗試用瀏覽器定位；也可以手動輸入。漢堡：53.5511, 9.9937</div>
+
+      <label>頭頂航班搜尋半徑（公里）</label>
+      <input type="number" id="inputRadius" value="25" min="5" max="150">
+      <div class="hint">
+        航班資料直接從瀏覽器抓取 OpenSky Network（匿名模式，免註冊免金鑰），
+        若遇到瀏覽器跨網域限制會自動切換備援線路。
+        因為是匿名額度，更新頻率較低（約每 20-30 秒一次），請耐心等待。
+      </div>
+
+      <div class="btnRow">
+        <button id="closeSettingsBtn">取消</button>
+        <button id="saveSettingsBtn">儲存並套用</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="stardata.js"></script>
+<script src="sky-dome-v2.js"></script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&#x810A;&#x5411; &#xB7; &#x59FF;&#x52E2;&#x76E3;&#x63A7;</title>
+<style>
+  :root{
+    --bg: #0e1613;
+    --panel: #141f1b;
+    --panel-2: #182620;
+    --line: #24352e;
+    --ink: #eef3ef;
+    --ink-dim: #90a59a;
+    --good: #6fd8a3;
+    --good-dim: #234a37;
+    --bad: #ff7a5c;
+    --bad-dim: #4a2620;
+    --warn: #e8c468;
+    --mono: 'IBM Plex Mono', 'Courier New', monospace;
+    --sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); -webkit-font-smoothing:antialiased;
+  }
+  body{
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding: 28px 16px 60px;
+  }
+  .wrap{ width:100%; max-width:920px; }
+
+  header{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:8px; }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand .mark{
+    font-family:var(--mono); font-size:13px; color:var(--good);
+    border:1px solid var(--good-dim); padding:3px 7px; border-radius:4px; letter-spacing:1px;
+  }
+  h1{ font-size:22px; font-weight:600; margin:0; letter-spacing:0.3px; }
+  .sub{ color:var(--ink-dim); font-size:13px; font-family:var(--mono); }
+
+  .stage{
+    position:relative; width:100%; aspect-ratio: 4/3; background:#000;
+    border-radius:14px; overflow:hidden; border:1px solid var(--line);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 20px 60px -20px rgba(0,0,0,.6);
+  }
+  video, canvas{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    object-fit:cover; transform: scaleX(-1);
+  }
+  video{ opacity:0.92; }
+
+  .stage-overlay{
+    position:absolute; inset:0; pointer-events:none;
+    display:flex; align-items:flex-start; justify-content:space-between;
+    padding:14px; z-index:5;
+  }
+  .badge{
+    font-family:var(--mono); font-size:12px; padding:6px 10px; border-radius:20px;
+    backdrop-filter: blur(6px); background:rgba(10,16,14,0.55);
+    border:1px solid rgba(255,255,255,0.08); color:var(--ink-dim);
+    transition: all .25s ease;
+  }
+  .badge.status{ font-weight:600; letter-spacing:0.4px; }
+  .badge.status.good{ color:var(--good); border-color:var(--good-dim); background:rgba(35,74,55,0.55); }
+  .badge.status.bad{ color:var(--bad); border-color:var(--bad-dim); background:rgba(74,38,32,0.6); animation:pulse 1.4s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.65;} }
+
+  .idle-msg{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:14px; text-align:center; z-index:4; padding:20px;
+  }
+  .idle-msg p{ color:var(--ink-dim); font-size:13px; max-width:340px; line-height:1.6; margin:0; }
+
+  .controls{
+    display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;
+  }
+  button{
+    font-family:var(--sans); font-size:14px; font-weight:600; cursor:pointer;
+    padding:11px 18px; border-radius:8px; border:1px solid var(--line);
+    background:var(--panel-2); color:var(--ink); transition: all .15s ease;
+  }
+  button:hover{ border-color:var(--good-dim); background:#1c2b24; }
+  button:active{ transform: translateY(1px); }
+  button:disabled{ opacity:.4; cursor:not-allowed; }
+  button.primary{ background:var(--good); color:#0b1712; border-color:var(--good); }
+  button.primary:hover{ background:#7fe3b0; }
+  button.ghost{ background:transparent; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:16px; margin-top:18px; }
+  @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; } }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px;
+  }
+  .panel h3{
+    font-size:11px; text-transform:uppercase; letter-spacing:1.4px; color:var(--ink-dim);
+    margin:0 0 14px; font-family:var(--mono); font-weight:600;
+  }
+
+  .metric-row{ display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line); }
+  .metric-row:last-child{ border-bottom:none; }
+  .metric-label{ font-size:13px; color:var(--ink-dim); }
+  .metric-value{ font-family:var(--mono); font-size:13px; display:flex; align-items:center; gap:8px; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--ink-dim); flex-shrink:0; }
+  .dot.good{ background:var(--good); box-shadow:0 0 8px var(--good); }
+  .dot.bad{ background:var(--bad); box-shadow:0 0 8px var(--bad); }
+
+  .stat-big{ display:flex; align-items:baseline; gap:8px; margin-bottom:4px; }
+  .stat-big .num{ font-family:var(--mono); font-size:34px; font-weight:600; color:var(--good); }
+  .stat-big .unit{ font-size:13px; color:var(--ink-dim); }
+  .stat-cap{ font-size:12px; color:var(--ink-dim); margin-bottom:18px; }
+
+  .bar-outer{ height:8px; border-radius:4px; background:var(--panel-2); overflow:hidden; margin-top:6px; }
+  .bar-inner{ height:100%; background:linear-gradient(90deg, var(--good), #4fb389); border-radius:4px; transition: width .4s ease; }
+
+  .slider-row{ margin-top:14px; }
+  .slider-row label{ font-size:12px; color:var(--ink-dim); display:flex; justify-content:space-between; margin-bottom:6px; font-family:var(--mono); }
+  input[type=range]{ width:100%; accent-color: var(--good); }
+
+  footer{ margin-top:26px; color:var(--ink-dim); font-size:11px; text-align:center; line-height:1.7; font-family:var(--mono); }
+  footer a{ color:var(--ink-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <span class="mark">&#x810A;&#x5411;</span>
+      <h1>&#x59FF;&#x52E2;&#x76E3;&#x63A7; Demo</h1>
+    </div>
+    <div class="sub">&#x6B63;&#x9762;&#x93E1;&#x982D; &#xB7; &#x672C;&#x6A5F;&#x7AEF;&#x904B;&#x7B97; &#xB7; &#x4E0D;&#x4E0A;&#x50B3;&#x5F71;&#x50CF;</div>
+  </header>
+
+  <div class="stage" id="stage">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+    <div class="stage-overlay">
+      <div class="badge status" id="statusBadge">&#x5C1A;&#x672A;&#x555F;&#x52D5;</div>
+      <div class="badge" id="fpsBadge">--</div>
+    </div>
+    <div class="idle-msg" id="idleMsg">
+      <p>&#x9EDE;&#x64CA;&#x300C;&#x555F;&#x52D5;&#x93E1;&#x982D;&#x300D;&#x958B;&#x59CB;&#x3002;&#x8ACB;&#x6B63;&#x9762;&#x9762;&#x5C0D;&#x93E1;&#x982D;,&#x80A9;&#x8180;&#x8207;&#x81C9;&#x90E8;&#x4FDD;&#x6301;&#x5728;&#x756B;&#x9762;&#x4E2D;&#x592E;,&#x518D;&#x6309;&#x300C;&#x6821;&#x6E96;&#x59FF;&#x52E2;&#x300D;&#x8A18;&#x9304;&#x4F60;&#x76EE;&#x524D;&#x5750;&#x59FF;&#x4F5C;&#x70BA;&#x57FA;&#x6E96;&#x3002;</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="startBtn">&#x555F;&#x52D5;&#x93E1;&#x982D;</button>
+    <button id="calibrateBtn" disabled>&#x6821;&#x6E96;&#x59FF;&#x52E2;</button>
+    <button class="ghost" id="soundBtn" disabled>&#x1F514; &#x63D0;&#x9192;&#x97F3;&#x6548;:&#x958B;</button>
+    <button class="ghost" id="resetBtn">&#x91CD;&#x7F6E;&#x7D71;&#x8A08;</button>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3>&#x5373;&#x6642;&#x59FF;&#x52E2;&#x6307;&#x6A19;</h3>
+      <div class="metric-row">
+        <span class="metric-label">&#x80A9;&#x8180;&#x6C34;&#x5E73;</span>
+        <span class="metric-value"><span class="dot" id="dotShoulder"></span><span id="valShoulder">--</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">&#x982D;&#x90E8;&#x6B6A;&#x659C;</span>
+        <span class="metric-value"><span class="dot" id="dotHeadTilt"></span><span id="valHeadTilt">--</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">&#x5DE6;&#x53F3;&#x504F;&#x79FB;(&#x672A;&#x7F6E;&#x4E2D;)</span>
+        <span class="metric-value"><span class="dot" id="dotOffset"></span><span id="valOffset">--</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">&#x982D;&#x90E8;&#x4E0B;&#x5782; / &#x524D;&#x50BE;</span>
+        <span class="metric-value"><span class="dot" id="dotDrop"></span><span id="valDrop">--</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">&#x8CBC;&#x8FD1;&#x93E1;&#x982D;(&#x8EAB;&#x9AD4;&#x524D;&#x79FB;)</span>
+        <span class="metric-value"><span class="dot" id="dotClose"></span><span id="valClose">--</span></span>
+      </div>
+
+      <div class="slider-row">
+        <label><span>&#x9748;&#x654F;&#x5EA6;</span><span id="sensVal">&#x4E2D;</span></label>
+        <input type="range" id="sensSlider" min="1" max="3" value="2" step="1">
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>&#x4ECA;&#x65E5;&#x7D71;&#x8A08;</h3>
+      <div class="stat-big"><span class="num" id="goodPct">--</span><span class="unit">% &#x826F;&#x597D;&#x59FF;&#x52E2;&#x6642;&#x9593;</span></div>
+      <div class="bar-outer"><div class="bar-inner" id="goodBar" style="width:0%"></div></div>
+      <div class="stat-cap" style="margin-top:14px;">&#x5DF2;&#x76E3;&#x6E2C;&#x6642;&#x9593;:<span id="totalTime" style="color:var(--ink)">0:00</span></div>
+      <div class="stat-cap">&#x4E0D;&#x826F;&#x63D0;&#x9192;&#x6B21;&#x6578;:<span id="alertCount" style="color:var(--ink)">0</span></div>
+      <div class="stat-cap" style="margin-bottom:0;">&#x76EE;&#x524D;&#x554F;&#x984C;:<br><span id="currentIssue" style="color:var(--bad); font-family:var(--mono); font-size:12px;">&#x7121;</span></div>
+    </div>
+  </div>
+
+  <footer>
+    &#x63A1;&#x7528; MediaPipe Pose Landmarker,&#x6240;&#x6709;&#x5075;&#x6E2C;&#x7686;&#x5728;&#x700F;&#x89BD;&#x5668;&#x672C;&#x6A5F;&#x57F7;&#x884C;,&#x5F71;&#x50CF;&#x4E0D;&#x6703;&#x4E0A;&#x50B3;&#x6216;&#x5132;&#x5B58;&#x3002;<br>
+    &#x6B64;&#x70BA;&#x6982;&#x5FF5;&#x5C55;&#x793A; Demo,&#x59FF;&#x52E2;&#x5224;&#x65B7;&#x50C5;&#x4F9B;&#x53C3;&#x8003;,&#x4E0D;&#x69CB;&#x6210;&#x91AB;&#x7642;&#x5EFA;&#x8B70;&#x3002;
+  </footer>
+</div>
+
+<script type="module">
+import { PoseLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+
+const video = document.getElementById('video');
+const canvas = document.getElementById('overlay');
+const ctx = canvas.getContext('2d');
+const stage = document.getElementById('stage');
+const statusBadge = document.getElementById('statusBadge');
+const fpsBadge = document.getElementById('fpsBadge');
+const idleMsg = document.getElementById('idleMsg');
+const startBtn = document.getElementById('startBtn');
+const calibrateBtn = document.getElementById('calibrateBtn');
+const soundBtn = document.getElementById('soundBtn');
+const resetBtn = document.getElementById('resetBtn');
+const sensSlider = document.getElementById('sensSlider');
+const sensVal = document.getElementById('sensVal');
+
+let poseLandmarker = null;
+let running = false;
+let lastVideoTime = -1;
+let soundOn = true;
+let calibrated = null; // baseline metrics
+let lastFrameTs = performance.now();
+
+// stats
+let goodMs = 0, totalMs = 0, alertCount = 0;
+let lastTickTs = null;
+let currentlyBad = false;
+let badSinceTs = null;
+const BAD_HOLD_MS = 1800; // must be bad this long before counted/alerted
+let lastAlertTs = 0;
+const ALERT_COOLDOWN_MS = 12000;
+
+const LM = { NOSE:0, L_EYE:2, R_EYE:5, L_EAR:7, R_EAR:8, L_SH:11, R_SH:12 };
+
+function sensitivityFactor(){
+  const v = parseInt(sensSlider.value,10);
+  sensVal.textContent = v===1 ? '\u4f4e' : v===2 ? '\u4e2d' : '\u9ad8';
+  // higher sensitivity => smaller allowed deviation
+  return v===1 ? 1.5 : v===2 ? 1.15 : 0.85;
+}
+sensSlider.addEventListener('input', sensitivityFactor);
+
+async function initModel(){
+  let vision;
+  try{
+    vision = await FilesetResolver.forVisionTasks(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+    );
+  }catch(e){
+    throw new Error('WASM_FETCH_FAILED');
+  }
+
+  const modelUrl = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
+
+  try{
+    poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+      baseOptions: { modelAssetPath: modelUrl, delegate: "GPU" },
+      runningMode: "VIDEO",
+      numPoses: 1
+    });
+  }catch(gpuErr){
+    console.warn('GPU delegate failed, retrying with CPU\u2026', gpuErr);
+    try{
+      poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+        baseOptions: { modelAssetPath: modelUrl, delegate: "CPU" },
+        runningMode: "VIDEO",
+        numPoses: 1
+      });
+    }catch(cpuErr){
+      throw new Error('MODEL_FETCH_FAILED');
+    }
+  }
+}
+
+async function startCamera(){
+  startBtn.disabled = true;
+  startBtn.textContent = '\u8f09\u5165\u6a21\u578b\u4e2d\u2026';
+  try{
+    if(!poseLandmarker) await initModel();
+  }catch(e){
+    console.error(e);
+    statusBadge.textContent = '\u6a21\u578b\u8f09\u5165\u5931\u6557';
+    startBtn.disabled = false;
+    startBtn.textContent = '\u555f\u52d5\u93e1\u982d';
+    const isFileProtocol = location.protocol === 'file:';
+    let msg = '\u6a21\u578b\u8f09\u5165\u5931\u6557(Failed to fetch)\u3002\u53ef\u80fd\u539f\u56e0:';
+    const reasons = [];
+    if(isFileProtocol){
+      reasons.push('\u4f60\u662f\u7528\u96d9\u64ca\u76f4\u63a5\u958b\u555f\u9019\u500b HTML \u6a94\u6848(\u7db2\u5740\u5217\u662f file:// \u958b\u982d)\u3002\u90e8\u5206\u700f\u89bd\u5668\u6703\u64cb\u6389\u672c\u5730\u6a94\u6848\u5c0d\u5916\u90e8\u8cc7\u6e90\u7684\u8acb\u6c42 \u2014\u2014 \u8acb\u6539\u7528\u672c\u6a5f\u4f3a\u670d\u5668\u958b\u555f,\u4f8b\u5982\u5728\u7d42\u7aef\u6a5f\u5230\u6a94\u6848\u6240\u5728\u8cc7\u6599\u593e\u57f7\u884c\u300cpython3 -m http.server 8000\u300d,\u518d\u7528\u700f\u89bd\u5668\u6253\u958b http://localhost:8000/posture-monitor.html');
+    }
+    reasons.push('\u5ee3\u544a\u6514\u622a\u5668 / \u9632\u6bd2\u8edf\u9ad4 / VPN \u64cb\u6389\u4e86 jsdelivr.net \u6216 storage.googleapis.com,\u53ef\u5148\u66ab\u6642\u95dc\u9589\u6216\u63db\u4e00\u500b\u7db2\u8def\u8a66\u8a66');
+    reasons.push('\u516c\u53f8\u6216\u5b78\u6821\u7db2\u8def\u7684\u9632\u706b\u7246\u5c01\u9396\u4e86\u9019\u4e9b\u7db2\u57df');
+    reasons.push('\u76ee\u524d\u6c92\u6709\u9023\u4e0a\u7db2\u8def(\u9996\u6b21\u8f09\u5165\u6a21\u578b\u9700\u8981\u7db2\u8def,\u4e4b\u5f8c\u5075\u6e2c\u624d\u662f\u96e2\u7dda\u672c\u6a5f\u904b\u7b97)');
+    idleMsg.querySelector('p').innerHTML = msg + '<br><br>' + reasons.map(r=>'\u2022 '+r).join('<br>');
+    return;
+  }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user', width:{ideal:640}, height:{ideal:480} }, audio:false });
+    video.srcObject = stream;
+    await new Promise(res => video.onloadedmetadata = res);
+    video.play();
+    resizeCanvas();
+    running = true;
+    idleMsg.style.display = 'none';
+    statusBadge.textContent = '\u5075\u6e2c\u4e2d \u00b7 \u8acb\u5148\u6821\u6e96';
+    statusBadge.className = 'badge status';
+    startBtn.textContent = '\u93e1\u982d\u904b\u4f5c\u4e2d';
+    calibrateBtn.disabled = false;
+    soundBtn.disabled = false;
+    lastTickTs = performance.now();
+    requestAnimationFrame(loop);
+  }catch(e){
+    console.error(e);
+    statusBadge.textContent = '\u7121\u6cd5\u5b58\u53d6\u651d\u5f71\u6a5f';
+    startBtn.disabled = false;
+    startBtn.textContent = '\u555f\u52d5\u93e1\u982d';
+    idleMsg.querySelector('p').textContent = '\u7121\u6cd5\u53d6\u5f97\u651d\u5f71\u6a5f\u6b0a\u9650,\u8acb\u78ba\u8a8d\u700f\u89bd\u5668\u5df2\u5141\u8a31\u5b58\u53d6\u93e1\u982d\u3002';
+  }
+}
+
+function resizeCanvas(){
+  canvas.width = stage.clientWidth;
+  canvas.height = stage.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+
+function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+function angleDeg(a,b){ return Math.atan2(b.y-a.y, b.x-a.x) * 180/Math.PI; }
+
+function computeMetrics(lm){
+  const nose = lm[LM.NOSE], lsh = lm[LM.L_SH], rsh = lm[LM.R_SH];
+  const lear = lm[LM.L_EAR], rear = lm[LM.R_EAR];
+  const shMidX = (lsh.x+rsh.x)/2, shMidY=(lsh.y+rsh.y)/2;
+  const shWidth = dist(lsh, rsh) || 0.001;
+
+  const shoulderTilt = Math.abs(angleDeg(lsh, rsh)); // 0 = level (or 180)
+  const shoulderTiltNorm = shoulderTilt > 90 ? 180-shoulderTilt : shoulderTilt;
+
+  let headTiltNorm = 0;
+  if(lear.visibility>0.3 && rear.visibility>0.3){
+    const ht = Math.abs(angleDeg(lear, rear));
+    headTiltNorm = ht > 90 ? 180-ht : ht;
+  }
+
+  const offsetNorm = (nose.x - shMidX) / shWidth; // horizontal centering
+  const dropNorm = (shMidY - nose.y) / shWidth; // "neck length" proxy
+  const widthRatio = shWidth; // for closeness, compared vs baseline later
+
+  return { shoulderTiltNorm, headTiltNorm, offsetNorm, dropNorm, widthRatio };
+}
+
+function fmtPct(n){ return (n*100).toFixed(0)+'%'; }
+
+function setDot(id, state){
+  const el = document.getElementById(id);
+  el.className = 'dot' + (state==='good'?' good':state==='bad'?' bad':'');
+}
+
+function loop(){
+  if(!running) return;
+  const now = performance.now();
+
+  if(video.currentTime !== lastVideoTime){
+    lastVideoTime = video.currentTime;
+    const result = poseLandmarker.detectForVideo(video, now);
+    handleResult(result, now);
+  }
+  requestAnimationFrame(loop);
+}
+
+function drawSkeleton(lm){
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  const W = canvas.width, H = canvas.height;
+  const pairs = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[7,11],[8,12]];
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(111,216,163,0.55)';
+  pairs.forEach(([a,b])=>{
+    const pa=lm[a], pb=lm[b];
+    if(!pa||!pb||pa.visibility<0.3||pb.visibility<0.3) return;
+    ctx.beginPath();
+    ctx.moveTo(pa.x*W, pa.y*H);
+    ctx.lineTo(pb.x*W, pb.y*H);
+    ctx.stroke();
+  });
+  [0,7,8,11,12].forEach(i=>{
+    const p = lm[i];
+    if(!p || p.visibility<0.3) return;
+    ctx.beginPath();
+    ctx.arc(p.x*W, p.y*H, 4, 0, Math.PI*2);
+    ctx.fillStyle = '#eef3ef';
+    ctx.fill();
+  });
+}
+
+let lastMetrics = null;
+
+function handleResult(result, now){
+  const dt = lastTickTs ? (now - lastTickTs) : 0;
+  lastTickTs = now;
+
+  if(!result.landmarks || result.landmarks.length===0){
+    statusBadge.textContent = '\u5075\u6e2c\u4e0d\u5230\u4eba\u50cf';
+    statusBadge.className = 'badge status';
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    return;
+  }
+  const lm = result.landmarks[0];
+  drawSkeleton(lm);
+  const m = computeMetrics(lm);
+  lastMetrics = m;
+
+  updateFpsBadge(now);
+
+  if(!calibrated){
+    statusBadge.textContent = '\u5075\u6e2c\u4e2d \u00b7 \u8acb\u5148\u6821\u6e96';
+    statusBadge.className = 'badge status';
+    updateMetricPanel(m, null, null);
+    return;
+  }
+
+  const sens = sensitivityFactor();
+  const issues = [];
+
+  const shoulderDelta = Math.abs(m.shoulderTiltNorm - calibrated.shoulderTiltNorm);
+  const shoulderBad = shoulderDelta > 6*sens;
+  if(shoulderBad) issues.push('\u80a9\u8180\u4e0d\u5e73');
+
+  let headTiltBad = false;
+  if(calibrated.headTiltNorm !== null){
+    const d = Math.abs(m.headTiltNorm - calibrated.headTiltNorm);
+    headTiltBad = d > 7*sens;
+    if(headTiltBad) issues.push('\u982d\u90e8\u6b6a\u659c');
+  }
+
+  const offsetDelta = Math.abs(m.offsetNorm - calibrated.offsetNorm);
+  const offsetBad = offsetDelta > 0.14*sens;
+  if(offsetBad) issues.push('\u8eab\u9ad4\u672a\u7f6e\u4e2d');
+
+  const dropDelta = calibrated.dropNorm - m.dropNorm; // positive = head dropped/moved down relative to shoulders
+  const dropBad = dropDelta > 0.10*sens;
+  if(dropBad) issues.push('\u982d\u90e8\u524d\u50be / \u4e0b\u5782');
+
+  const closeRatio = m.widthRatio / calibrated.widthRatio;
+  const closeBad = closeRatio > 1 + 0.16/sens;
+  if(closeBad) issues.push('\u8eab\u9ad4\u8cbc\u8fd1\u93e1\u982d');
+
+  updateMetricPanel(m, calibrated, { shoulderBad, headTiltBad, offsetBad, dropBad, closeBad });
+
+  const isBad = issues.length>0;
+  totalMs += dt;
+
+  if(isBad){
+    if(!badSinceTs) badSinceTs = now;
+    const heldFor = now - badSinceTs;
+    if(heldFor > BAD_HOLD_MS){
+      setBadState(true, issues);
+      if(now - lastAlertTs > ALERT_COOLDOWN_MS){
+        lastAlertTs = now;
+        alertCount++;
+        document.getElementById('alertCount').textContent = alertCount;
+        if(soundOn) playBeep();
+      }
+    } else {
+      goodMs += dt; // still counts as good during grace period
+    }
+  } else {
+    badSinceTs = null;
+    setBadState(false, []);
+    goodMs += dt;
+  }
+
+  updateStatsPanel();
+}
+
+function setBadState(bad, issues){
+  currentlyBad = bad;
+  if(bad){
+    statusBadge.textContent = '\u26a0 \u59ff\u52e2\u4e0d\u826f';
+    statusBadge.className = 'badge status bad';
+  } else {
+    statusBadge.textContent = '\u2713 \u59ff\u52e2\u826f\u597d';
+    statusBadge.className = 'badge status good';
+  }
+  document.getElementById('currentIssue').textContent = issues.length? issues.join('\u3001') : '\u7121';
+}
+
+function updateMetricPanel(m, base, flags){
+  document.getElementById('valShoulder').textContent = m.shoulderTiltNorm.toFixed(1)+'\u00b0';
+  document.getElementById('valHeadTilt').textContent = m.headTiltNorm ? m.headTiltNorm.toFixed(1)+'\u00b0' : '--';
+  document.getElementById('valOffset').textContent = (m.offsetNorm*100).toFixed(0)+'%';
+  document.getElementById('valDrop').textContent = m.dropNorm.toFixed(2);
+  document.getElementById('valClose').textContent = base ? ((m.widthRatio/base.widthRatio*100).toFixed(0)+'%') : '--';
+
+  if(!flags){
+    ['dotShoulder','dotHeadTilt','dotOffset','dotDrop','dotClose'].forEach(id=>setDot(id,null));
+    return;
+  }
+  setDot('dotShoulder', flags.shoulderBad?'bad':'good');
+  setDot('dotHeadTilt', flags.headTiltBad?'bad':'good');
+  setDot('dotOffset', flags.offsetBad?'bad':'good');
+  setDot('dotDrop', flags.dropBad?'bad':'good');
+  setDot('dotClose', flags.closeBad?'bad':'good');
+}
+
+function updateStatsPanel(){
+  const pct = totalMs>0 ? (goodMs/totalMs*100) : 0;
+  document.getElementById('goodPct').textContent = pct.toFixed(0);
+  document.getElementById('goodBar').style.width = pct.toFixed(0)+'%';
+  const totalSec = Math.floor(totalMs/1000);
+  const mm = Math.floor(totalSec/60), ss = totalSec%60;
+  document.getElementById('totalTime').textContent = `${mm}:${ss.toString().padStart(2,'0')}`;
+}
+
+function updateFpsBadge(now){
+  const dt = now - lastFrameTs;
+  lastFrameTs = now;
+  if(dt>0) fpsBadge.textContent = Math.round(1000/dt) + ' fps';
+}
+
+let audioCtx = null;
+function playBeep(){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 720;
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+0.5);
+    o.connect(g).connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime+0.55);
+  }catch(e){ /* ignore */ }
+}
+
+calibrateBtn.addEventListener('click', ()=>{
+  if(!lastMetrics) return;
+  calibrated = { ...lastMetrics };
+  goodMs = 0; totalMs = 0; alertCount = 0; badSinceTs = null;
+  document.getElementById('alertCount').textContent = 0;
+  calibrateBtn.textContent = '\u2713 \u5df2\u6821\u6e96(\u91cd\u65b0\u6821\u6e96)';
+  statusBadge.textContent = '\u2713 \u59ff\u52e2\u826f\u597d';
+  statusBadge.className = 'badge status good';
+});
+
+soundBtn.addEventListener('click', ()=>{
+  soundOn = !soundOn;
+  soundBtn.textContent = soundOn ? '\u1f514 \u63d0\u9192\u97f3\u6548:\u958b' : '\u1f515 \u63d0\u9192\u97f3\u6548:\u95dc';
+});
+
+resetBtn.addEventListener('click', ()=>{
+  goodMs = 0; totalMs = 0; alertCount = 0; badSinceTs = null;
+  document.getElementById('alertCount').textContent = 0;
+  updateStatsPanel();
+});
+
+startBtn.addEventListener('click', startCamera);
+</script>
+</body>
+</html>

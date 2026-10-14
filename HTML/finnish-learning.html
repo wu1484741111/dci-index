@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suomi · Finnish Learning · 芬蘭語</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+TC:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ee;--surf:#fff;--surf2:#f0ece3;--bdr:#d8d0c0;
+  --tx:#2a2318;--tx2:#6b5e4a;--tx3:#9e8e78;
+  --acc:#8b3a2a;--fi:#1a3d5c;--en:#6b2d0e;--de:#2d5a1e;--zh:#5a1e4a;
+  --pon:#2a2318;--ptx:#f7f4ee;--pbg:#e8e0d0;--poff:#6b5e4a;
+  --sd:0 2px 12px rgba(42,35,24,.08);--r:11px;--t:.18s ease;
+}
+[data-theme=dark]{
+  --bg:#141210;--surf:#1e1b17;--surf2:#252118;--bdr:#3a3328;
+  --tx:#e8e0d0;--tx2:#b0a090;--tx3:#6e6050;--acc:#d4705a;
+  --fi:#7ab8e0;--en:#e0946a;--de:#8ecf72;--zh:#d68ecf;
+  --pon:#e8e0d0;--ptx:#1e1b17;--pbg:#2e2a22;--poff:#9e8e78;
+  --sd:0 2px 16px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--bg);color:var(--tx);min-height:100vh;transition:background var(--t),color var(--t)}
+
+/* ── TOP BAR ── */
+#topbar{display:flex;align-items:center;gap:7px;padding:8px 14px;border-bottom:1px solid var(--bdr);background:var(--surf);position:sticky;top:0;z-index:300;flex-wrap:wrap}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;white-space:nowrap}.logo b{color:var(--acc)}
+.sp{flex:1;min-width:4px}
+.pill{display:flex;background:var(--pbg);border-radius:999px;padding:2px}
+.pill button{border:none;background:none;color:var(--poff);border-radius:999px;padding:3px 10px;font-size:.71rem;font-family:inherit;cursor:pointer;transition:all var(--t);white-space:nowrap}
+.pill button.on{background:var(--pon);color:var(--ptx)}
+.lb{border:1.5px solid var(--bdr);background:var(--surf2);border-radius:5px;padding:3px 8px;font-size:.7rem;cursor:pointer;color:var(--tx2);transition:all var(--t)}
+.lb.on{background:var(--pon);color:var(--ptx);border-color:var(--pon)}
+.lb.de.on{background:var(--de);border-color:var(--de);color:#fff}
+.lb.zh.on{background:var(--zh);border-color:var(--zh);color:#fff}
+.iconbtn{width:28px;height:28px;border:1.5px solid var(--bdr);background:var(--surf2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+#ttsbadge{font-size:.63rem;padding:2px 7px;border:1px solid var(--bdr);border-radius:999px;color:var(--tx3);background:var(--surf2);white-space:nowrap;transition:all .3s;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+#ttsbadge.ok{color:var(--de);border-color:var(--de)}
+#ttsbadge.busy{color:var(--fi);border-color:var(--fi);animation:blink 1s infinite}
+#ttsbadge.err{color:#c44;border-color:#c44}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* ── SETTINGS MODAL ── */
+#sOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center}
+#sOverlay.open{display:flex}
+#sBox{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:22px;width:min(420px,92vw);box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.stit{font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:16px}
+.srow{margin-bottom:13px}
+.slbl{font-size:.73rem;color:var(--tx2);letter-spacing:.04em;margin-bottom:4px;display:block}
+.sinput{width:100%;padding:7px 10px;border:1.5px solid var(--bdr);border-radius:7px;background:var(--surf2);color:var(--tx);font-family:inherit;font-size:.82rem;outline:none;transition:border-color var(--t)}
+.sinput:focus{border-color:var(--fi)}
+.shint{font-size:.67rem;color:var(--tx3);margin-top:3px;line-height:1.4}
+.shint a{color:var(--fi)}
+.sbtns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.bcnl{border:1.5px solid var(--bdr);background:none;color:var(--tx2);border-radius:7px;padding:6px 16px;font-family:inherit;font-size:.78rem;cursor:pointer}
+.bsav{border:none;background:var(--fi);color:#fff;border-radius:7px;padding:6px 16px;font-family:inherit;font-size:.78rem;cursor:pointer}
+.epill{display:flex;background:var(--pbg);border-radius:999px;padding:2px;display:inline-flex}
+.epill button{border:none;background:none;color:var(--poff);border-radius:999px;padding:3px 10px;font-size:.67rem;font-family:inherit;cursor:pointer;transition:all var(--t)}
+.epill button.on{background:var(--pon);color:var(--ptx)}
+
+/* ── NAV BAR: dropdowns ── */
+#navbar{display:flex;align-items:stretch;background:var(--surf);border-bottom:1px solid var(--bdr);padding:0 10px;position:relative;z-index:250;overflow:visible}
+#navbar::-webkit-scrollbar{display:none}
+.ddwrap{position:relative;overflow:visible}
+.ddtrig{border:none;background:none;color:var(--tx3);font-family:'Cormorant Garamond',serif;font-size:.95rem;padding:8px 13px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all var(--t);display:flex;align-items:center;gap:4px}
+.ddtrig:hover,.ddtrig.open,.ddtrig.active{color:var(--tx)}
+.ddtrig.active{border-bottom-color:var(--acc);font-weight:600}
+.ddtrig .arr{font-size:.6rem;opacity:.5;transition:transform var(--t)}
+.ddtrig.open .arr{transform:rotate(180deg)}
+.ddmenu{display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:200px;background:var(--surf);border:1px solid var(--bdr);border-radius:8px;box-shadow:0 6px 24px rgba(42,35,24,.18);z-index:9999;padding:4px 0}
+.ddmenu.open{display:block}
+.dditem{display:block;width:100%;border:none;background:none;text-align:left;padding:8px 14px;font-family:inherit;font-size:.82rem;color:var(--tx2);cursor:pointer;transition:background var(--t);white-space:nowrap}
+.dditem:hover{background:var(--surf2);color:var(--tx)}
+.dditem.on{color:var(--fi);font-weight:500}
+.dditem.on::before{content:'✓ ';font-size:.75rem}
+.ddiv{height:1px;background:var(--bdr);margin:3px 0}
+
+/* ── PAGER ── */
+#pager{display:flex;align-items:center;gap:8px;padding:8px 14px 0;overflow-x:auto;scrollbar-width:none}
+#pager::-webkit-scrollbar{display:none}
+.ptab{border:1px solid var(--bdr);background:var(--surf);border-radius:999px;color:var(--tx3);font-size:.7rem;font-family:inherit;padding:3px 12px;cursor:pointer;transition:all var(--t);white-space:nowrap}
+.ptab.on{background:var(--pon);color:var(--ptx);border-color:var(--pon)}
+.padd{border:1px dashed var(--bdr);background:none;border-radius:999px;color:var(--tx3);font-size:.7rem;font-family:inherit;padding:3px 10px;cursor:pointer;transition:all var(--t);opacity:.6}
+.padd:hover{opacity:1;border-color:var(--fi);color:var(--fi)}
+
+/* ── MAIN ── */
+main{max-width:860px;margin:0 auto;padding:12px 14px 60px}
+.shdr{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;font-style:italic}
+.ssub{font-size:.72rem;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.seclbl{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin:11px 0 4px 2px}
+
+.sv{display:flex;flex-direction:column;gap:7px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);padding:11px 13px;box-shadow:var(--sd)}
+.rfi{font-size:1.04rem;color:var(--fi);line-height:1.5;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ren{font-size:.83rem;color:var(--en);margin-top:3px;font-style:italic;line-height:1.5;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rde{font-size:.82rem;color:var(--de);margin-top:3px;line-height:1.5;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rzh{font-family:'Noto Sans TC',serif;font-size:.82rem;color:var(--zh);margin-top:3px;line-height:1.6;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.llbl{font-size:.59rem;text-transform:uppercase;letter-spacing:.08em;opacity:.5;white-space:nowrap;font-style:normal;flex-shrink:0}
+.refline{font-size:.64rem;color:var(--tx3);margin-top:3px}
+
+.wv{display:flex;flex-direction:column;gap:12px}
+.wblk{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:var(--sd)}
+.wbhdr{padding:8px 13px;border-bottom:1px solid var(--bdr);background:var(--surf2);display:flex;align-items:center;gap:8px}
+.wrow{display:grid;grid-template-columns:1.4fr 1.4fr 1.4fr 1.4fr 26px;align-items:start;gap:3px;padding:5px 13px;border-bottom:1px solid var(--bdr);transition:background var(--t)}
+.wrow:last-child{border-bottom:none}.wrow:hover{background:var(--surf2)}
+.whdr{font-size:.59rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);padding-bottom:3px}
+.wfi{font-size:.94rem;color:var(--fi);line-height:1.3}.wpos{font-size:.57rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em}
+.wen2{font-size:.8rem;color:var(--en);font-style:italic;line-height:1.3}
+.wde2{font-size:.8rem;color:var(--de);line-height:1.3}
+.wzh2{font-family:'Noto Sans TC',serif;font-size:.81rem;color:var(--zh);line-height:1.4}
+.nowords{padding:24px;text-align:center;color:var(--tx3);font-style:italic;font-size:.86rem}
+
+.tb{background:none;border:1px solid var(--bdr);border-radius:4px;color:var(--tx3);font-size:.67rem;padding:1px 5px;cursor:pointer;display:inline-flex;align-items:center;gap:2px;transition:all var(--t);white-space:nowrap;user-select:none;flex-shrink:0}
+.tb:hover{background:var(--surf2);color:var(--tx);border-color:var(--tx3)}
+.tb.fi{border-color:color-mix(in srgb,var(--fi) 45%,var(--bdr));color:var(--fi)}
+.tb.fi:hover{background:var(--fi);color:#fff;border-color:var(--fi)}
+.tb.speaking{animation:pulse .85s ease-in-out infinite;border-color:var(--acc);color:var(--acc)}
+.tb.spin{opacity:.5;pointer-events:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.credits{margin-top:24px;padding:10px 13px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--surf);font-size:.69rem;color:var(--tx3);line-height:1.7}
+.credits b{color:var(--tx2)}
+.hidden{display:none!important}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- CORS banner — shown only when opened as file:// with ElevenLabs selected -->
+<div id="cors-banner" style="display:none;background:#8b3a2a;color:#fff;font-size:.82rem;padding:10px 16px;line-height:1.6;position:relative">
+  <strong>⚠️ ElevenLabs needs a local server</strong> — browsers block API calls from <code>file://</code> for security.<br>
+  <strong>Fix in 10 seconds:</strong>
+  1. Open Terminal &nbsp;
+  2. <code>cd</code> to this file's folder &nbsp;
+  3. Run: <code style="background:rgba(255,255,255,.2);padding:1px 6px;border-radius:3px">node proxy.js</code> (in the same folder) &nbsp;
+  4. Open <code>http://localhost:3000</code> in Chrome<br>
+  <small style="opacity:.75">proxy.js is included alongside this HTML file. Or switch to V2 · Piper WASM (no server needed) via ⚙️.</small>
+  <button onclick="this.parentElement.style.display='none'" style="position:absolute;top:8px;right:10px;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer">✕</button>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="sOverlay" onclick="if(event.target===this)closeSett()">
+  <div id="sBox">
+    <div class="stit">⚙️ TTS Settings</div>
+    <div class="srow">
+      <span class="slbl">Finnish TTS Engine</span>
+      <div class="epill">
+        <button id="ev2" onclick="setEng('v2')" class="">V2 · Piper WASM</button>
+        <button id="ev3" onclick="setEng('v3')" class="on">V3 · ElevenLabs</button>
+      </div>
+    </div>
+    <div id="elrow" class="srow">
+      <span class="slbl">ElevenLabs API Key</span>
+      <input class="sinput" id="elkey" type="password" placeholder="sk_…" autocomplete="off">
+      <div class="shint">Get key at <a href="https://elevenlabs.io/app/developers/api-keys" target="_blank">elevenlabs.io → API Keys</a>. Stored only in your browser.</div>
+    </div>
+    <div id="elvoicerow" class="srow">
+      <span class="slbl">Voice ID <span style="opacity:.55">(optional — leave blank for default)</span></span>
+      <input class="sinput" id="elvoice" type="text" placeholder="JBFqnCBsd6RMkjVDRZzb">
+      <div class="shint">Find voices at <a href="https://elevenlabs.io/voice-library" target="_blank">elevenlabs.io/voice-library</a></div>
+    </div>
+    <div class="sbtns">
+      <button class="bcnl" onclick="closeSett()">Cancel</button>
+      <button class="bsav" onclick="saveSett()">Save & Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo">Suomi · <b>芬蘭語</b></div>
+  <div class="sp"></div>
+  <div class="pill">
+    <button id="bWord" onclick="setMode('word')">逐字 Word</button>
+    <button id="bSent" onclick="setMode('sentence')" class="on">整句 Sentence</button>
+  </div>
+  <button class="lb de on" id="tDE" onclick="toggleLang('de')">DE</button>
+  <button class="lb zh on" id="tZH" onclick="toggleLang('zh')">繁</button>
+  <span id="ttsbadge" class="ok">🔊 ElevenLabs</span>
+  <button class="iconbtn" onclick="openSett()" title="Settings">⚙️</button>
+  <button class="iconbtn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</div>
+
+<!-- DROPDOWN NAV -->
+<div id="navbar"></div>
+
+<!-- PAGE TABS -->
+<div id="pager"></div>
+
+<main id="mainc"></main>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SETTINGS & STORAGE
+══════════════════════════════════════════════════════════ */
+let EL_KEY   = localStorage.getItem('el_key')   || '';
+let EL_VOICE = localStorage.getItem('el_voice')  || 'JBFqnCBsd6RMkjVDRZzb';
+let TTS_ENG  = localStorage.getItem('tts_eng')   || 'v3';
+
+function openSett() {
+  document.getElementById('elkey').value   = EL_KEY;
+  document.getElementById('elvoice').value = EL_VOICE === 'JBFqnCBsd6RMkjVDRZzb' ? '' : EL_VOICE;
+  setEng(TTS_ENG, false);
+  document.getElementById('sOverlay').classList.add('open');
+}
+function closeSett() { document.getElementById('sOverlay').classList.remove('open'); }
+function saveSett() {
+  EL_KEY   = document.getElementById('elkey').value.trim();
+  const vid = document.getElementById('elvoice').value.trim();
+  EL_VOICE = vid || 'JBFqnCBsd6RMkjVDRZzb';
+  localStorage.setItem('el_key',   EL_KEY);
+  localStorage.setItem('el_voice', EL_VOICE);
+  localStorage.setItem('tts_eng',  TTS_ENG);
+  closeSett();
+  updateBadge();
+}
+function setEng(e, persist) {
+  TTS_ENG = e;
+  if (persist !== false) localStorage.setItem('tts_eng', e);
+  document.getElementById('ev2').classList.toggle('on', e === 'v2');
+  document.getElementById('ev3').classList.toggle('on', e === 'v3');
+  document.getElementById('elrow').classList.toggle('hidden', e !== 'v3');
+  document.getElementById('elvoicerow').classList.toggle('hidden', e !== 'v3');
+}
+
+function setBadge(t, c) { const b = document.getElementById('ttsbadge'); b.textContent = t; b.className = c || ''; }
+function updateBadge() {
+  if (TTS_ENG === 'v3') {
+    if (!EL_KEY)               setBadge('🔊 EL: need key ⚙️', 'err');
+    else if (IS_FILE)          setBadge('🔊 EL: run proxy.js first', 'err');
+    else                       setBadge('🔊 ElevenLabs ✓', 'ok');
+  } else {
+    setBadge(_piperReady ? '🔊 Piper ✓' : '🔊 Piper (tap ▶)', _piperReady ? 'ok' : '');
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ELEVENLABS TTS (V3)
+   ElevenLabs allows CORS from localhost & https origins,
+   but NOT from file:// (origin: null).
+   We detect this on load and show a one-time banner.
+══════════════════════════════════════════════════════════ */
+const EL_MODEL = 'eleven_v3';
+const elCache  = new Map();
+let activeBtn  = null, activeAudio = null;
+
+const IS_FILE  = location.protocol === 'file:';
+const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
+
+function stopAll() {
+  if (activeAudio) { activeAudio.pause(); activeAudio = null; }
+  if (activeBtn)   { activeBtn.classList.remove('speaking', 'spin'); activeBtn = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+}
+
+async function speakEL(text, btn) {
+  if (!EL_KEY) { openSett(); return; }
+
+  stopAll();
+  btn.classList.add('spin'); activeBtn = btn;
+  setBadge('🔊 generating…', 'busy');
+
+  const ckey = EL_VOICE + '|' + text;
+  if (elCache.has(ckey)) {
+    btn.classList.remove('spin'); btn.classList.add('speaking');
+    playURL(elCache.get(ckey), btn); return;
+  }
+
+  try {
+    // Route through local proxy (proxy.js) to avoid CORS.
+    // On localhost the proxy is always running; elsewhere fall back to direct.
+    const elPath = `/v1/text-to-speech/${EL_VOICE}?output_format=mp3_44100_128`;
+    const elURL  = IS_LOCAL
+      ? `http://localhost:3000/elevenlabs${elPath}`
+      : `https://api.elevenlabs.io${elPath}`;
+
+    const r = await fetch(elURL, {
+      method: 'POST',
+      headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text, model_id: EL_MODEL, language_code: 'fi',
+        voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.3, use_speaker_boost: true }
+      })
+    });
+    if (!r.ok) {
+      let msg = 'HTTP ' + r.status;
+      try { msg = (await r.json())?.detail?.message || msg; } catch(e) {}
+      throw new Error(msg);
+    }
+    const url = URL.createObjectURL(await r.blob());
+    elCache.set(ckey, url);
+    btn.classList.remove('spin'); btn.classList.add('speaking');
+    playURL(url, btn);
+    setBadge('🔊 ElevenLabs ✓', 'ok');
+  } catch(e) {
+    btn.classList.remove('spin', 'speaking'); activeBtn = null;
+    // TypeError with no HTTP status = network/CORS block (no response at all)
+    const isCORSBlock = (e instanceof TypeError) && IS_FILE;
+    if (isCORSBlock) {
+      showCORSBanner();
+      setBadge('🔊 EL: open via localhost', 'err');
+      _fallbackFI(text, btn);
+    } else {
+      // Real API error (wrong key, quota, etc.) — show the message
+      setBadge('🔊 EL: ' + String(e.message || e).slice(0, 28), 'err');
+    }
+    console.error('ElevenLabs:', e);
+  }
+}
+
+let _bannerShown = false;
+function showCORSBanner() {
+  if (_bannerShown) return; _bannerShown = true;
+  document.getElementById('cors-banner').style.display = 'block';
+}
+
+function playURL(url, btn) {
+  const a = new Audio(url); activeAudio = a;
+  a.onended = () => { btn.classList.remove('speaking'); activeBtn = null; activeAudio = null; setBadge('🔊 ElevenLabs ✓', 'ok'); };
+  a.onerror = () => { btn.classList.remove('speaking', 'spin'); activeBtn = null; activeAudio = null; };
+  a.play();
+}
+
+/* ══════════════════════════════════════════════════════════
+   PIPER WASM (V2 — fallback)
+══════════════════════════════════════════════════════════ */
+let _Piper = null, _piperReady = false, _piperLoading = false;
+const PIPER_VOICE = 'fi_FI-harri-medium';
+
+async function ensureCOI() {
+  if (window.crossOriginIsolated) return true;
+  if (!('serviceWorker' in navigator)) return false;
+  try {
+    const swBlob = new Blob([`
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).then(r=>{
+  const h=new Headers(r.headers);
+  h.set('Cross-Origin-Opener-Policy','same-origin');
+  h.set('Cross-Origin-Embedder-Policy','require-corp');
+  return new Response(r.body,{status:r.status,statusText:r.statusText,headers:h});
+}).catch(()=>fetch(e.request)));});`], { type: 'application/javascript' });
+    await navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope: '/' });
+    await navigator.serviceWorker.ready;
+    if (!window.crossOriginIsolated) window.location.reload();
+    return window.crossOriginIsolated;
+  } catch(e) { return false; }
+}
+
+async function initPiper() {
+  if (_Piper) return;
+  try {
+    _Piper = await import('https://cdn.jsdelivr.net/npm/@diffusionstudio/vits-web@1.0.3/+esm');
+    const stored = await _Piper.stored().catch(() => []);
+    if (Array.isArray(stored) && stored.includes(PIPER_VOICE)) { _piperReady = true; updateBadge(); }
+  } catch(e) { console.warn('Piper import:', e); }
+}
+
+async function speakPiper(text, btn) {
+  if (!_piperReady) {
+    if (!_piperLoading) {
+      _piperLoading = true;
+      setBadge('🔊 Piper: loading…', 'busy');
+      const iso = await ensureCOI();
+      if (iso) { await initPiper(); }
+      if (!_piperReady && _Piper) {
+        setBadge('🔊 downloading…', 'busy');
+        try {
+          await _Piper.download(PIPER_VOICE, (p) => {
+            if (p.total) setBadge('🔊 ' + Math.round(p.loaded * 100 / p.total) + '%', 'busy');
+          });
+          _piperReady = true;
+        } catch(e) { _piperLoading = false; setBadge('🔊 Piper: failed', 'err'); _fallbackFI(text, btn); return; }
+      }
+      _piperLoading = false;
+      if (!_piperReady) { _fallbackFI(text, btn); return; }
+      updateBadge();
+    } else { setTimeout(() => speakPiper(text, btn), 800); return; }
+  }
+  stopAll(); btn.classList.add('spin'); activeBtn = btn;
+  try {
+    const wav = await _Piper.predict({ text, voiceId: PIPER_VOICE });
+    btn.classList.remove('spin'); btn.classList.add('speaking');
+    const url = URL.createObjectURL(wav); const a = new Audio(url); activeAudio = a;
+    a.onended = () => { btn.classList.remove('speaking'); activeBtn = null; activeAudio = null; URL.revokeObjectURL(url); updateBadge(); };
+    a.play();
+  } catch(e) { btn.classList.remove('spin', 'speaking'); activeBtn = null; _fallbackFI(text, btn); }
+}
+
+function _fallbackFI(text, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'fi-FI'; u.rate = 0.82;
+  const fv = speechSynthesis.getVoices().filter(v => v.lang.startsWith('fi'));
+  if (fv.length) u.voice = fv.find(v => v.localService) || fv[0];
+  btn.classList.add('speaking');
+  u.onend = u.onerror = () => btn.classList.remove('speaking');
+  speechSynthesis.speak(u);
+}
+
+/* ══ MAIN DISPATCH ══ */
+function _speakFI(text, btn) {
+  if (TTS_ENG === 'v3') speakEL(text, btn);
+  else speakPiper(text, btn);
+}
+
+/* Other languages */
+let oBtnA = null;
+function _speakOther(text, lang, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel(); stopAll();
+  if (oBtnA) { oBtnA.classList.remove('speaking'); oBtnA = null; }
+  const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = lang === 'zh-TW' ? 0.85 : 0.9;
+  btn.classList.add('speaking'); oBtnA = btn;
+  u.onend = u.onerror = () => { btn.classList.remove('speaking'); oBtnA = null; };
+  speechSynthesis.speak(u);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════════════ */
+const D = {
+hymns: { label: '詩歌 Hymns', pages: [
+  { id: 'h1', label: 'No.1 · Hallelujah', title: 'Hallelujah, Praise the Lord', sub: 'Hymns No.1 · LSM Hymnal', secs: [
+    { s: 'Verse 1 · 第一節', items: [
+      { fi: 'Hallelujah, ylistä Herraa,', en: 'Hallelujah, praise the Lord,', de: 'Halleluja, lobe den Herrn,', zh: '哈利路亞，讚美主，', words: [{ fi: 'Hallelujah', en: 'Hallelujah', de: 'Halleluja', zh: '哈利路亞', pos: '' }, { fi: 'ylistä', en: 'praise', de: 'lobe', zh: '讚美', pos: 'v.' }, { fi: 'Herraa', en: 'the Lord', de: 'den Herrn', zh: '主', pos: 'n.' }] },
+      { fi: 'Hän on kalliomme ja linnamme.', en: 'He is our Rock and our fortress.', de: 'Er ist unser Fels und unsere Burg.', zh: '祂是我們的磐石和堡壘。', words: [{ fi: 'Hän', en: 'He', de: 'Er', zh: '祂', pos: 'pron.' }, { fi: 'on', en: 'is', de: 'ist', zh: '是', pos: 'v.' }, { fi: 'kalliomme', en: 'our Rock', de: 'unser Fels', zh: '我們的磐石', pos: 'n.' }, { fi: 'ja', en: 'and', de: 'und', zh: '和', pos: 'conj.' }, { fi: 'linnamme', en: 'our fortress', de: 'unsere Burg', zh: '堡壘', pos: 'n.' }] },
+      { fi: 'Hän on pelastuksemme lähde.', en: 'He is the source of our salvation.', de: 'Er ist die Quelle unseres Heils.', zh: '祂是我們救恩的源頭。', words: [{ fi: 'pelastuksemme', en: 'our salvation', de: 'unseres Heils', zh: '我們救恩的', pos: 'n.' }, { fi: 'lähde', en: 'source', de: 'Quelle', zh: '源頭', pos: 'n.' }] }
+    ] },
+    { s: 'Chorus · 副歌', items: [
+      { fi: 'Ylistämme Sinua, Herra Jeesus,', en: 'We praise Thee, Lord Jesus,', de: 'Wir loben Dich, Herr Jesus,', zh: '我們讚美祢，主耶穌，', words: [{ fi: 'Ylistämme', en: 'We praise', de: 'Wir loben', zh: '我們讚美', pos: 'v.' }, { fi: 'Sinua', en: 'Thee', de: 'Dich', zh: '祢', pos: 'pron.' }, { fi: 'Herra Jeesus', en: 'Lord Jesus', de: 'Herr Jesus', zh: '主耶穌', pos: 'n.' }] },
+      { fi: 'sillä Sinä olet meidän kaikkemme.', en: 'for Thou art our everything.', de: 'denn Du bist unser Alles.', zh: '因祢是我們的一切。', words: [{ fi: 'sillä', en: 'for', de: 'denn', zh: '因', pos: 'conj.' }, { fi: 'kaikkemme', en: 'everything', de: 'Alles', zh: '一切', pos: 'n.' }] },
+      { fi: 'Sinä olet elämämme ja voitomme.', en: 'Thou art our life and our victory.', de: 'Du bist unser Leben und unser Sieg.', zh: '祢是我們的生命和得勝。', words: [{ fi: 'elämämme', en: 'our life', de: 'unser Leben', zh: '我們的生命', pos: 'n.' }, { fi: 'voitomme', en: 'our victory', de: 'unser Sieg', zh: '我們的得勝', pos: 'n.' }] }
+    ] }
+  ] },
+  { id: 'h2', label: 'No.501 · Jeesus rakastaa', title: 'Jeesus rakastaa minua', sub: 'Jesus Loves Me · 耶穌愛我 · No.501', secs: [
+    { s: 'Verse 1', items: [
+      { fi: 'Jeesus rakastaa minua, sen tiedän varmasti.', en: 'Jesus loves me, this I know,', de: 'Jesus liebt mich ganz gewiss,', zh: '耶穌愛我，我知情，', words: [{ fi: 'Jeesus', en: 'Jesus', de: 'Jesus', zh: '耶穌', pos: 'n.' }, { fi: 'rakastaa', en: 'loves', de: 'liebt', zh: '愛', pos: 'v.' }, { fi: 'minua', en: 'me', de: 'mich', zh: '我', pos: 'pron.' }] },
+      { fi: 'Raamattu sen kertoo.', en: 'for the Bible tells me so.', de: 'denn die Bibel sagt mir so.', zh: '聖經如此說。', words: [{ fi: 'Raamattu', en: 'the Bible', de: 'die Bibel', zh: '聖經', pos: 'n.' }, { fi: 'kertoo', en: 'tells', de: 'sagt', zh: '說', pos: 'v.' }] },
+      { fi: 'Pienet lapset kuuluvat Hänelle.', en: 'Little ones to Him belong;', de: 'Alle Kleinen sind sein Eigen;', zh: '小孩子屬於祂；', words: [{ fi: 'Pienet lapset', en: 'Little ones', de: 'Kleine Kinder', zh: '小孩子', pos: 'n.' }, { fi: 'kuuluvat Hänelle', en: 'belong to Him', de: 'gehören ihm', zh: '屬於祂', pos: 'v.' }] },
+      { fi: 'He ovat heikkoja, mutta Hän on väkevä.', en: 'they are weak, but He is strong.', de: 'sie sind schwach, doch Er ist stark.', zh: '他們軟弱，祂卻剛強。', words: [{ fi: 'heikkoja', en: 'weak', de: 'schwach', zh: '軟弱', pos: 'adj.' }, { fi: 'väkevä', en: 'strong', de: 'stark', zh: '剛強', pos: 'adj.' }] }
+    ] },
+    { s: 'Chorus · 副歌', items: [
+      { fi: 'Kyllä, Jeesus rakastaa minua.', en: 'Yes, Jesus loves me!', de: 'Ja, Jesus liebt mich!', zh: '是的，耶穌愛我！', words: [] },
+      { fi: 'Raamattu sen kertoo.', en: 'The Bible tells me so.', de: 'Die Bibel sagt mir so.', zh: '聖經如此說。', words: [] }
+    ] }
+  ] }
+] },
+
+outline: { label: '綱要 Outline', pages: [
+  { id: 'o44', label: 'Vol.8 Wk.44', title: 'Experiencing, Enjoying and Expressing Christ', sub: 'Vol.8 · Week 44 · 經歷、享受並表達基督', secs: [
+    { s: 'I. Kristus — ihmisten elämä · Christ — Life of Man · 基督——人的生命', items: [
+      { fi: 'Jumala loi ihmisen omaksi kuvakseen ja antoi hänelle elämän; Kristus on se elämä.', en: 'God created man in His own image and gave him life; Christ is that life.', de: 'Gott schuf den Menschen nach Seinem Bild und gab ihm Leben; Christus ist dieses Leben.', zh: '神按自己的形象造人，並將生命賜給他；基督就是那生命。', ref: 'Gen. 1:26; Col. 3:4', words: [] },
+      { fi: 'Ihminen tarvitsee Jumalan elämää täyttääkseen Jumalan tarkoituksen maan päällä.', en: 'Man needs the life of God to fulfil God\'s purpose on earth.', de: 'Der Mensch braucht das Leben Gottes, um Gottes Zweck auf Erden zu erfüllen.', zh: '人需要神的生命，以成全神在地上的定旨。', ref: 'Gen. 2:9', words: [] },
+      { fi: 'Kristus tuli lihaksi, jotta me saisimme elämän ja sen yltäkylläisesti.', en: 'Christ came in the flesh that we might have life and have it abundantly.', de: 'Christus kam im Fleisch, damit wir Leben haben und es in Fülle haben.', zh: '基督成為肉身，使我們可以得生命，並且得得更豐盛。', ref: 'John 10:10', words: [] }
+    ] },
+    { s: 'II. Sanalla ruokkiminen · Feeding on the Word · 以話語為食', items: [
+      { fi: 'Herran sanat ovat henkeä ja elämää; ne ravitsevat meidän sisäistä ihmistämme.', en: 'The Lord\'s words are spirit and life; they nourish our inner man.', de: 'Die Worte des Herrn sind Geist und Leben; sie nähren unseren inneren Menschen.', zh: '主的話是靈也是生命；祂滋養我們裡面的人。', ref: 'John 6:63', words: [] },
+      { fi: 'Meidän tulee syödä Herraa, imeä Häntä sisäämme Hänen sanansa kautta.', en: 'We need to eat the Lord, to take Him in through His word.', de: 'Wir müssen den Herrn essen, Ihn durch Sein Wort aufnehmen.', zh: '我們需要吃主，藉著祂的話語將祂攝取進來。', ref: 'Jer. 15:16', words: [] },
+      { fi: 'Sana asuu meissä rikkaasti, kun rukoilemme Sanaa ja sekoitamme sen uskoon.', en: 'The word dwells in us richly when we pray over the word and mix it with faith.', de: 'Das Wort wohnt reichlich in uns, wenn wir das Wort beten und es mit Glauben mischen.', zh: '當我們禱讀話語、以信心調和話語時，話語就豐豐富富住在我們裡面。', ref: 'Col. 3:16; Heb. 4:2', words: [] }
+    ] },
+    { s: 'III. Henki — ehtymätön lähde · The Spirit — Inexhaustible Source · 靈——取之不盡的源頭', items: [
+      { fi: 'Pyhä Henki on ehtymätön lähde; Hän virtaa uskovan syvimmästä olemuksesta.', en: 'The Holy Spirit is the inexhaustible source; He flows out of the believer\'s innermost being.', de: 'Der Heilige Geist ist die unerschöpfliche Quelle; Er strömt aus dem Innersten des Gläubigen.', zh: '聖靈是取之不盡的源頭；祂從信徒的最深處湧流出來。', ref: 'John 7:38-39', words: [] },
+      { fi: 'Meidän ei tulisi sammuttaa Henkeä, vaan antaa Hänen täyttää meidät.', en: 'We should not quench the Spirit but let Him fill us.', de: 'Wir sollen den Geist nicht auslöschen, sondern Ihn uns erfüllen lassen.', zh: '我們不應撲滅那靈，乃要讓祂充滿我們。', ref: '1 Thes. 5:19; Eph. 5:18', words: [] }
+    ] },
+    { s: 'IV. Rukoilu — yhteys Jumalan kanssa · Prayer — Fellowship with God · 禱告——與神的交通', items: [
+      { fi: 'Rukoilu on hengitystä hengellisessä elämässä; ilman sitä sisäinen ihminen kuihtuu.', en: 'Prayer is breathing in the spiritual life; without it the inner man withers.', de: 'Gebet ist das Atmen im geistlichen Leben; ohne es verkümmert der innere Mensch.', zh: '禱告是屬靈生命的呼吸；沒有它，裡面的人就會枯萎。', words: [] },
+      { fi: 'Meidän tulee rukoilla Hengessä, puhuen sydämestämme Herralle.', en: 'We must pray in spirit, speaking from our heart to the Lord.', de: 'Wir müssen im Geist beten und von unserem Herzen zum Herrn sprechen.', zh: '我們必須在靈裡禱告，從我們的心向主說話。', ref: 'Eph. 6:18', words: [] }
+    ] }
+  ] },
+  { id: 'o45', label: 'Vol.8 Wk.45', title: 'Experiencing, Enjoying and Expressing Christ', sub: 'Vol.8 · Week 45 · 經歷、享受並表達基督', secs: [
+    { s: 'I. Pyhä Henki · The Holy Spirit · 聖靈', items: [
+      { fi: 'Pyhä Henki on Jumalan Henki, Isän Henki ja Kristuksen Henki.', en: 'The Holy Spirit is the Spirit of God, the Spirit of the Father, and the Spirit of Christ.', de: 'Der Heilige Geist ist der Geist Gottes, der Geist des Vaters und der Geist Christi.', zh: '聖靈是神的靈、父的靈，也是基督的靈。', ref: 'Rom. 8:9', words: [] },
+      { fi: 'Henki asuu meissä ja antaa elämää kuolevaisille ruumiillemme.', en: 'The Spirit dwells in us and gives life to our mortal bodies.', de: 'Der Geist wohnt in uns und macht unsere sterblichen Leiber lebendig.', zh: '那靈住在我們裡面，也必叫我們必死的身體活過來。', ref: 'Rom. 8:11', words: [] },
+      { fi: 'Me olemme Hengen temppeli; Jumalan Henki asuu meissä.', en: 'We are the temple of the Spirit; the Spirit of God dwells in us.', de: 'Wir sind der Tempel des Geistes; der Geist Gottes wohnt in uns.', zh: '我們是聖靈的殿，神的靈住在我們裡面。', ref: '1 Cor. 3:16', words: [] }
+    ] },
+    { s: 'II. Kristus elämänä · Christ as Life · 基督為生命', items: [
+      { fi: 'Kristus on meidän elämämme.', en: 'Christ is our life.', de: 'Christus ist unser Leben.', zh: '基督是我們的生命。', ref: 'Col. 3:4', words: [] },
+      { fi: 'En minä enää elä, vaan Kristus elää minussa.', en: 'It is no longer I who live, but Christ who lives in me.', de: 'Nicht mehr ich lebe, sondern Christus lebt in mir.', zh: '現在活著的，不再是我，乃是基督在我裡面活著。', ref: 'Gal. 2:20', words: [] }
+    ] },
+    { s: 'III. Kirkko · The Church · 召會', items: [
+      { fi: 'Kirkko on Kristuksen ruumis, Hänen täyteytensä.', en: 'The church is the Body of Christ, His fullness.', de: 'Die Gemeinde ist der Leib Christi, Seine Fülle.', zh: '召會是基督的身體，是祂的豐滿。', ref: 'Eph. 1:22-23', words: [] },
+      { fi: 'Kasvamme Häneen, joka on pää, Kristus.', en: 'We grow up into Him who is the Head, Christ.', de: 'Wir wachsen auf in Ihn hinein, der das Haupt ist, Christus.', zh: '我們在各事上長到祂，就是頭，基督。', ref: 'Eph. 4:15', words: [] }
+    ] },
+    { s: 'IV. Jumalan varustus · Armor of God · 神的軍裝', items: [
+      { fi: 'Pukekaa päällenne koko Jumalan haarniska.', en: 'Put on the whole armor of God.', de: 'Zieht die ganze Waffenrüstung Gottes an.', zh: '要穿上神所賜的全副軍裝。', ref: 'Eph. 6:11', words: [] },
+      { fi: 'Totuuden vyö, vanhurskauden haarniskapaita, rauhan evankeliumin kengät.', en: 'The belt of truth, the breastplate of righteousness, the sandals of the gospel of peace.', de: 'Den Gürtel der Wahrheit, den Brustpanzer der Gerechtigkeit, die Schuhe des Evangeliums des Friedens.', zh: '用真理束腰，用公義護胸，腳穿傳和平之福音的鞋。', ref: 'Eph. 6:14-15', words: [] },
+      { fi: 'Uskon kilpi, pelastuksen kypärä, Hengen miekka, joka on Jumalan sana.', en: 'The shield of faith, the helmet of salvation, the sword of the Spirit, which is the word of God.', de: 'Den Schild des Glaubens, den Helm des Heils, das Schwert des Geistes, welches das Wort Gottes ist.', zh: '拿著信德的盾牌，戴上救恩的頭盔，拿著聖靈的寶劍，就是神的話。', ref: 'Eph. 6:16-17', words: [] }
+    ] }
+  ] }
+] },
+
+gospel: { label: '福音 Gospel', pages: [
+  { id: 'g1', label: 'Basic Truths · 基本真理', title: 'Gospel Phrases', sub: '福音基本用語 · Living Stream Ministry', secs: [
+    { s: 'Sin & Need · 罪與需要', items: [
+      { fi: 'Kaikki ovat syntiä tehneet.', en: 'All have sinned.', de: 'Alle haben gesündigt.', zh: '眾人都犯了罪。', ref: 'Rom. 3:23', words: [{ fi: 'Kaikki', en: 'All', de: 'Alle', zh: '眾人', pos: 'pron.' }, { fi: 'syntiä tehneet', en: 'have sinned', de: 'haben gesündigt', zh: '犯了罪', pos: 'v.' }] },
+      { fi: 'Synnin palkka on kuolema.', en: 'The wages of sin is death.', de: 'Der Lohn der Sünde ist der Tod.', zh: '罪的工價乃是死。', ref: 'Rom. 6:23', words: [{ fi: 'palkka', en: 'wages', de: 'Lohn', zh: '工價', pos: 'n.' }, { fi: 'kuolema', en: 'death', de: 'Tod', zh: '死', pos: 'n.' }] },
+      { fi: 'Jumala rakastaa sinua.', en: 'God loves you.', de: 'Gott liebt dich.', zh: '神愛你。', words: [{ fi: 'Jumala', en: 'God', de: 'Gott', zh: '神', pos: 'n.' }, { fi: 'rakastaa', en: 'loves', de: 'liebt', zh: '愛', pos: 'v.' }, { fi: 'sinua', en: 'you', de: 'dich', zh: '你', pos: 'pron.' }] }
+    ] },
+    { s: 'Salvation · 救恩', items: [
+      { fi: 'Jumala niin rakasti maailmaa, että antoi ainokaisen Poikansa.', en: 'God so loved the world that He gave His only begotten Son.', de: 'Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab.', zh: '神愛世人，甚至將祂的獨生子賜給他們。', ref: 'John 3:16', words: [] },
+      { fi: 'Jeesus Kristus kuoli meidän puolestamme.', en: 'Jesus Christ died for us.', de: 'Jesus Christus ist für uns gestorben.', zh: '耶穌基督為我們死了。', ref: 'Rom. 5:8', words: [{ fi: 'kuoli', en: 'died', de: 'gestorben', zh: '死了', pos: 'v.' }, { fi: 'puolestamme', en: 'for us', de: 'für uns', zh: '為我們', pos: 'prep.' }] },
+      { fi: 'Hän nousi kuolleista kolmantena päivänä.', en: 'He rose from the dead on the third day.', de: 'Er erstand am dritten Tage von den Toten.', zh: '祂在第三天從死人中復活了。', ref: '1 Cor. 15:4', words: [{ fi: 'nousi kuolleista', en: 'rose from the dead', de: 'erstand von den Toten', zh: '從死人中復活', pos: 'v.' }] }
+    ] },
+    { s: 'Response · 回應', items: [
+      { fi: 'Tunnusta, että Jeesus on Herra.', en: 'Confess that Jesus is Lord.', de: 'Bekenne, daß Jesus Herr ist.', zh: '口裡承認耶穌為主。', ref: 'Rom. 10:9', words: [{ fi: 'Tunnusta', en: 'Confess', de: 'Bekenne', zh: '承認', pos: 'v.' }, { fi: 'Herra', en: 'Lord', de: 'Herr', zh: '主', pos: 'n.' }] },
+      { fi: 'Jokainen, joka huutaa avukseen Herran nimeä, pelastetaan.', en: 'Whoever calls upon the name of the Lord shall be saved.', de: 'Jeder, der den Namen des Herrn anrufen wird, soll gerettet werden.', zh: '凡求告主名的，就必得救。', ref: 'Rom. 10:13', words: [{ fi: 'huutaa avukseen', en: 'calls upon', de: 'anrufen', zh: '求告', pos: 'v.' }, { fi: 'pelastetaan', en: 'shall be saved', de: 'gerettet werden', zh: '必得救', pos: 'v.' }] }
+    ] }
+  ] }
+] },
+
+prayer: { label: '禱告 Prayer', pages: [
+  { id: 'pm', label: 'Morning · 早禱', title: 'Morning Prayer', sub: '晨禱用語 · Aamuhartaus', secs: [
+    { s: 'Praise · 讚美', items: [
+      { fi: 'Herra, kiitän Sinua tästä uudesta päivästä.', en: 'Lord, I thank You for this new day.', de: 'Herr, ich danke Dir für diesen neuen Tag.', zh: '主，我感謝祢賜給我這新的一天。', words: [{ fi: 'kiitän', en: 'I thank', de: 'ich danke', zh: '我感謝', pos: 'v.' }] },
+      { fi: 'Armahtosi uusiutuu joka aamu.', en: 'Your mercies are new every morning.', de: 'Deine Barmherzigkeit erneuert sich jeden Morgen.', zh: '你的慈愛每早晨都是新的。', ref: 'Lam. 3:23', words: [{ fi: 'Armahtosi', en: 'Your mercies', de: 'Deine Barmherzigkeit', zh: '你的慈愛', pos: 'n.' }, { fi: 'uusiutuu', en: 'are renewed', de: 'erneuert sich', zh: '更新', pos: 'v.' }] }
+    ] },
+    { s: 'Commitment · 委身', items: [
+      { fi: 'Täytä minut Pyhällä Hengellä.', en: 'Fill me with the Holy Spirit.', de: 'Fülle mich mit dem Heiligen Geist.', zh: '用聖靈充滿我。', words: [{ fi: 'Täytä', en: 'Fill', de: 'Fülle', zh: '充滿', pos: 'v.' }, { fi: 'Pyhällä Hengellä', en: 'with the Holy Spirit', de: 'mit dem Heiligen Geist', zh: '用聖靈', pos: 'n.' }] },
+      { fi: 'Käytä minua tänään kunniaksesi.', en: 'Use me today for Your glory.', de: 'Gebrauche mich heute für Deine Herrlichkeit.', zh: '今天使用我，為了祢的榮耀。', words: [] }
+    ] }
+  ] },
+  { id: 'pe', label: 'Evening · 晚禱', title: 'Evening Prayer', sub: '晚禱用語 · Iltahartaus', secs: [
+    { s: 'Confession · 認罪', items: [
+      { fi: 'Herra, tutki sydämeni.', en: 'Lord, search my heart.', de: 'Herr, erforsche mein Herz.', zh: '主，鑑察我的心。', ref: 'Ps. 139:23', words: [{ fi: 'tutki', en: 'search', de: 'erforsche', zh: '鑑察', pos: 'v.' }, { fi: 'sydämeni', en: 'my heart', de: 'mein Herz', zh: '我的心', pos: 'n.' }] },
+      { fi: 'Anteeksi kaikki syntini.', en: 'Forgive all my sins.', de: 'Vergib mir all meine Sünden.', zh: '赦免我一切的罪。', words: [{ fi: 'Anteeksi', en: 'Forgive', de: 'Vergib', zh: '赦免', pos: 'v.' }, { fi: 'syntini', en: 'my sins', de: 'meine Sünden', zh: '我的罪', pos: 'n.' }] }
+    ] },
+    { s: 'Rest · 安息', items: [
+      { fi: 'Herra, lepään Sinussa tänä yönä.', en: 'Lord, I rest in You this night.', de: 'Herr, ich ruhe in Dir diese Nacht.', zh: '主，今夜我安息在祢裡面。', words: [] },
+      { fi: 'Siunaa minua ja perheeni.', en: 'Bless me and my family.', de: 'Segne mich und meine Familie.', zh: '祝福我和我的家人。', words: [{ fi: 'Siunaa', en: 'Bless', de: 'Segne', zh: '祝福', pos: 'v.' }, { fi: 'perheeni', en: 'my family', de: 'meine Familie', zh: '我的家人', pos: 'n.' }] }
+    ] }
+  ] }
+] },
+
+daily: { label: '日常 Daily', pages: [
+  { id: 'd1', label: 'Greetings · 問候', title: 'Daily Greetings', sub: '日常問候語 · Päivittäiset tervehdykset', secs: [
+    { s: 'Basic Greetings · 基本問候', items: [
+      { fi: 'Hyvää huomenta!', en: 'Good morning!', de: 'Guten Morgen!', zh: '早安！', words: [{ fi: 'Hyvää huomenta', en: 'Good morning', de: 'Guten Morgen', zh: '早安', pos: 'interj.' }] },
+      { fi: 'Hyvää iltaa!', en: 'Good evening!', de: 'Guten Abend!', zh: '晚安！', words: [{ fi: 'iltaa', en: 'evening', de: 'Abend', zh: '晚上', pos: 'n.' }] },
+      { fi: 'Kuinka voit?', en: 'How are you?', de: 'Wie geht es dir?', zh: '你好嗎？', words: [{ fi: 'Kuinka voit', en: 'How are you', de: 'Wie geht es dir', zh: '你好嗎', pos: 'phrase' }] },
+      { fi: 'Olen hyvin, kiitos.', en: 'I am fine, thank you.', de: 'Ich bin gut, danke.', zh: '我很好，謝謝。', words: [{ fi: 'hyvin', en: 'fine', de: 'gut', zh: '好', pos: 'adv.' }, { fi: 'kiitos', en: 'thank you', de: 'danke', zh: '謝謝', pos: 'n.' }] }
+    ] },
+    { s: 'At Church · 在教會', items: [
+      { fi: 'Tervetuloa kokoukseen!', en: 'Welcome to the meeting!', de: 'Herzlich willkommen zur Zusammenkunft!', zh: '歡迎來聚會！', words: [{ fi: 'Tervetuloa', en: 'Welcome', de: 'Herzlich willkommen', zh: '歡迎', pos: 'n.' }, { fi: 'kokoukseen', en: 'to the meeting', de: 'zur Zusammenkunft', zh: '來聚會', pos: 'n.' }] },
+      { fi: 'Oletko kristitty?', en: 'Are you a Christian?', de: 'Bist du ein Christ?', zh: '你是基督徒嗎？', words: [{ fi: 'kristitty', en: 'a Christian', de: 'ein Christ', zh: '基督徒', pos: 'n.' }] }
+    ] }
+  ] },
+  { id: 'd2', label: 'Family · 家庭', title: 'Family & Home', sub: '家庭生活用語 · Perhe ja koti', secs: [
+    { s: 'Family Members · 家庭成員', items: [
+      { fi: 'äiti', en: 'mother', de: 'Mutter', zh: '媽媽', words: [{ fi: 'äiti', en: 'mother', de: 'Mutter', zh: '媽媽', pos: 'n.' }] },
+      { fi: 'isä', en: 'father', de: 'Vater', zh: '爸爸', words: [{ fi: 'isä', en: 'father', de: 'Vater', zh: '爸爸', pos: 'n.' }] },
+      { fi: 'tytär', en: 'daughter', de: 'Tochter', zh: '女兒', words: [{ fi: 'tytär', en: 'daughter', de: 'Tochter', zh: '女兒', pos: 'n.' }] },
+      { fi: 'poika', en: 'son', de: 'Sohn', zh: '兒子', words: [{ fi: 'poika', en: 'son', de: 'Sohn', zh: '兒子', pos: 'n.' }] }
+    ] },
+    { s: 'Home Life · 家庭生活', items: [
+      { fi: 'Rukoillaanko yhdessä?', en: 'Shall we pray together?', de: 'Wollen wir zusammen beten?', zh: '我們一起禱告好嗎？', words: [] },
+      { fi: 'Luetaan Raamattua yhdessä.', en: "Let's read the Bible together.", de: 'Laßt uns zusammen die Bibel lesen.', zh: '我們一起讀聖經。', words: [{ fi: 'Luetaan', en: "Let's read", de: 'Laßt uns lesen', zh: '我們讀', pos: 'v.' }, { fi: 'Raamattua', en: 'the Bible', de: 'die Bibel', zh: '聖經', pos: 'n.' }] }
+    ] }
+  ] }
+] },
+
+scripture: { label: '聖經 Scripture', pages: [
+  { id: 's1', label: 'John · 約翰', title: 'Gospel of John — Key Verses', sub: '約翰福音鑰節 · Johanneksen evankeliumi', secs: [
+    { s: 'John 1', items: [
+      { fi: 'Alussa oli Sana, ja Sana oli Jumalan luona, ja Sana oli Jumala.', en: 'In the beginning was the Word, and the Word was with God, and the Word was God.', de: 'Im Anfang war das Wort, und das Wort war bei Gott, und das Wort war Gott.', zh: '太初有道，道與神同在，道就是神。', ref: 'John 1:1', words: [{ fi: 'Alussa', en: 'In the beginning', de: 'Im Anfang', zh: '太初', pos: 'n.' }, { fi: 'Sana', en: 'Word', de: 'Wort', zh: '道', pos: 'n.' }] },
+      { fi: 'Sana tuli lihaksi ja asui meidän keskellämme.', en: 'The Word became flesh and dwelt among us.', de: 'Und das Wort wurde Fleisch und wohnte unter uns.', zh: '道成了肉身，住在我們中間。', ref: 'John 1:14', words: [{ fi: 'tuli lihaksi', en: 'became flesh', de: 'wurde Fleisch', zh: '成了肉身', pos: 'v.' }] }
+    ] },
+    { s: 'John 3', items: [
+      { fi: 'Niin Jumala rakasti maailmaa, että antoi ainoan Poikansa.', en: 'For God so loved the world that He gave His only begotten Son.', de: 'Denn also hat Gott die Welt geliebt, daß er seinen eingeborenen Sohn gab.', zh: '神愛世人，甚至將祂的獨生子賜給他們。', ref: 'John 3:16', words: [] },
+      { fi: 'Minä olen tie, totuus ja elämä.', en: 'I am the way, the reality, and the life.', de: 'Ich bin der Weg, die Wahrheit und das Leben.', zh: '我就是道路、實際、生命。', ref: 'John 14:6', words: [{ fi: 'tie', en: 'way', de: 'Weg', zh: '道路', pos: 'n.' }, { fi: 'totuus', en: 'reality', de: 'Wahrheit', zh: '實際', pos: 'n.' }, { fi: 'elämä', en: 'life', de: 'Leben', zh: '生命', pos: 'n.' }] }
+    ] }
+  ] },
+  { id: 's2', label: 'Eph. · 以弗所', title: 'Ephesians — Key Verses', sub: '以弗所書鑰節 · Kirje efesolaisille', secs: [
+    { s: 'Eph. 1–4', items: [
+      { fi: 'Kirkko on Kristuksen ruumis, Hänen täyteytensä.', en: 'The church is His Body, the fullness of the One who fills all in all.', de: 'Die Gemeinde ist sein Leib, die Fülle dessen, der alles in allem erfüllt.', zh: '召會是祂的身體，是那充滿萬有者的豐滿。', ref: 'Eph. 1:22-23', words: [] },
+      { fi: 'Kristus asuu sydämissämme uskon kautta.', en: 'Christ makes His home in our hearts through faith.', de: 'Christus wohnt durch den Glauben in unseren Herzen.', zh: '基督藉著信住在我們心裡。', ref: 'Eph. 3:17', words: [] },
+      { fi: 'Kasvamme kaikin puolin Häneen, joka on pää, Kristus.', en: 'We grow up in all things into Him who is the Head, Christ.', de: 'Wir wachsen in allen Stücken auf in ihn hinein, der das Haupt ist, Christus.', zh: '我們在各事上長到祂，就是頭，基督。', ref: 'Eph. 4:15', words: [] }
+    ] }
+  ] }
+] }
+};
+
+/* ══════════════════════════════════════════════════════════
+   APP STATE
+══════════════════════════════════════════════════════════ */
+let activeCat  = 'hymns';
+let activePage = {};   // cat → pageId
+let mode    = 'sentence';
+let showDE  = true;
+let showZH  = true;
+let openDD  = null;   // currently open dropdown key
+
+Object.keys(D).forEach(k => activePage[k] = D[k].pages[0].id);
+
+/* ══ BUTTON HTML ══ */
+function esc(t) { return t.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' '); }
+function fib(t) { return `<button class="tb fi" onclick="_speakFI('${esc(t)}',this)">▶ FI</button>`; }
+function ob(t, lang, lbl) { return `<button class="tb" onclick="_speakOther('${esc(t)}','${lang}',this)">${lbl}</button>`; }
+
+/* ══ DROPDOWN NAV ══ */
+function renderNav() {
+  const nb = document.getElementById('navbar');
+  nb.innerHTML = Object.entries(D).map(([k, v]) => {
+    const isActive = k === activeCat;
+    const isOpen   = openDD === k;
+    const pages    = v.pages;
+    const items    = pages.map(p => {
+      const isCur = activePage[k] === p.id;
+      return `<button class="dditem${isCur ? ' on' : ''}" onclick="event.stopPropagation();selectPage('${k}','${p.id}')">${p.label}</button>`;
+    }).join('');
+    return `
+      <div class="ddwrap" id="dd-${k}">
+        <button class="ddtrig${isActive ? ' active' : ''}${isOpen ? ' open' : ''}" onclick="event.stopPropagation();toggleDD('${k}')">
+          ${v.label} <span class="arr">▾</span>
+        </button>
+        <div class="ddmenu${isOpen ? ' open' : ''}">${items}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleDD(k) {
+  const isOpening = openDD !== k;
+  // Close all
+  document.querySelectorAll('.ddmenu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.ddtrig').forEach(t => t.classList.remove('open'));
+  openDD = null;
+  if (isOpening) {
+    const wrap = document.getElementById('dd-' + k);
+    if (wrap) {
+      wrap.querySelector('.ddmenu').classList.add('open');
+      wrap.querySelector('.ddtrig').classList.add('open');
+      openDD = k;
+    }
+  }
+}
+
+function selectPage(cat, pageId) {
+  activeCat      = cat;
+  activePage[cat] = pageId;
+  openDD         = null;
+  renderNav();
+  renderPager();
+  renderMain();
+}
+
+/* ══ PAGER ══ */
+function renderPager() {
+  const pages = D[activeCat].pages;
+  const cur   = activePage[activeCat];
+  document.getElementById('pager').innerHTML =
+    pages.map(p => `<button class="ptab${p.id === cur ? ' on' : ''}" onclick="selectPage('${activeCat}','${p.id}')">${p.label}</button>`).join('') +
+    `<button class="padd" onclick="alert('Upload a new PDF or paste content to add the next week — coming soon!')" title="Add next week">+ week</button>`;
+}
+
+/* ══ MAIN RENDER ══ */
+function renderMain() {
+  const page = D[activeCat].pages.find(p => p.id === activePage[activeCat]) || D[activeCat].pages[0];
+  let h = `<div class="shdr"><div class="stitle">${page.title}</div><div class="ssub">${page.sub}</div></div>`;
+
+  if (mode === 'sentence') {
+    h += `<div class="sv">`;
+    for (const sec of page.secs) {
+      h += `<div class="seclbl">${sec.s}</div>`;
+      sec.items.forEach(item => {
+        h += `<div class="card">
+          <div class="rfi"><span class="llbl">FI</span><span>${item.fi}</span>${fib(item.fi)}</div>
+          <div class="ren"><span class="llbl">EN</span><span>${item.en}</span>${ob(item.en,'en-US','EN')}</div>
+          <div class="rde${showDE ? '' : ' hidden'}"><span class="llbl">DE</span><span>${item.de}</span>${ob(item.de,'de-DE','DE')}</div>
+          <div class="rzh${showZH ? '' : ' hidden'}"><span class="llbl">繁</span><span>${item.zh}</span>${ob(item.zh,'zh-TW','繁')}</div>
+          ${item.ref ? `<div class="refline">${item.ref}</div>` : ''}
+        </div>`;
+      });
+    }
+    h += `</div>`;
+  } else {
+    const hasW = page.secs.some(s => s.items.some(it => it.words && it.words.length > 0));
+    if (!hasW) {
+      h += `<div class="nowords">Word-by-word for this sheet coming soon · 逐字模式即將推出</div>`;
+    } else {
+      h += `<div class="wv">`;
+      for (const sec of page.secs) {
+        h += `<div class="seclbl">${sec.s}</div>`;
+        sec.items.forEach(item => {
+          if (!item.words || !item.words.length) return;
+          h += `<div class="wblk">
+            <div class="wbhdr"><span style="color:var(--fi);font-family:'Source Serif 4',serif;font-size:.88rem">${item.fi}</span>${fib(item.fi)}</div>
+            <div class="wrow whdr"><div>Finnish</div><div>English</div><div class="${showDE ? '' : 'hidden'}">Deutsch</div><div class="${showZH ? '' : 'hidden'}">繁中</div><div></div></div>`;
+          item.words.forEach(w => {
+            h += `<div class="wrow">
+              <div><div class="wfi">${w.fi}</div><div class="wpos">${w.pos}</div></div>
+              <div class="wen2">${w.en}</div>
+              <div class="wde2${showDE ? '' : ' hidden'}">${w.de}</div>
+              <div class="wzh2${showZH ? '' : ' hidden'}">${w.zh}</div>
+              <div>${fib(w.fi)}</div>
+            </div>`;
+          });
+          h += `</div>`;
+        });
+      }
+      h += `</div>`;
+    }
+  }
+
+  h += `<div class="credits"><b>Sources · 來源 · Quellen:</b><br>
+    Finnish/English: <em>Living Stream Ministry</em> ·
+    Deutsch: <em>Lebensstrom e.V.</em> ·
+    繁中: <em>台灣福音書房 Taiwan Gospel Room</em></div>`;
+
+  document.getElementById('mainc').innerHTML = h;
+}
+
+/* ══ CONTROLS ══ */
+function setMode(m) {
+  mode = m;
+  document.getElementById('bSent').classList.toggle('on', m === 'sentence');
+  document.getElementById('bWord').classList.toggle('on', m === 'word');
+  renderMain();
+}
+function toggleLang(l) {
+  if (l === 'de') { showDE = !showDE; document.getElementById('tDE').classList.toggle('on', showDE); }
+  else            { showZH = !showZH; document.getElementById('tZH').classList.toggle('on', showZH); }
+  renderMain();
+}
+function toggleTheme() {
+  const d = document.body.dataset.theme === 'dark';
+  document.body.dataset.theme = d ? 'light' : 'dark';
+  document.getElementById('themeBtn').textContent = d ? '🌙' : '☀️';
+}
+
+/* ══ INIT ══ */
+setEng(TTS_ENG, false);
+updateBadge();
+// Show a gentle badge hint if on file:// — but don't auto-show full banner
+if (IS_FILE && TTS_ENG === 'v3') {
+  setBadge('🔊 EL: open via localhost', 'err');
+}
+renderNav();
+renderPager();
+renderMain();
+
+/* Close dropdowns on outside click */
+document.addEventListener('click', () => {
+  if (openDD !== null) {
+    document.querySelectorAll('.ddmenu').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.ddtrig').forEach(t => t.classList.remove('open'));
+    openDD = null;
+  }
+});
+
+/* Auto-init Piper cache check if V2 selected */
+if (TTS_ENG === 'v2') {
+  ensureCOI().then(iso => { if (iso) initPiper(); });
+}
+</script>
+</body>
+</html>
