@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lounge · 3D 聊天世界</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b1020;font-family:system-ui,"Noto Sans TC",sans-serif;color:#fff}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+#hud{position:fixed;top:max(10px,env(safe-area-inset-top));left:10px;font-size:13px;background:#0008;padding:6px 10px;border-radius:8px;pointer-events:none;line-height:1.5}
+#toast{position:fixed;top:20%;left:50%;transform:translateX(-50%);background:#000a;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .4s;pointer-events:none}
+#log{position:fixed;left:10px;bottom:calc(64px + env(safe-area-inset-bottom));width:min(420px,70vw);font-size:14px;pointer-events:none}
+#log div{background:#000a;padding:4px 9px;margin-top:3px;border-radius:6px;word-break:break-word}
+#log b{color:#ffd37a}
+#cf{position:fixed;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));display:flex;gap:6px;max-width:520px}
+#msg{flex:1;padding:11px 12px;border-radius:10px;border:1px solid #fff4;background:#000a;color:#fff;font-size:16px}
+button{padding:0 16px;border-radius:10px;border:0;background:#ffd37a;color:#201400;font-weight:700;font-size:15px}
+#joy{position:fixed;left:24px;bottom:calc(90px + env(safe-area-inset-bottom));width:120px;height:120px;border-radius:50%;background:#fff2;border:1px solid #fff4;display:none;touch-action:none}
+#knob{position:absolute;left:40px;top:40px;width:40px;height:40px;border-radius:50%;background:#fffa}
+#jump{position:fixed;right:24px;bottom:calc(110px + env(safe-area-inset-bottom));width:72px;height:72px;border-radius:50%;display:none}
+@media (pointer:coarse){#joy,#jump{display:block}}
+#start{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(#0b1020cc,#1b2a4acc);z-index:5}
+#start form{width:min(360px,88vw);display:flex;flex-direction:column;gap:12px}
+#start h1{margin:0;font-size:30px}
+#start p{margin:0;color:#cfd8f0;font-size:14px;line-height:1.6}
+#start input{padding:13px;border-radius:10px;border:0;font-size:17px}
+#start button{padding:13px;font-size:17px}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="hud"></div><div id="toast"></div><div id="log"></div>
+<form id="cf" autocomplete="off"><input id="msg" maxlength="120" placeholder="說點什麼…（Enter 開始輸入）"><button>送出</button></form>
+<div id="joy"><div id="knob"></div></div><button id="jump">跳</button>
+<div id="start"><form id="sf">
+<h1>Lounge</h1>
+<p>一個大型的程序生成世界：海洋、沙漠、森林、雪山，還有 12 顆隱藏水晶。朋友打開網址就能一起逛、一起聊，不需要登入。<br>電腦：點畫面鎖定滑鼠，WASD 移動，空白鍵跳，Shift 跑，Enter 聊天。手機：左搖桿移動，右側拖曳轉視角。</p>
+<input id="nm" maxlength="16" placeholder="你的暱稱" required>
+<button>進入世界</button>
+</form></div>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------- 確定性隨機與地形（所有人看到同一個世界） ---------- */
+const hs=(x,y)=>{let h=(Math.imul(x,374761393)+Math.imul(y,668265263)+1013904223)|0;h=Math.imul(h^(h>>>13),1274126177);h^=h>>>16;return(h>>>0)/4294967296};
+const vn=(x,y)=>{const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);
+ return hs(xi,yi)*(1-u)*(1-v)+hs(xi+1,yi)*u*(1-v)+hs(xi,yi+1)*(1-u)*v+hs(xi+1,yi+1)*u*v};
+const fbm=(x,y,o=5)=>{let a=.5,s=0,f=1;for(let i=0;i<o;i++){s+=a*vn(x*f,y*f);f*=2;a/=2}return s};
+const mulberry=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const rnd=mulberry(20261015);
+const M=(x,z)=>fbm(x/180-50,z/180+30,4);
+const H=(x,z)=>{let h=(fbm(x/260+3,z/260+7)-.5)*110;const m=Math.max(0,fbm(x/120+40,z/120-20)-.52);h+=m*230;
+ const d=Math.hypot(x,z),k=Math.min(1,Math.max(0,(70-d)/40));return h*(1-k)+6*k};
+
+/* ---------- 場景 ---------- */
+const cv=document.getElementById('cv');
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(70,1,.1,900);
+const hemi=new THREE.HemisphereLight(0xffffff,0x445533,1.1);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xfff2d0,1.6);scene.add(sun);
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix()}
+addEventListener('resize',resize);resize();
+
+const S=1600,N=320;
+const tg=new THREE.PlaneGeometry(S,S,N,N);tg.rotateX(-Math.PI/2);
+{const p=tg.attributes.position,cl=new Float32Array(p.count*3),c=new THREE.Color();
+ for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),h=H(x,z),m=M(x,z);p.setY(i,h);
+  if(h<1.8)c.set(0xd9c88a);else if(h>78)c.set(0xf4f7ff);else if(h>52)c.set(0x7d7a78);
+  else if(m<.42&&h<34)c.set(0xcfa955);else if(m>.55)c.set(0x2f6b34);else c.set(0x5c9a45);
+  c.multiplyScalar(.9+hs(i,7)*.2);cl.set([c.r,c.g,c.b],i*3)}
+ tg.setAttribute('color',new THREE.BufferAttribute(cl,3));tg.computeVertexNormals()}
+scene.add(new THREE.Mesh(tg,new THREE.MeshLambertMaterial({vertexColors:true,flatShading:true})));
+const water=new THREE.Mesh(new THREE.PlaneGeometry(S*2,S*2).rotateX(-Math.PI/2),new THREE.MeshLambertMaterial({color:0x2a6fb5,transparent:true,opacity:.78}));
+scene.add(water);
+
+/* ---------- 樹、仙人掌、岩石 ---------- */
+const dm=new THREE.Object3D(),col=new THREE.Color();
+const mk=(g,c,n)=>{const m=new THREE.InstancedMesh(g,new THREE.MeshLambertMaterial({color:c,flatShading:true}),n);m.count=0;scene.add(m);return m};
+const trunk=mk(new THREE.CylinderGeometry(.4,.5,3,6),0x5a3d22,8000),crown=mk(new THREE.ConeGeometry(2.6,7,7),0xffffff,8000),
+ cactus=mk(new THREE.CylinderGeometry(.6,.7,4,7),0x4a8c4a,1800),rock=mk(new THREE.DodecahedronGeometry(1.6),0x8a8886,1500);
+const put=(m,x,y,z,s,ry=0)=>{dm.position.set(x,y,z);dm.scale.setScalar(s);dm.rotation.y=ry;dm.updateMatrix();m.setMatrixAt(m.count++,dm.matrix)};
+for(let i=0;i<60000&&trunk.count<8000;i++){
+ const x=(rnd()-.5)*S*.96,z=(rnd()-.5)*S*.96,h=H(x,z),m=M(x,z),s=.7+rnd()*1.2;
+ if(h<2||h>60||Math.hypot(x,z)<35)continue;
+ if(m>.5&&h<48&&rnd()<.5){put(trunk,x,h+1.5*s,z,s);col.setHSL(.28+rnd()*.08,.5,.2+rnd()*.1);crown.setColorAt(crown.count,col);put(crown,x,h+6.2*s,z,s)}
+ else if(m<.42&&h<34&&cactus.count<1800&&rnd()<.05)put(cactus,x,h+2*s,z,s);
+ else if(rock.count<1500&&rnd()<.02)put(rock,x,h+.5*s,z,s,rnd()*6);
+}
+for(const m of[trunk,crown,cactus,rock]){m.instanceMatrix.needsUpdate=true}
+crown.instanceColor.needsUpdate=true;
+
+/* 出生廣場：燈塔與石圈 */
+const bh=H(0,0);
+const pillar=new THREE.Mesh(new THREE.CylinderGeometry(.8,1.2,16,8),new THREE.MeshBasicMaterial({color:0xffc060}));pillar.position.set(0,bh+8,0);scene.add(pillar);
+for(let i=0;i<10;i++){const a=i/10*6.283;put(rock,Math.cos(a)*9,bh+.4,Math.sin(a)*9,1.3,a);}
+rock.instanceMatrix.needsUpdate=true;
+
+/* ---------- 12 顆隱藏水晶 ---------- */
+const cand={peak:[],desert:[],forest:[]};
+for(let i=0;i<6000;i++){const x=(rnd()-.5)*S*.9,z=(rnd()-.5)*S*.9,h=H(x,z),m=M(x,z);
+ if(h>70)cand.peak.push([x,z,h]);else if(m<.4&&h>3&&h<30)cand.desert.push([x,z,h]);else if(m>.6&&h>3&&h<45)cand.forest.push([x,z,h])}
+const crystals=[];
+for(const[k,n]of[['peak',4],['desert',4],['forest',4]]){const a=cand[k];for(let i=0;i<n&&a.length;i++){
+ const[x,z,h]=a.splice(Math.floor(rnd()*a.length),1)[0],g=new THREE.Group(),c=new THREE.Color().setHSL(crystals.length/12,.9,.6);
+ const gem=new THREE.Mesh(new THREE.OctahedronGeometry(1.3),new THREE.MeshBasicMaterial({color:c}));gem.position.y=3;
+ const beam=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,70,6),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.35}));beam.position.y=35;
+ g.add(gem,beam);g.position.set(x,h,z);scene.add(g);crystals.push({g,gem,beam,x,z,h,got:false})}}
+
+/* ---------- 玩家 ---------- */
+const me={x:0,y:bh+2,z:6,vy:0,yaw:0,pitch:0,name:'',hue:0};
+const keys={};let jx=0,jy=0,jumpReq=false,found=0;
+const msg=document.getElementById('msg'),hud=document.getElementById('hud'),logEl=document.getElementById('log'),toastEl=document.getElementById('toast');
+addEventListener('keydown',e=>{if(document.activeElement===msg){if(e.key==='Escape')msg.blur();return}
+ if(e.key==='Enter'){e.preventDefault();msg.focus();return}keys[e.code]=1;if(e.code==='Space')e.preventDefault()});
+addEventListener('keyup',e=>{keys[e.code]=0});
+let lk=null;const clampP=()=>{me.pitch=Math.max(-1.4,Math.min(1.4,me.pitch))};
+cv.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')cv.requestPointerLock?.();else lk={id:e.pointerId,x:e.clientX,y:e.clientY}});
+cv.addEventListener('pointermove',e=>{if(lk&&e.pointerId===lk.id){me.yaw-=(e.clientX-lk.x)*.006;me.pitch-=(e.clientY-lk.y)*.006;lk.x=e.clientX;lk.y=e.clientY;clampP()}});
+addEventListener('pointerup',e=>{if(lk&&e.pointerId===lk.id)lk=null});
+document.addEventListener('mousemove',e=>{if(document.pointerLockElement===cv){me.yaw-=e.movementX*.0025;me.pitch-=e.movementY*.0025;clampP()}});
+const joy=document.getElementById('joy'),knob=document.getElementById('knob');
+const jset=e=>{const r=joy.getBoundingClientRect(),dx=e.clientX-r.left-60,dy=e.clientY-r.top-60,l=Math.min(50,Math.hypot(dx,dy)),a=Math.atan2(dy,dx);
+ jx=Math.cos(a)*l/50;jy=Math.sin(a)*l/50;knob.style.left=40+jx*50+'px';knob.style.top=40+jy*50+'px'};
+joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);jset(e)});
+joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))jset(e)});
+const jend=()=>{jx=jy=0;knob.style.left=knob.style.top='40px'};
+joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
+document.getElementById('jump').addEventListener('pointerdown',()=>{jumpReq=true});
+
+/* ---------- 頭像、名牌、對話泡泡 ---------- */
+function spr(w,h,sx,sy){const c=document.createElement('canvas');c.width=w;c.height=h;
+ const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false,transparent:true}));
+ s.scale.set(sx,sy,1);s.renderOrder=9;s.userData={c};return s}
+function paint(s,txt,bg,fs){const c=s.userData.c,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);
+ if(!txt){s.visible=false;return}x.font=`bold ${fs}px system-ui,sans-serif`;
+ const w=Math.min(c.width-4,x.measureText(txt).width+36),l=(c.width-w)/2,t=8,h=c.height-16;
+ x.fillStyle=bg;x.beginPath();x.roundRect(l,t,w,h,h/2.4);x.fill();x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';
+ x.fillText(txt,c.width/2,c.height/2,c.width-40);s.material.map.needsUpdate=true;s.visible=true}
+function avatar(name,hue){const g=new THREE.Group(),c=new THREE.Color().setHSL(hue/360,.7,.55);
+ const b=new THREE.Mesh(new THREE.CapsuleGeometry(.4,.9,4,8),new THREE.MeshLambertMaterial({color:c}));b.position.y=.85;
+ const hd=new THREE.Mesh(new THREE.SphereGeometry(.33,12,10),new THREE.MeshLambertMaterial({color:0xffe0c0}));hd.position.y=1.8;
+ const nm=spr(512,96,5.3,1),bb=spr(512,112,6,1.3);nm.position.y=2.7;bb.position.y=3.5;paint(nm,name,'#000a',44);paint(bb,'','#fff',0);
+ g.add(b,hd,nm,bb);scene.add(g);return{g,nm,bb,name,tx:0,ty:0,tz:0,yaw:0,t:0}}
+const peers=new Map();
+const hueOf=n=>{let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))%360;return h};
+
+/* ---------- 聊天紀錄 ---------- */
+function addLog(who,text,mine){const d=document.createElement('div'),b=document.createElement('b');
+ b.textContent=who+'：';d.append(b,document.createTextNode(text));logEl.append(d);while(logEl.children.length>8)logEl.firstChild.remove();
+ setTimeout(()=>d.remove(),30000)}
+function bubble(a,text){paint(a.bb,text.slice(0,40),'#2b3a67',40);clearTimeout(a.bt);a.bt=setTimeout(()=>paint(a.bb,'','#fff',0),7000)}
+let tt;function toast(t){toastEl.textContent=t;toastEl.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>toastEl.style.opacity=0,2800)}
+
+/* ---------- 網路：Trystero（WebRTC 點對點，無需伺服器與登入） ---------- */
+let sendS=()=>{},sendC=()=>{},online=false;
+async function net(){
+ try{
+  const{joinRoom}=await import('https://cdn.jsdelivr.net/npm/trystero@0.21.5/+esm');
+  const room=joinRoom({appId:'dci-index-lounge-2026'},'main');
+  const[s1,g1]=room.makeAction('st'),[s2,g2]=room.makeAction('ch');
+  sendS=s1;sendC=s2;online=true;
+  const st=()=>[me.x,me.y,me.z,me.yaw,me.name];
+  room.onPeerJoin(id=>s1(st(),id));
+  room.onPeerLeave(id=>{const a=peers.get(id);if(a){scene.remove(a.g);peers.delete(id)}});
+  g1((d,id)=>{if(!Array.isArray(d))return;const name=String(d[4]||'旅人').slice(0,16);let a=peers.get(id);
+   if(!a){a=avatar(name,hueOf(name));a.g.position.set(+d[0],+d[1],+d[2]);peers.set(id,a)}
+   if(a.name!==name){a.name=name;paint(a.nm,name,'#000a',44)}
+   a.tx=+d[0]||0;a.ty=+d[1]||0;a.tz=+d[2]||0;a.yaw=+d[3]||0});
+  g2((t,id)=>{const a=peers.get(id);t=String(t).slice(0,120);addLog(a?a.name:'旅人',t);if(a)bubble(a,t)});
+ }catch(e){toast('連線服務載入失敗，目前是單人模式')}
+}
+
+/* ---------- 開始、聊天送出 ---------- */
+document.getElementById('sf').addEventListener('submit',e=>{e.preventDefault();
+ me.name=document.getElementById('nm').value.trim().slice(0,16)||'旅人';me.hue=hueOf(me.name);
+ try{localStorage.setItem('lounge-name',me.name)}catch(_){}
+ document.getElementById('start').remove();net();if(!matchMedia('(pointer:coarse)').matches)cv.requestPointerLock?.()});
+try{document.getElementById('nm').value=localStorage.getItem('lounge-name')||''}catch(_){}
+document.getElementById('cf').addEventListener('submit',e=>{e.preventDefault();const t=msg.value.trim();msg.value='';if(!t)return;
+ sendC(t);addLog(me.name,t,true);if(!matchMedia('(pointer:coarse)').matches)msg.blur()});
+
+/* ---------- 主迴圈 ---------- */
+const sky=new THREE.Color(),dayC=new THREE.Color(0x8fcdf0),nightC=new THREE.Color(0x080d24);
+scene.fog=new THREE.Fog(0x8fcdf0,120,650);
+let last=performance.now(),sendT=0;
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;
+ if(!me.name){renderer.render(scene,camera);return}
+ const typing=document.activeElement===msg;
+ let fx=(typing?0:(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0))+jx,
+     fz=(typing?0:(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0))-jy;
+ const l=Math.hypot(fx,fz);if(l>1){fx/=l;fz/=l}
+ const gy=H(me.x,me.z),wet=gy<.5,sp=((keys.ShiftLeft&&!typing)?17:9)*(wet?.5:1);
+ const sn=Math.sin(me.yaw),cs=Math.cos(me.yaw);
+ me.x+=(fx*cs-fz*sn)*sp*dt;me.z+=(-fx*sn-fz*cs)*sp*dt;
+ me.x=Math.max(-780,Math.min(780,me.x));me.z=Math.max(-780,Math.min(780,me.z));
+ const floor=Math.max(H(me.x,me.z),wet?-1.2:-99)+1.7;
+ if((keys.Space&&!typing||jumpReq)&&me.y<=floor+.05)me.vy=8.5;jumpReq=false;
+ me.vy-=25*dt;me.y+=me.vy*dt;if(me.y<floor){me.y=floor;me.vy=0}
+ camera.position.set(me.x,me.y,me.z);camera.rotation.set(me.pitch,me.yaw,0,'YXZ');
+ /* 所有人共用的日夜循環（10 分鐘一輪） */
+ const ph=(Date.now()/1000%600)/600*6.283,el=Math.sin(ph),day=Math.max(0,Math.min(1,el*2+.5));
+ sky.copy(nightC).lerp(dayC,day);scene.background=sky;scene.fog.color.copy(sky);
+ sun.position.set(Math.cos(ph)*300+me.x,Math.max(30,el*300),200+me.z);sun.intensity=.2+1.4*day;hemi.intensity=.35+.8*day;
+ water.position.y=Math.sin(now/900)*.12;
+ /* 水晶 */
+ for(const c of crystals){c.gem.rotation.y+=dt;c.gem.position.y=3+Math.sin(now/600+c.x)*.4;
+  if(!c.got&&Math.hypot(c.x-me.x,c.z-me.z)<5&&Math.abs(c.h-me.y)<8){c.got=true;found++;c.gem.material.color.set(0x888888);c.beam.visible=false;toast(`發現水晶 ${found} / ${crystals.length}`)}}
+ /* 其他玩家 */
+ for(const a of peers.values()){const k=Math.min(1,dt*10);a.g.position.x+=(a.tx-a.g.position.x)*k;a.g.position.z+=(a.tz-a.g.position.z)*k;
+  a.g.position.y+=(a.ty-1.7-a.g.position.y)*k;a.g.rotation.y+=(a.yaw-a.g.rotation.y)*k}
+ sendT+=dt;if(sendT>.1){sendT=0;if(online)sendS([me.x,me.y,me.z,me.yaw,me.name])}
+ hud.textContent=`線上 ${peers.size+1} 人　水晶 ${found}/${crystals.length}　座標 ${me.x|0}, ${me.z|0}${online?'':'　（單人模式）'}`;
+ renderer.render(scene,camera)}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
