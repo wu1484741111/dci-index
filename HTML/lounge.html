@@ -181,7 +181,7 @@ function tick(dt,now){
   v.style.display=s&&s.getVideoTracks().some(t=>t.readyState==='live'&&!t.muted)?'block':'none'}}
 
 /* ---------- 玩家 ---------- */
-const me={x:0,y:bh+2,z:6,vy:0,yaw:0,pitch:0,name:'',hue:0};
+const me={x:(Math.random()-.5)*16,y:bh+2,z:4+(Math.random()-.5)*16,vy:0,yaw:0,pitch:0,name:'',hue:0};
 const keys={};let jx=0,jy=0,jumpReq=false,found=0;
 const msg=document.getElementById('msg'),hud=document.getElementById('hud'),logEl=document.getElementById('log'),toastEl=document.getElementById('toast');
 addEventListener('keydown',e=>{if(document.activeElement===msg){if(e.key==='Escape')msg.blur();return}
@@ -244,11 +244,14 @@ function bubble(a,text){paint(a.bb,text.slice(0,40),'#2b3a67',40);clearTimeout(a
 let tt;function toast(t){toastEl.textContent=t;toastEl.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>toastEl.style.opacity=0,2800)}
 
 /* ---------- 網路：Trystero（WebRTC 點對點，無需伺服器與登入） ---------- */
-let sendS=()=>{},sendC=()=>{},online=false;
+let sendS=()=>{},sendC=()=>{},online=false,rl=-1;
+const RELAYS=['wss://relay.damus.io','wss://nos.lol','wss://relay.snort.social','wss://nostr.mom','wss://relay.primal.net','wss://offchain.pub','wss://nostr.oxtr.dev','wss://relay.nostr.band'];
 async function net(){
  try{
-  const{joinRoom}=await import('https://cdn.jsdelivr.net/npm/trystero@0.21.5/+esm');
-  const room=joinRoom({appId:'dci-index-lounge-2026'},'main');
+  const{joinRoom,getRelaySockets}=await import('https://cdn.jsdelivr.net/npm/trystero@0.21.5/+esm');
+  const room=joinRoom({appId:'dci-index-lounge-2026',relayUrls:RELAYS},'main');
+  setInterval(()=>{try{rl=Object.values(getRelaySockets()).filter(x=>x.readyState===1).length}catch(_){}},2000);
+  setTimeout(()=>{if(rl===0)toast('連不到中繼伺服器，朋友可能找不到你（換網路試試）')},10000);
   const[s1,g1]=room.makeAction('st'),[s2,g2]=room.makeAction('ch');
   sendS=s1;sendC=s2;online=true;R=room;const[s3,g3]=room.makeAction('it');sendI=s3;
   g3(d=>{if(!Array.isArray(d))return;const it=items[d[0]];if(!it||it===held)return;it.mine=false;it.m.position.set(+d[1]||0,+d[2]||0,+d[3]||0)});
@@ -306,7 +309,7 @@ function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/
  for(const a of peers.values()){const k=Math.min(1,dt*10);a.g.position.x+=(a.tx-a.g.position.x)*k;a.g.position.z+=(a.tz-a.g.position.z)*k;
   a.g.position.y+=(a.ty-1.7-a.g.position.y)*k;a.g.rotation.y+=(a.yaw-a.g.rotation.y)*k}
  sendT+=dt;if(sendT>.1){sendT=0;if(online)sendS([me.x,me.y,me.z,me.yaw,me.name,me.av,me.hue])}
- hud.textContent=`線上 ${peers.size+1} 人　水晶 ${found}/${crystals.length}　🐟 ${fishes}　座標 ${me.x|0}, ${me.z|0}${online?'':'　（單人模式）'}`;
+ hud.textContent=`線上 ${peers.size+1} 人　水晶 ${found}/${crystals.length}　🐟 ${fishes}　座標 ${me.x|0}, ${me.z|0}${online?`　中繼 ${rl<0?'…':rl}/${RELAYS.length}`:'　（單人模式）'}`;
  renderer.render(scene,camera)}
 requestAnimationFrame(loop);
 </script>
