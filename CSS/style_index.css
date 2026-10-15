@@ -189,28 +189,6 @@ h2 {
     font-weight: unset;
 }
 
-.lounge-link {
-    display: flex;
-    justify-content: center;
-    margin: 15px 0 0 400px; /* 跟 .h3_1 對齊，放在它正下方 */
-}
-
-.lounge-link a {
-    background-color: rgba(10, 10, 1, 0.445);
-    border: goldenrod double 2px;
-    padding: 10px 20px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-family: "Kdam Thmor Pro", sans-serif;
-}
-
-.lounge-link a:hover {
-    background-color: rgb(10, 10, 1);
-    transform: scale(1.05);
-    color: rgb(252, 252, 64);
-}
-
 
 
 
